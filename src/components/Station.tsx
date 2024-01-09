@@ -12,6 +12,7 @@ import { env } from "~/env";
 import SkillRow from "./SkillRow";
 import useDeleteStation from "~/hooks/useDeleteStation";
 import useDeleteSkill from "~/hooks/useDeleteSkill";
+import { getUserId } from "~/services/supabaseFunctions";
 
 interface Props {
   station: Station;
@@ -122,10 +123,9 @@ const StationComponent = ({ station }: Props) => {
     setHideDurationPicker(true);
   };
 
-  const handleCreateSkill = () => {
+  const handleCreateSkill = async () => {
     createSkill({
       station_id: station.id,
-      user_id: env.NEXT_PUBLIC_STATIC_USER_ID,
     });
   };
 

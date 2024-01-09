@@ -1,13 +1,13 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createStation, getStations } from "~/services/supabaseFunctions";
-import { CreateStationArgs, Station } from "~/utils/types";
+import { Station } from "~/utils/types";
 
 const useCreateStation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ userId }: CreateStationArgs) => {
-      await createStation(userId);
+    mutationFn: async () => {
+      await createStation();
       return await getStations();
     },
 

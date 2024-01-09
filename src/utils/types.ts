@@ -16,9 +16,7 @@ export type Station = {
   user_id: string;
 };
 
-export type CreateStationArgs = {
-  userId: string;
-};
+export type CreateStationArgs = {};
 
 export type UpdateStationNameArgs = {
   station_id: number;
@@ -26,6 +24,11 @@ export type UpdateStationNameArgs = {
 };
 
 export type CreateSkillArgs = {
-  user_id: string;
   station_id: number;
+};
+
+export type updateSkillArgs = {
+  skill_id: number;
+  name: string;
+  repetitions: number;
 };

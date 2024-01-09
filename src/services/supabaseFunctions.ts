@@ -2,7 +2,17 @@ import { PostgrestSingleResponse } from "@supabase/supabase-js";
 import client from "~/utils/supabaseClient";
 import { Station } from "~/utils/types";
 
+export const getUserId = async () => {
+  const { data } = await client.auth.getUser();
+  const user_id = data.user?.id;
+  if (!user_id) {
+    throw new Error("No user id found");
+  }
+  return user_id;
+};
+
 export const getStations = async (): Promise<Station[]> => {
+  const user_id = await getUserId();
   try {
     const response: PostgrestSingleResponse<Station[]> = await client
       .from("stations")
@@ -23,7 +33,9 @@ export const getStations = async (): Promise<Station[]> => {
                 )
             `,
       )
-      .order("order", { ascending: true });
+      .order("order", { ascending: true })
+      .order("order", { referencedTable: "skills", ascending: true })
+      .eq("user_id", user_id);
 
     if (response.error) {
       throw response.error;
@@ -127,7 +139,9 @@ export const deleteStation = async (station_id: number) => {
   }
 };
 
-export const createStation = async (user_id: string) => {
+export const createStation = async () => {
+  const user_id = await getUserId();
+
   try {
     const { data, error } = await client
       .from("stations")
@@ -142,7 +156,8 @@ export const createStation = async (user_id: string) => {
   }
 };
 
-export const createSkill = async (station_id: number, user_id: string) => {
+export const createSkill = async (station_id: number) => {
+  const user_id = await getUserId();
   try {
     const { data, error } = await client
       .from("skills")
@@ -162,6 +177,26 @@ export const deleteSkill = async (skill_id: number) => {
     const { data, error } = await client
       .from("skills")
       .delete()
+      .eq("id", skill_id);
+
+    if (error) {
+      throw error;
+    }
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const updateSkill = async (
+  skill_id: number,
+  name: string,
+  repetitions: number,
+) => {
+  try {
+    const { data, error } = await client
+      .from("skills")
+      .update({ name: name, repetitions: repetitions })
       .eq("id", skill_id);
 
     if (error) {
