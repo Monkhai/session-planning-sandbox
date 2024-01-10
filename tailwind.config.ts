@@ -11,6 +11,7 @@ export default {
         gray: "var(--color-gray)",
         seperator: "var(--color-seperator)",
         textInput: "var(--color-text-input)",
+        darkBackground: "var(--color-dark-background)",
       },
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],
