@@ -1,18 +1,19 @@
 "use client";
-
+import { PiDotsThreeCircleFill } from "react-icons/pi";
 import React, { useEffect, useState } from "react";
 import { FaCirclePlus } from "react-icons/fa6";
 import { IoMdRemoveCircle } from "react-icons/io";
+import { IoCloseCircleSharp } from "react-icons/io5";
+import useCreateSkill from "~/hooks/useCreateSkill";
+import useDeleteSkill from "~/hooks/useDeleteSkill";
+import useDeleteStation from "~/hooks/useDeleteStation";
 import useEditStationDuration from "~/hooks/useEditStationDuration";
 import useEditStationName from "~/hooks/useEditStationName";
 import { Station } from "~/utils/types";
 import DurationPicker from "./DurationPicker";
-import useCreateSkill from "~/hooks/useCreateSkill";
-import { env } from "~/env";
 import SkillRow from "./SkillRow";
-import useDeleteStation from "~/hooks/useDeleteStation";
-import useDeleteSkill from "~/hooks/useDeleteSkill";
-import { getUserId } from "~/services/supabaseFunctions";
+import Spacer from "./utility/Spacer";
+import { set } from "zod";
 
 interface Props {
   station: Station;
@@ -24,6 +25,7 @@ const StationComponent = ({ station }: Props) => {
   const [durationString, setDurationString] = useState<string | undefined>();
   const [stationName, setStationName] = useState<string>("");
   const stationNameRef = React.useRef<HTMLInputElement>(null);
+  const [showEditModal, setShowEditModal] = useState<boolean>(false);
 
   const { mutate: updateStationName, isPending: isPendingNameEdit } =
     useEditStationName();
@@ -134,8 +136,8 @@ const StationComponent = ({ station }: Props) => {
   };
 
   return (
-    <div className="w-full">
-      <div className="flex w-full flex-row items-center gap-2 px-4 py-2">
+    <div className=" w-full">
+      <div className=" flex w-full flex-row items-center gap-2 px-4 py-2">
         <div className="w-full">
           <input
             value={stationName}
@@ -159,11 +161,13 @@ const StationComponent = ({ station }: Props) => {
               {durationString ? durationString : "Duration"}
             </p>
           </button>
+
           <div
-            className="absolute w-60"
+            className="absolute mt-2 w-80"
             style={{
               transition: "all 0.150s ease-in-out",
               scale: hideDurationPicker ? 0 : 1,
+              opacity: hideDurationPicker ? 0 : 1,
               transformOrigin: "top left",
             }}
           >
@@ -175,21 +179,34 @@ const StationComponent = ({ station }: Props) => {
           </div>
         </div>
 
-        <button
-          disabled={isPendingCreateSkill}
-          onClick={handleCreateSkill}
-          className="transition-all duration-150 active:scale-95"
-        >
-          <FaCirclePlus color={"var(--color-blue)"} size={30} />
-        </button>
+        <div className="flex flex-row">
+          <button
+            disabled={isPendingCreateSkill}
+            onClick={handleCreateSkill}
+            className="transition-all duration-150 active:scale-95"
+          >
+            <FaCirclePlus color={"var(--color-blue)"} size={30} />
+          </button>
 
-        <button
-          className="ml-4 transition-all duration-150 active:scale-95"
-          onClick={handleDeleteStation}
-          disabled={isPendingDeleteStation}
-        >
-          <IoMdRemoveCircle color={"red"} size={34} />
-        </button>
+          <button
+            className="ml-4 transition-all duration-150 active:scale-95"
+            onClick={() => setShowEditModal(!showEditModal)}
+          >
+            <PiDotsThreeCircleFill size={36} color={"gray"} />
+          </button>
+
+          <div
+            className="absolute w-60"
+            style={{
+              transition: "all 0.150s ease-in-out",
+              scale: showEditModal ? 1 : 0,
+              opacity: showEditModal ? 1 : 0,
+              transformOrigin: "top left",
+            }}
+          >
+            <div className="w-full border-2 bg-white"> </div>
+          </div>
+        </div>
       </div>
 
       <div className="overflow-hidden rounded-[10px]">

@@ -32,7 +32,7 @@ export default function HomePage() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-start bg-background py-4 pb-10">
+    <main className="flex min-h-screen flex-col items-center justify-start bg-background pb-10 pb-4">
       <NavBar />
 
       <div className="flex w-3/6 flex-col justify-center gap-8"></div>
