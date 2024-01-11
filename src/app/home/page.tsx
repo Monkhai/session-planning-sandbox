@@ -1,4 +1,6 @@
 "use client";
+import * as IGLogo from "../../../public/instagram.png";
+import { AiOutlineQuestionCircle } from "react-icons/ai";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import CreateNewStationButton from "~/components/CreateNewStationButton";
@@ -11,33 +13,16 @@ import useCreateStation from "~/hooks/useCreateStation";
 import useStations from "~/hooks/useStations";
 import { getUserId } from "~/services/supabaseFunctions";
 import client from "~/utils/supabaseClient";
+import { IoIosMail } from "react-icons/io";
+import Image from "next/image";
+import ContactMeModal from "~/components/ContactMeModal";
+import { useUserSeenOnboard } from "~/hooks/useUserSeenOnboard";
 
 export default function HomePage() {
   const router = useRouter();
   const dialogRef = useRef<HTMLDialogElement>(null);
-
-  useEffect(() => {
-    const userSeenOnboard = async () => {
-      const userId = await getUserId();
-      const { data, error } = await client
-        .from("user_data")
-        .select("seen_onboard")
-        .eq("user_id", userId);
-
-      if (error) {
-        console.error(error);
-        return;
-      }
-
-      if (data) {
-        const seenOnboard = data[0]?.seen_onboard || false;
-        if (!seenOnboard) {
-          dialogRef.current?.showModal();
-        }
-      }
-    };
-    userSeenOnboard();
-  }, []);
+  const [showContact, setShowContact] = useState(false);
+  useUserSeenOnboard(dialogRef);
 
   client.auth.getSession().then(({ data }) => {
     if (!data.session) {
@@ -90,10 +75,19 @@ export default function HomePage() {
       <div className="sticky bottom-10 mt-10 flex w-full flex-row items-center justify-center gap-4 px-10 print:hidden">
         <LogoutButton handleLogout={handleLogout} />
         <CreateNewStationButton onClick={handleCreateStation} />
-        <Spacer />
+        <div className="relative flex flex-1 items-center justify-end">
+          <div className="relative flex items-center justify-center">
+            <button
+              onClick={() => setShowContact(!showContact)}
+              className="active:scale-95"
+            >
+              <AiOutlineQuestionCircle size={30} color={"var(--color-blue)"} />
+            </button>
+            <ContactMeModal showContact={showContact} />
+          </div>
+        </div>
       </div>
 
-      {/* ---------------------------------------- */}
       <OnboardingDialog
         dialogRef={dialogRef}
         onOnboardSeen={handleSeenOnboard}
