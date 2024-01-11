@@ -12,6 +12,8 @@ const useDeleteSkill = () => {
     },
 
     onMutate: (id: number) => {
+      queryClient.cancelQueries({ queryKey: ["stations"] });
+
       const previousStations: Station[] =
         queryClient.getQueryData(["stations"]) || [];
 

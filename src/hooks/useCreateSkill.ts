@@ -15,6 +15,8 @@ const useCreateSkill = () => {
     },
 
     onMutate: async ({ station_id }: CreateSkillArgs) => {
+      await queryClient.cancelQueries({ queryKey: ["stations"] });
+
       const user_id = await getUserId();
       if (!user_id) {
         throw new Error("No user id found");
@@ -29,12 +31,15 @@ const useCreateSkill = () => {
         return;
       }
 
+      const tempId = Math.floor(Math.random() * 1000000000);
+      const tempOrder = Math.floor(Math.random() * 1000000000);
+
       const newSkill = {
-        id: 0,
+        id: tempId,
         station_id,
         name: "",
         repetitions: 0,
-        order: 0,
+        order: tempOrder,
         user_id,
       };
 

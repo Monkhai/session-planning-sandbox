@@ -86,4 +86,4 @@ const DurationPicker = ({
   );
 };
 
-export default DurationPicker;
+export default React.memo(DurationPicker);

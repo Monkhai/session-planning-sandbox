@@ -7,18 +7,28 @@ const useUpdateSkill = () => {
 
   return useMutation({
     mutationKey: ["stations"],
-    mutationFn: async ({ skill_id, name, repetitions }: updateSkillArgs) => {
-      await updateSkill(skill_id, name, repetitions);
+    mutationFn: async ({
+      skill_id,
+      name,
+      repetitions,
+      description,
+    }: updateSkillArgs) => {
+      await updateSkill(skill_id, name, repetitions, description);
       return await getStations();
     },
 
-    onMutate: ({ skill_id, name, repetitions }: updateSkillArgs) => {
+    onMutate: ({
+      skill_id,
+      name,
+      repetitions,
+      description,
+    }: updateSkillArgs) => {
       const previousStations: Station[] =
         queryClient.getQueryData(["stations"]) || [];
       const newStations: Station[] = previousStations.map((station) => {
         const newSkills = station.skills.map((skill) => {
           if (skill.id === skill_id) {
-            return { ...skill, name, repetitions };
+            return { ...skill, name, repetitions, description };
           }
           return skill;
         });

@@ -32,7 +32,7 @@ export default function HomePage() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-start bg-background pb-10 pb-4">
+    <main className="flex min-h-screen flex-col items-center justify-start bg-background  pb-4">
       <NavBar />
 
       <div className="flex w-3/6 flex-col justify-center gap-8"></div>
@@ -40,16 +40,20 @@ export default function HomePage() {
       <StationResponseHandler stationResponse={stationResponse} />
       <Spacer />
 
-      <div className="sticky bottom-10 mt-10 flex gap-4">
-        <CreateNewStationButton onClick={handleCreateStation} />
-      </div>
+      <div className="sticky bottom-10 mt-10 flex w-full flex-row items-center justify-center gap-4 px-10 print:hidden">
+        <div className="flex flex-1 items-center justify-start">
+          <button
+            onClick={handleLogout}
+            className="rounded-[12px] bg-primary p-4 transition-all duration-150 active:scale-95  print:hidden"
+          >
+            <p className="text-center text-lg text-white">Logout</p>
+          </button>
+        </div>
 
-      <button
-        onClick={handleLogout}
-        className="absolute bottom-10 left-10 rounded-[12px] bg-primary p-4 transition-all duration-150 active:scale-95"
-      >
-        <p className="text-center text-lg text-white">Logout</p>
-      </button>
+        <CreateNewStationButton onClick={handleCreateStation} />
+
+        <Spacer />
+      </div>
     </main>
   );
 }

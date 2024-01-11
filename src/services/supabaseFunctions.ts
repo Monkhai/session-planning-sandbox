@@ -29,6 +29,7 @@ export const getStations = async (): Promise<Station[]> => {
                     name,
                     repetitions,
                     order,
+                    description,
                     user_id
                 )
             `,
@@ -63,6 +64,7 @@ export const getOneStation = async (station_id: number): Promise<Station> => {
                     name,
                     repetitions,
                     order,
+                    description,
                     user_id
                 )
             `,
@@ -192,11 +194,16 @@ export const updateSkill = async (
   skill_id: number,
   name: string,
   repetitions: number,
+  description: string,
 ) => {
   try {
     const { data, error } = await client
       .from("skills")
-      .update({ name: name, repetitions: repetitions })
+      .update({
+        name: name,
+        repetitions: repetitions,
+        description: description,
+      })
       .eq("id", skill_id);
 
     if (error) {

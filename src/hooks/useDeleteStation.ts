@@ -12,6 +12,8 @@ const useDeleteStation = () => {
     },
 
     onMutate: (station_id: number) => {
+      queryClient.cancelQueries({ queryKey: ["stations"] });
+
       const previousStations = queryClient.getQueryData(["stations"]) || [];
 
       queryClient.setQueryData(["stations"], (old: Station[] | undefined) => {

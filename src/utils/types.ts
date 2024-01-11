@@ -4,6 +4,7 @@ export type Skill = {
   name: string;
   repetitions: number;
   order: number;
+  description: string;
   user_id: string;
 };
 
@@ -31,4 +32,5 @@ export type updateSkillArgs = {
   skill_id: number;
   name: string;
   repetitions: number;
+  description: string;
 };

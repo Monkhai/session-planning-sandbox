@@ -1,9 +1,7 @@
 "use client";
-import { PiDotsThreeCircleFill } from "react-icons/pi";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { FaCirclePlus } from "react-icons/fa6";
-import { IoMdRemoveCircle } from "react-icons/io";
-import { IoCloseCircleSharp } from "react-icons/io5";
+import { PiDotsThreeCircleFill } from "react-icons/pi";
 import useCreateSkill from "~/hooks/useCreateSkill";
 import useDeleteSkill from "~/hooks/useDeleteSkill";
 import useDeleteStation from "~/hooks/useDeleteStation";
@@ -12,8 +10,7 @@ import useEditStationName from "~/hooks/useEditStationName";
 import { Station } from "~/utils/types";
 import DurationPicker from "./DurationPicker";
 import SkillRow from "./SkillRow";
-import Spacer from "./utility/Spacer";
-import { set } from "zod";
+import StationSettings from "./StationSettings";
 
 interface Props {
   station: Station;
@@ -24,20 +21,16 @@ const StationComponent = ({ station }: Props) => {
   const [duration, setDuration] = useState<string>("00:00:00");
   const [durationString, setDurationString] = useState<string | undefined>();
   const [stationName, setStationName] = useState<string>("");
-  const stationNameRef = React.useRef<HTMLInputElement>(null);
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
+  const [showDurationPicker, setShowDurationPicker] = useState<boolean>(false);
+  const [editSkills, setEditSkills] = useState<boolean>(false);
 
-  const { mutate: updateStationName, isPending: isPendingNameEdit } =
-    useEditStationName();
-  const { mutate: updateStationDuration, isPending: isPendindDurationEdit } =
-    useEditStationDuration();
-  const { mutate: createSkill, isPending: isPendingCreateSkill } =
-    useCreateSkill();
+  const stationNameRef = React.useRef<HTMLInputElement>(null);
 
-  const { mutate: deleteStation, isPending: isPendingDeleteStation } =
-    useDeleteStation();
-
-  const { isPending: isPendningDeleteSkill } = useDeleteSkill();
+  const { mutate: updateStationName } = useEditStationName();
+  const { mutate: updateStationDuration } = useEditStationDuration();
+  const { mutate: createSkill } = useCreateSkill();
+  const { mutate: deleteStation } = useDeleteStation();
 
   const convertDurationToString = (
     duration: string | null,
@@ -106,7 +99,7 @@ const StationComponent = ({ station }: Props) => {
     };
   }, [stationName, station]);
 
-  const handledurationChange = (duration: string) => {
+  const handledurationChange = useCallback((duration: string) => {
     setDuration(duration);
     if (duration) {
       updateStationDuration({
@@ -119,11 +112,11 @@ const StationComponent = ({ station }: Props) => {
         stationDuration: null,
       });
     }
-  };
+  }, []);
 
-  const onHideDurationPicker = () => {
+  const onHideDurationPicker = useCallback(() => {
     setHideDurationPicker(true);
-  };
+  }, []);
 
   const handleCreateSkill = async () => {
     createSkill({
@@ -136,8 +129,8 @@ const StationComponent = ({ station }: Props) => {
   };
 
   return (
-    <div className=" w-full">
-      <div className=" flex w-full flex-row items-center gap-2 px-4 py-2">
+    <div className="w-full py-2 print:py-1">
+      <div className=" flex w-full flex-row items-center gap-2 py-2 pl-4">
         <div className="w-full">
           <input
             value={stationName}
@@ -146,21 +139,23 @@ const StationComponent = ({ station }: Props) => {
             className="flex min-w-10 max-w-full bg-transparent text-lg font-bold outline-none active:outline-none"
             placeholder="Station Name"
           />
-          <button onClick={() => setHideDurationPicker(!hideDurationPicker)}>
-            <p
-              style={{
-                color: hideDurationPicker
-                  ? durationString
-                    ? "var(--color-text)"
-                    : "var(--color-gray)"
-                  : "var(--color-blue)",
-                fontWeight: hideDurationPicker ? "" : "bold",
-              }}
-              className="pl-2 text-sm font-semibold"
-            >
-              {durationString ? durationString : "Duration"}
-            </p>
-          </button>
+          {showDurationPicker && (
+            <button onClick={() => setHideDurationPicker(!hideDurationPicker)}>
+              <p
+                style={{
+                  color: hideDurationPicker
+                    ? durationString
+                      ? "var(--color-text)"
+                      : "var(--color-gray)"
+                    : "var(--color-blue)",
+                  fontWeight: hideDurationPicker ? "" : "bold",
+                }}
+                className="pl-2 text-sm font-semibold"
+              >
+                {durationString ? durationString : "Duration"}
+              </p>
+            </button>
+          )}
 
           <div
             className="absolute mt-2 w-80"
@@ -179,9 +174,8 @@ const StationComponent = ({ station }: Props) => {
           </div>
         </div>
 
-        <div className="flex flex-row">
+        <div className="relative left-4 flex flex-row print:hidden">
           <button
-            disabled={isPendingCreateSkill}
             onClick={handleCreateSkill}
             className="transition-all duration-150 active:scale-95"
           >
@@ -195,25 +189,22 @@ const StationComponent = ({ station }: Props) => {
             <PiDotsThreeCircleFill size={36} color={"gray"} />
           </button>
 
-          <div
-            className="absolute w-60"
-            style={{
-              transition: "all 0.150s ease-in-out",
-              scale: showEditModal ? 1 : 0,
-              opacity: showEditModal ? 1 : 0,
-              transformOrigin: "top left",
-            }}
-          >
-            <div className="w-full border-2 bg-white"> </div>
-          </div>
+          <StationSettings
+            setShowDurationPicker={setShowDurationPicker}
+            showEditModal={showEditModal}
+            setEditSkills={setEditSkills}
+            setShowEditModal={setShowEditModal}
+            handleDeleteStation={handleDeleteStation}
+          />
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-[10px]">
+      <div>
         {station.skills.map((skill, index) => (
           <SkillRow
-            isPendingDelete={isPendningDeleteSkill}
+            index={index}
             skill={skill}
+            editSkills={editSkills}
             key={skill.id}
             isLast={station.skills.length - 1 == index}
           />
@@ -223,4 +214,4 @@ const StationComponent = ({ station }: Props) => {
   );
 };
 
-export default StationComponent;
+export default React.memo(StationComponent);

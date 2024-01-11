@@ -12,22 +12,13 @@ const useCreateStation = () => {
     },
 
     onMutate: () => {
+      queryClient.cancelQueries({ queryKey: ["stations"] });
+
       const previousStations = queryClient.getQueryData(["stations"]) || [];
 
       queryClient.setQueryData(["stations"], (old: Station[] | undefined) => {
-        let tempId = 1;
-        let tempOrder = 1;
-
-        if (old !== undefined) {
-          if (old.length > 0) {
-            const lastStation = old[old.length - 1];
-
-            if (lastStation) {
-              tempId = lastStation.id + 1;
-              tempOrder = lastStation.order + 1;
-            }
-          }
-        }
+        const tempId = Math.floor(Math.random() * 1000000000);
+        const tempOrder = Math.floor(Math.random() * 1000000000);
 
         const newStation = {
           id: tempId,

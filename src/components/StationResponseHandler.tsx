@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 import client from "~/utils/supabaseClient";
 import { Station } from "~/utils/types";
 import StationComponent from "./Station";
+import React from "react";
 
 interface Props {
   stationResponse: UseQueryResult<Station[], Error>;
@@ -35,4 +36,4 @@ const StationResponseHandler = ({ stationResponse }: Props) => {
   return null;
 };
 
-export default StationResponseHandler;
+export default React.memo(StationResponseHandler);
