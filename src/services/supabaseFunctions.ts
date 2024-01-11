@@ -3,12 +3,17 @@ import client from "~/utils/supabaseClient";
 import { Station } from "~/utils/types";
 
 export const getUserId = async () => {
-  const { data } = await client.auth.getUser();
-  const user_id = data.user?.id;
-  if (!user_id) {
+  try {
+    const { data } = await client.auth.getUser();
+    const user_id = data.user?.id;
+    if (!user_id) {
+      throw new Error("No user id found");
+    }
+    return user_id;
+  } catch (error) {
+    console.log(error);
     throw new Error("No user id found");
   }
-  return user_id;
 };
 
 export const getStations = async (): Promise<Station[]> => {

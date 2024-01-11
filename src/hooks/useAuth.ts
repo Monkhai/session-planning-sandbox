@@ -14,7 +14,6 @@ export function useAuth(redirectIfNotAuth = true) {
         router.push("/login"); // Redirect to login if no session
       } else {
         if (redirectIfNotAuth) {
-          console.log("this is called");
           router.push("/home"); // Redirect to home if authenticated
         }
       }
