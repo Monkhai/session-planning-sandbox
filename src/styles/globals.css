@@ -51,6 +51,10 @@ h3 {
   @apply text-2xl;
 }
 
+h4 {
+  @apply text-xl;
+}
+
 .modal {
   @apply: z-10 flex w-80 flex-col gap-4 rounded-[10px] bg-white p-4 shadow-xl;
 }
