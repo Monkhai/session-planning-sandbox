@@ -4,6 +4,7 @@ import { IoIosMail } from "react-icons/io";
 import * as IGLogo from "../../public/instagram.png";
 import * as PrintTip from "../../public/howToPrint.png";
 import Spacer from "./utility/Spacer";
+import FormLink from "~/utils/FormLink";
 interface Props {
   showContact: boolean;
 }
@@ -18,26 +19,16 @@ const ContactMeModal = ({ showContact }: Props) => {
         transformOrigin: "bottom right",
         transition: "all 0.150s ease",
       }}
-      className="absolute bottom-10 right-5 flex w-[16rem] flex-col items-center rounded-[10px] bg-white p-4 shadow-xl"
+      className="absolute bottom-10 right-5 flex w-[16rem] flex-col items-center justify-center gap-4 rounded-[10px] bg-white p-4 shadow-xl"
     >
-      <h3 className="self-center text-center font-semibold">Contact Me</h3>
-
-      <div className="flex flex-row items-center justify-between">
-        <a type="email" href="mailto:yohaiwiener@gmail.com">
-          <IoIosMail size={70} color={"black"} />
+      <button className="self-center rounded-[10px] bg-primary p-4 text-white transition-all duration-150 active:scale-95">
+        <a target="_blank" rel="noopener noreferrer" href={FormLink}>
+          Provide Feedback
         </a>
-        <a
-          href="https://www.instagram.com/yohai_wiener"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image alt="Instagram logo" src={IGLogo} width={50} height={50} />
-        </a>
-      </div>
-
+      </button>
       <button
         onClick={() => dialogRef.current?.showModal()}
-        className="mt-4 self-center rounded-[10px] bg-primary p-4 text-white transition-all duration-150 active:scale-95"
+        className="self-center rounded-[10px] bg-primary p-4 text-white transition-all duration-150 active:scale-95"
       >
         Remind me how to print
       </button>

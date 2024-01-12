@@ -45,6 +45,7 @@ export default function HomePage() {
   };
 
   const handleSeenOnboard = async () => {
+    dialogRef.current?.close();
     try {
       const userId = await getUserId();
       const { error } = await client
@@ -60,8 +61,6 @@ export default function HomePage() {
       const e = error as Error;
       console.log(e.message);
     }
-
-    dialogRef.current?.close();
   };
 
   return (
