@@ -6,7 +6,8 @@ import { useEffect } from "react";
 import { getUserId } from "~/services/supabaseFunctions";
 import client from "~/utils/supabaseClient";
 
-export function useAuth(router: AppRouterInstance) {
+export function useAuth() {
+  const router = useRouter();
   useEffect(() => {
     getUserId().catch(() => router.replace("/login"));
 

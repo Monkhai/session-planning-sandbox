@@ -18,7 +18,7 @@ import client from "~/utils/supabaseClient";
 
 export default function HomePage() {
   const router = useRouter();
-  useAuth(router);
+  useAuth();
 
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [showContact, setShowContact] = useState(false);
