@@ -7,6 +7,8 @@ import NavBar from "~/components/NavBar";
 import introductionText from "~/utils/introductionText";
 import client from "~/utils/supabaseClient";
 import * as IGLogo from "../../../public/instagram.png";
+import { Auth } from "@supabase/auth-ui-react";
+import { ThemeSupa } from "@supabase/auth-ui-shared";
 
 const Login = () => {
   const router = useRouter();
@@ -47,7 +49,7 @@ const Login = () => {
           </div>
         </div>
         {/* <Spacer /> */}
-        {/* <div className="w-1/4">
+        <div className="w-1/4">
           <Auth
             onlyThirdPartyProviders
             appearance={{
@@ -65,7 +67,7 @@ const Login = () => {
             providers={["google"]}
             redirectTo="/home"
           />
-        </div> */}
+        </div>
         {/* <Spacer /> */}
       </section>
     </section>
