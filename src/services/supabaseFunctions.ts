@@ -176,10 +176,17 @@ export const uploadDrillStationMedia = async (
 ) => {
   const user_id = await getUserId();
 
+  const fileName = file.name.replace(/[^a-zA-Z0-9.]/g, "_");
+
   try {
-    await client.storage
+    const { error } = await client.storage
       .from("user-media")
-      .upload(`${user_id}/drills/${station_id}/${file.name}`, file);
+      .upload(`${user_id}/drills/${station_id}/${fileName}`, file);
+
+    if (error) {
+      console.log(error);
+      throw error;
+    }
   } catch (error) {
     throw error;
   }
@@ -412,6 +419,10 @@ export const deleteMedia = async (name: string, station_id: number) => {
     const { data, error } = await client.storage
       .from("user-media")
       .remove([`${user_id}/drills/${station_id}/${name}`]);
+
+    if (error) {
+      throw error;
+    }
   } catch (error) {
     throw error;
   }

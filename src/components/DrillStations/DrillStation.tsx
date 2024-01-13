@@ -33,6 +33,7 @@ const DrillStation = ({ station, isLast }: Props) => {
   const [showMedia, setShowMedia] = React.useState<boolean>(false);
   const [showComments, setShowComments] = React.useState<boolean>(false);
   const [editMedia, setEditMedia] = React.useState<boolean>(false);
+  const [showBigImage, setShowBigImage] = React.useState<boolean>(false);
 
   const inputRef = React.useRef<HTMLInputElement>(null);
   const descriptionRef = React.useRef<HTMLTextAreaElement>(null);
@@ -334,7 +335,7 @@ const DrillStation = ({ station, isLast }: Props) => {
                 accept="video/*, image/*"
               />
             </div>
-            <div className="flex h-[200px] w-full justify-center gap-10 rounded-[10px] bg-white px-4 py-4">
+            <div className="flex h-[200px] w-full items-center justify-start gap-10 rounded-[10px] bg-white px-4 py-4">
               {station.mediaUrls.map((media) => {
                 if (media.type == "image") {
                   return (
@@ -343,7 +344,8 @@ const DrillStation = ({ station, isLast }: Props) => {
                       className="flex flex-col items-center justify-center gap-4"
                     >
                       <Image
-                        className="h-32 w-60 rounded-[10px] border-black object-cover"
+                        onClick={() => setShowBigImage(true)}
+                        className="h-32 w-60 cursor-pointer rounded-[10px] border-black object-cover"
                         src={media.url}
                         alt="Image describing a drill"
                         width={media.dimensions.width}
@@ -356,6 +358,20 @@ const DrillStation = ({ station, isLast }: Props) => {
                         >
                           <IoMdRemoveCircle color={"red"} size={24} />
                         </button>
+                      )}
+                      {showBigImage && (
+                        <div
+                          onClick={() => setShowBigImage(false)}
+                          className="fixed inset-0 bottom-0 left-0 z-10 flex items-center justify-center bg-seperatorSecondary"
+                        >
+                          <Image
+                            className="h-4/5 w-4/5 rounded-[10px] object-contain"
+                            src={media.url}
+                            alt="Image describing a drill"
+                            width={media.dimensions.width}
+                            height={media.dimensions.height}
+                          />
+                        </div>
                       )}
                     </div>
                   );
