@@ -31,7 +31,6 @@ const StationHeader = ({
   durationString,
   handleDurationChange,
   hideDurationPicker,
-
   setHideDurationPicker,
   setStationName,
   stationName,
@@ -39,7 +38,7 @@ const StationHeader = ({
   showDuration,
 }: Props) => {
   return (
-    <div className=" flex min-h-20 flex-1 flex-row items-start justify-around gap-2 py-2">
+    <div className=" flex min-h-20 w-full flex-row items-start justify-around gap-2 py-2">
       <div className="relative bottom-1 flex flex-row print:hidden">
         <button
           className="transition-all duration-150 active:scale-95"

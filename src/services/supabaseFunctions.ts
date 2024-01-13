@@ -18,6 +18,7 @@ export const getUserId = async () => {
     return user_id;
   } catch (error) {
     console.log(error);
+    throw new Error("No user id found");
   }
 };
 

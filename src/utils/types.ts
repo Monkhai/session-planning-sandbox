@@ -75,6 +75,7 @@ export type updateSkillArgs = {
   name: string;
   repetitions: number;
   description: string;
+  station_id: number;
 };
 
 export type UpdateDrillStationArgs = {

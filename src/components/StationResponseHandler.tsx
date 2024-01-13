@@ -28,7 +28,7 @@ const StationResponseHandler = ({ error, isLoading, stations }: Props) => {
   }
   if (stations && stations.length > 0) {
     return (
-      <div className="w-full  pt-4">
+      <div className="flex w-full flex-col gap-4 pt-4">
         {stations.map((station, index) => {
           const isLast = stations.length - 1 === index;
           if (station.type === "skillStation") {

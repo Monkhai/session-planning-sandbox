@@ -19,28 +19,33 @@ const StationDuration = ({
   showDuration,
 }: Props) => {
   if (!showDuration) return null;
+  const durationStyleClasses = `
+  pl-2 
+  text-sm 
+  font-semibold
+  print:font-normal
+  print:text-black
+  print:text-xs
 
+  ${
+    hideDurationPicker
+      ? durationString
+        ? "text-[var(--color-text)]"
+        : "text-[var(--color-gray)]"
+      : "text-[var(--color-blue)] font-bold"
+  }
+`;
   if (showDuration) {
     return (
       <>
         <button onClick={() => setHideDurationPicker(!hideDurationPicker)}>
-          <p
-            style={{
-              color: hideDurationPicker
-                ? durationString
-                  ? "var(--color-text)"
-                  : "var(--color-gray)"
-                : "var(--color-blue)",
-              fontWeight: hideDurationPicker ? "" : "bold",
-            }}
-            className="pl-2 text-sm font-semibold"
-          >
+          <p className={durationStyleClasses}>
             {durationString ? durationString : "Duration"}
           </p>
         </button>
 
         <div
-          className="absolute mt-2 w-80"
+          className="absolute z-10 mt-2 w-80"
           style={{
             transition: "all 0.150s ease-in-out",
             scale: hideDurationPicker ? 0 : 1,

@@ -47,6 +47,7 @@ const SkillRow = ({ isLast, skill, editSkills, index }: Props) => {
           name: skillName,
           repetitions: reps,
           description: description,
+          station_id: skill.station_id,
         });
       }
     };
@@ -80,26 +81,29 @@ const SkillRow = ({ isLast, skill, editSkills, index }: Props) => {
   }, [skill, skillName, reps, description]);
 
   const handleDeleteSkill = () => {
-    deleteSkill(skill.id);
+    deleteSkill({ id: skill.id, station_id: skill.station_id });
   };
 
   return (
     <div className="flex flex-row">
       <div
         style={{
-          borderBottom: !isLast ? "0.5px solid var(--color-seperator)" : "none",
           borderBottomLeftRadius: isLast ? "10px" : "0px",
           borderBottomRightRadius: isLast ? "10px" : "0px",
           borderTopLeftRadius: index == 0 ? "10px" : "0px",
           borderTopRightRadius: index == 0 ? "10px" : "0px",
         }}
-        className="flex w-full  flex-row bg-white p-4 print:p-2"
+        className={
+          !isLast
+            ? "flex h-[50px] w-full flex-row border-b-[1px] border-b-seperator bg-white p-4 print:h-[35px] print:border-none  print:p-2 print:py-0"
+            : "flex h-[50px] w-full flex-row  bg-white p-4 print:h-[35px]  print:p-2 print:py-0"
+        }
       >
         <input
           ref={nameRef}
           value={skillName}
           onChange={(e) => setSkillName(e.target.value)}
-          className="flex-1 text-xl outline-none active:outline-none print:text-sm"
+          className="h-[20px] flex-1 text-xl outline-none active:outline-none print:text-xs"
           placeholder="Skill Name"
         />
         {showReps && (
@@ -107,13 +111,13 @@ const SkillRow = ({ isLast, skill, editSkills, index }: Props) => {
             ref={repsRef}
             value={reps ? reps : ""}
             onChange={(e) => setReps(Number(e.target.value))}
-            className="text-right text-xl outline-none active:outline-none"
+            className="h-[20px] text-right text-xl outline-none active:outline-none print:text-sm"
             placeholder="Reps"
           />
         )}
         {editSkills && (
           <button
-            className="ml-4 transition-all duration-150 active:scale-95"
+            className="ml-4 transition-all duration-150 active:scale-95 print:hidden"
             onClick={handleDeleteSkill}
           >
             <IoMdRemoveCircle color={"red"} size={24} />

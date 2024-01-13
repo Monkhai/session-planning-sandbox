@@ -6,20 +6,48 @@ const useDeleteSkill = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (id: number) => {
+    mutationFn: async ({
+      id,
+      station_id,
+    }: {
+      id: number;
+      station_id: number;
+    }) => {
       await deleteSkill(id);
       return await getAllStations();
     },
 
-    onMutate: (id: number) => {
+    onMutate: ({ id, station_id }: { id: number; station_id: number }) => {
       queryClient.cancelQueries({ queryKey: ["stations"] });
 
       const previousStations: SkillStationType[] =
         queryClient.getQueryData(["stations"]) ?? [];
 
+      const targetStation = previousStations.find(
+        (station) =>
+          station.id === station_id && station.type === "skillStation",
+      );
+
+      if (!targetStation) {
+        throw new Error("Station not found");
+      }
+
+      const targetSkill = targetStation.skills.find((skill) => skill.id === id);
+
+      if (!targetSkill) {
+        throw new Error("Skill not found");
+      }
+
+      const newStation = {
+        ...targetStation,
+        skills: targetStation.skills.filter((skill) => skill.id !== id),
+      };
+
       const newStations = previousStations.map((station) => {
-        const newSkills = station.skills.filter((skill) => skill.id !== id);
-        return { ...station, skills: newSkills };
+        if (station.id === station_id && station.type === "skillStation") {
+          return newStation;
+        }
+        return station;
       });
 
       queryClient.setQueryData(["stations"], newStations);
@@ -34,10 +62,11 @@ const useDeleteSkill = () => {
     },
 
     onError: (error, _, rollback) => {
+      console.log(error);
       if (rollback) {
         rollback();
-        return error;
       }
+      return error;
     },
   });
 };

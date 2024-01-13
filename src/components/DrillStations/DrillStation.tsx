@@ -251,7 +251,7 @@ const DrillStation = ({ station, isLast }: Props) => {
   //---------------------------------------------
 
   return (
-    <div className="print:py- relative flex w-full flex-row px-20 py-2">
+    <div className="relative flex w-full flex-row px-10 py-2 print:px-0">
       <div className="flex flex-1 px-2">
         <DrillStationHeader
           editMedia={editMedia}
@@ -275,15 +275,15 @@ const DrillStation = ({ station, isLast }: Props) => {
           setHideDurationPicker={setHideDurationPicker}
         />
       </div>
-      <div className="flex w-1/2 flex-col gap-4">
+      <div className="flex w-1/2 flex-col gap-4 print:w-3/5">
         <div className="flex flex-col gap-1">
-          <p className="text-md ml-4 text-gray">Description</p>
+          <p className="text-md ml-4 text-gray print:text-xs">Description</p>
           <div className="flex w-full rounded-[10px] bg-white p-4">
             <textarea
               ref={descriptionRef}
               value={description ? description : ""}
               onChange={(e) => setDescription(e.target.value)}
-              className="h-[120px] w-full resize-none text-wrap text-xl outline-none active:outline-none print:text-sm"
+              className="h-[120px] w-full resize-none text-wrap text-xl outline-none active:outline-none print:h-[80px]  print:text-sm"
               placeholder="Description"
               rows={5}
             />
@@ -292,13 +292,13 @@ const DrillStation = ({ station, isLast }: Props) => {
         {/*  */}
         {showComments && (
           <div className="flex flex-col gap-1">
-            <p className="text-md ml-4 text-gray">Comments</p>
+            <p className="text-md ml-4 text-gray print:text-xs">Comments</p>
             <div className="flex w-full rounded-[10px] bg-white p-4">
               <textarea
                 ref={commentsRef}
                 value={comments ? comments : ""}
                 onChange={(e) => setComments(e.target.value)}
-                className="h-[120px] w-full resize-none text-wrap text-xl outline-none active:outline-none print:text-sm"
+                className="resize-noneprint:h-[80px] h-[120px] w-full text-wrap text-xl outline-none active:outline-none print:text-sm "
                 placeholder="Comments"
               />
             </div>
@@ -306,7 +306,7 @@ const DrillStation = ({ station, isLast }: Props) => {
         )}
         {/*  */}
         {showMedia && (
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-1 print:hidden">
             <div className=" flex flex-1 flex-row items-center gap-2">
               <p className="text-md ml-4 text-gray">Media</p>
               <button

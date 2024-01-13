@@ -18,10 +18,14 @@ interface Props {
 const SkillStation = ({ station, isLast }: Props) => {
   const [hideDurationPicker, setHideDurationPicker] = useState(true);
   const [duration, setDuration] = useState<string>("00:00:00");
-  const [durationString, setDurationString] = useState<string | undefined>();
-  const [stationName, setStationName] = useState<string>("");
+  const [durationString, setDurationString] = useState<string | undefined>(
+    station.duration ? convertDurationToString(station.duration) : undefined,
+  );
+  const [stationName, setStationName] = useState<string>(station.name ?? "");
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
-  const [showDurationPicker, setShowDurationPicker] = useState<boolean>(false);
+  const [showDuration, setShowDuration] = useState<boolean>(
+    station.show_duration ?? false,
+  );
   const [editSkills, setEditSkills] = useState<boolean>(false);
 
   const stationNameRef = React.useRef<HTMLInputElement>(null);
@@ -35,12 +39,16 @@ const SkillStation = ({ station, isLast }: Props) => {
   }, [station.duration]);
 
   useEffect(() => {
-    setShowDurationPicker(station.show_duration);
+    setShowDuration(station.show_duration);
   }, [station.show_duration]);
 
   useEffect(() => {
     setStationName(station.name);
   }, [station.name]);
+
+  useEffect(() => {
+    setShowDuration(station.show_duration);
+  }, [station.show_duration]);
 
   useEffect(() => {
     const newDurationString = convertDurationToString(duration);
@@ -63,7 +71,7 @@ const SkillStation = ({ station, isLast }: Props) => {
           station_id: station.id,
           duration: duration,
           name: stationName,
-          show_duration: showDurationPicker,
+          show_duration: showDuration,
         });
       }
     };
@@ -87,20 +95,16 @@ const SkillStation = ({ station, isLast }: Props) => {
         station_id: station.id,
         duration: duration,
         name: stationName,
-        show_duration: showDurationPicker,
+        show_duration: showDuration,
       });
     } else {
       updateStation({
         station_id: station.id,
         duration: null,
         name: stationName,
-        show_duration: showDurationPicker,
+        show_duration: showDuration,
       });
     }
-  }, []);
-
-  const onHideDurationPicker = useCallback(() => {
-    setHideDurationPicker(true);
   }, []);
 
   const handleCreateSkill = async () => {
@@ -114,7 +118,7 @@ const SkillStation = ({ station, isLast }: Props) => {
   };
 
   const handleToggleDuration = (show: boolean) => {
-    setShowDurationPicker(show);
+    setShowDuration(show);
     updateStation({
       station_id: station.id,
       duration: duration,
@@ -124,8 +128,8 @@ const SkillStation = ({ station, isLast }: Props) => {
   };
 
   return (
-    <div className="relative flex w-full flex-row px-20 py-2 print:py-1">
-      <div className="flex flex-1 px-2">
+    <div className="relative z-0 flex w-full flex-row px-10 py-2 print:px-2 print:py-1">
+      <div className="flex flex-1">
         <StationHeader
           duration={duration}
           durationString={durationString}
@@ -134,7 +138,7 @@ const SkillStation = ({ station, isLast }: Props) => {
           setHideDurationPicker={setHideDurationPicker}
           setShowSettingsModal={setShowEditModal}
           setStationName={setStationName}
-          showDuration={showDurationPicker}
+          showDuration={showDuration}
           showSettingsModal={showEditModal}
           stationName={stationName}
           stationNameRef={stationNameRef}

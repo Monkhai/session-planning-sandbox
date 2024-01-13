@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import ReactDOM from "react-dom";
 import { IoCloseCircleSharp } from "react-icons/io5";
 import {
   convertDurationToNumberOfMinutes,
@@ -41,7 +42,7 @@ const DurationPicker = ({
   };
 
   return (
-    <div className="z-10 flex w-80 flex-col gap-4 rounded-[10px] bg-white p-4 shadow-xl">
+    <div className="z-50 flex w-80 flex-col gap-4 rounded-[10px] bg-white p-4 shadow-xl print:hidden">
       <div className="flex flex-row justify-between">
         <p className="font-semibold">Set Duration (in minutes)</p>
         <button onClick={hideDurationPicker}>
