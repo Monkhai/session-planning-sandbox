@@ -1,13 +1,14 @@
 export const onBoardText1 = "Welcome to the Session Sandbox!";
-export const onBoardText2 = "In the Session Sandbox, you can (for now...) :";
+export const onBoardText2 = "In the Session Sandbox, you can:";
 
 export const onBoardTextList = [
-  "Create Stations.",
-  "Customize stations with specific skills.",
+  "Create stations.",
+  "Add skill to stations.",
+  "Save drills with images and info.",
   "Print your session.",
 ];
 export const onBoardText3 =
-  "This sandox is a very simple proof of concept. It is quite buggy and limitted at the moment (and not ready to be used on mobile), but hopefully soon it will be a fully functional tool for you to use!";
+  "This sandox is a very simple proof of concept. It is very buggy and easy to break. Hopefully with your feedback it will become a fully functional tool for you to use!";
 
 export const onBoardText4 =
   "Check the help button on the bottom right for instruction on how to print and to provide feedback.";

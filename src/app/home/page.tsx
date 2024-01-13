@@ -77,7 +77,8 @@ export default function HomePage() {
       <Spacer />
 
       <div className="sticky bottom-10 mt-10 flex w-full flex-row items-center justify-center gap-4 px-10 print:hidden">
-        <LogoutButton handleLogout={handleLogout} />
+        {/* <LogoutButton handleLogout={handleLogout} /> */}
+        <Spacer />
         <CreateNewStationButton
           onCreateSkillStation={handleCreateSkillStation}
           onCreateDrillStation={handleCreateDrillStation}
