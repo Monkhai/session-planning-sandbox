@@ -24,6 +24,7 @@ input[type="number"] {
   --color-blue: #007aff;
   --color-gray: rgba(60, 60, 67, 0.6);
   --color-seperator: rgba(60, 60, 67, 0.36);
+  --color-seperator-secondary: rgba(60, 60, 67, 0.16);
   --color-text-primary: #000000;
   --color-text-input: rgba(118, 118, 128, 0.12);
 }

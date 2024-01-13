@@ -1,22 +1,20 @@
 "use client";
-import * as IGLogo from "../../../public/instagram.png";
-import { AiOutlineQuestionCircle } from "react-icons/ai";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import CreateNewStationButton from "~/components/CreateNewStationButton";
+import DrillStation from "~/components/DrillStations/DrillStation";
+import HelpButton from "~/components/HelpButton";
 import LogoutButton from "~/components/LogoutButton";
 import NavBar from "~/components/NavBar";
 import OnboardingDialog from "~/components/OnboardingDialog";
 import StationResponseHandler from "~/components/StationResponseHandler";
 import Spacer from "~/components/utility/Spacer";
-import useCreateStation from "~/hooks/useCreateStation";
-import useStations from "~/hooks/useStations";
+import { env } from "~/env";
+import useCreateSkillStation from "~/hooks/useCreateSkillStation";
+import useSkillStations from "~/hooks/useSkillStations";
+import { useUserSeenOnboard } from "~/hooks/useUserSeenOnboard";
 import { getUserId } from "~/services/supabaseFunctions";
 import client from "~/utils/supabaseClient";
-import { IoIosMail } from "react-icons/io";
-import Image from "next/image";
-import ContactMeModal from "~/components/ContactMeModal";
-import { useUserSeenOnboard } from "~/hooks/useUserSeenOnboard";
 
 export default function HomePage() {
   const router = useRouter();
@@ -24,16 +22,21 @@ export default function HomePage() {
   const [showContact, setShowContact] = useState(false);
   useUserSeenOnboard(dialogRef);
 
-  client.auth.getSession().then(({ data }) => {
-    if (!data.session) {
-      client.auth.signOut();
-      router.push("/login");
-    }
-  });
+  client.auth
+    .getSession()
+    .then(({ data }) => {
+      if (!data.session) {
+        client.auth.signOut();
+        router.push("/login");
+      }
+    })
+    .catch((error) => {
+      console.log("error");
+    });
 
-  const stationResponse = useStations();
+  const stationResponse = useSkillStations();
 
-  const { mutate: createStation } = useCreateStation();
+  const { mutate: createStation } = useCreateSkillStation();
 
   const handleCreateStation = async () => {
     createStation();
@@ -69,22 +72,27 @@ export default function HomePage() {
 
       <StationResponseHandler stationResponse={stationResponse} />
 
+      <DrillStation
+        station={{
+          comments: "",
+          description: "",
+          duration: "",
+          id: 1,
+          mediaUrls: [],
+          name: "",
+          order: 1,
+          show_duration: true,
+          type: "drillStation",
+          user_id: env.NEXT_PUBLIC_STATIC_USER_ID,
+        }}
+      />
+
       <Spacer />
 
       <div className="sticky bottom-10 mt-10 flex w-full flex-row items-center justify-center gap-4 px-10 print:hidden">
         <LogoutButton handleLogout={handleLogout} />
         <CreateNewStationButton onClick={handleCreateStation} />
-        <div className="relative flex flex-1 items-center justify-end">
-          <div className="relative flex items-center justify-center">
-            <button
-              onClick={() => setShowContact(!showContact)}
-              className="active:scale-95"
-            >
-              <AiOutlineQuestionCircle size={30} color={"var(--color-blue)"} />
-            </button>
-            <ContactMeModal showContact={showContact} />
-          </div>
-        </div>
+        <HelpButton setShowContact={setShowContact} showContact={showContact} />
       </div>
 
       <OnboardingDialog

@@ -7,7 +7,7 @@ export const onBoardTextList = [
   "Print your session.",
 ];
 export const onBoardText3 =
-  "This sandox is a very simple proof of concept. It is quite buggy and limitted at the moment but hopefully soon it will be a fully functional tool for you to use!";
+  "This sandox is a very simple proof of concept. It is quite buggy and limitted at the moment (and not ready to be used on mobile), but hopefully soon it will be a fully functional tool for you to use!";
 
 export const onBoardText4 =
   "Check the help button on the bottom right for instruction on how to print and to provide feedback.";

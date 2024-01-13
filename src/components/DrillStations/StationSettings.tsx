@@ -2,36 +2,38 @@ import React from "react";
 import { IoCloseCircleSharp } from "react-icons/io5";
 
 interface Props {
-  showEditModal: boolean;
-  setShowEditModal: React.Dispatch<React.SetStateAction<boolean>>;
+  showSettingsModal: boolean;
+  setShowSettingsModal: React.Dispatch<React.SetStateAction<boolean>>;
   setEditSkills: React.Dispatch<React.SetStateAction<boolean>>;
   handleDeleteStation: () => void;
-  setShowDurationPicker: React.Dispatch<React.SetStateAction<boolean>>;
+  onToggleDuration: (show: boolean) => void;
+  showDuration: boolean;
 }
 
 const StationSettings = ({
   handleDeleteStation,
-  setShowEditModal,
+  showDuration,
+  setShowSettingsModal,
   setEditSkills,
-  showEditModal,
-  setShowDurationPicker,
+  showSettingsModal,
+  onToggleDuration,
 }: Props) => {
   return (
     <div className="z-10">
       <div
-        className="absolute right-4 top-10 w-80"
+        className="absolute left-4 top-10 w-80"
         style={{
           transition: "all 0.150s ease-in-out",
-          scale: showEditModal ? 1 : 0,
-          opacity: showEditModal ? 1 : 0,
-          transformOrigin: "top right",
+          scale: showSettingsModal ? 1 : 0,
+          opacity: showSettingsModal ? 1 : 0,
+          transformOrigin: "top left",
         }}
       >
         <div className="flex w-full flex-col items-start gap-2 rounded-[10px] bg-white p-4 shadow-xl">
           <div className="flex w-full flex-1 flex-row justify-between pb-2">
-            <h2 className="font-lg flex-1 font-semibold">Station Settings</h2>
+            <h3 className="font-lg flex-1 font-semibold">Station Settings</h3>
             <button
-              onClick={() => setShowEditModal(false)}
+              onClick={() => setShowSettingsModal(false)}
               className="transition-all duration-150 active:scale-95"
             >
               <IoCloseCircleSharp size={24} color={"var(--color-blue)"} />
@@ -40,7 +42,8 @@ const StationSettings = ({
           <div className="flex w-full flex-1 flex-row items-center justify-between pr-1">
             <p className="">Show Duration</p>
             <input
-              onChange={(e) => setShowDurationPicker(e.target.checked)}
+              onChange={(e) => onToggleDuration(e.target.checked)}
+              checked={showDuration}
               className="h-4 w-4"
               type="checkbox"
               name="showDuration"
@@ -71,4 +74,4 @@ const StationSettings = ({
   );
 };
 
-export default StationSettings;
+export default React.memo(StationSettings);

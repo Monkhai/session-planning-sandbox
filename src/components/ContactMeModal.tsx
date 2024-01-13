@@ -40,7 +40,7 @@ const ContactMeModal = ({ showContact }: Props) => {
         <div className="flex h-full flex-1 flex-col items-center justify-start">
           <h4 className="w-3/4">
             After clicking <b>ctrl + P</b> or <b>cmd + P</b> make sure to
-            unselect "Headers and Footers" and select "Background Graphics"
+            unselect "Headers and Footers".
           </h4>
           <Image src={PrintTip} alt="How to print" />
           <Spacer />

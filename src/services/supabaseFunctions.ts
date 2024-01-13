@@ -1,6 +1,11 @@
 import { PostgrestSingleResponse } from "@supabase/supabase-js";
 import client from "~/utils/supabaseClient";
-import { Station } from "~/utils/types";
+import {
+  DrillStationNoUrls,
+  SkillStationType,
+  drillStationType,
+  UpdateDrillStationArgs,
+} from "~/utils/types";
 
 export const getUserId = async () => {
   try {
@@ -16,11 +21,11 @@ export const getUserId = async () => {
   }
 };
 
-export const getStations = async (): Promise<Station[]> => {
+export const getSkillStations = async (): Promise<SkillStationType[]> => {
   const user_id = await getUserId();
   try {
-    const response: PostgrestSingleResponse<Station[]> = await client
-      .from("stations")
+    const response: PostgrestSingleResponse<SkillStationType[]> = await client
+      .from("skill_stations")
       .select(
         `
                 id,
@@ -28,6 +33,8 @@ export const getStations = async (): Promise<Station[]> => {
                 duration,
                 order,
                 user_id,
+                show_duration,
+                type,
                 skills (
                   station_id,
                     id,
@@ -52,73 +59,16 @@ export const getStations = async (): Promise<Station[]> => {
   }
 };
 
-export const getOneStation = async (station_id: number): Promise<Station> => {
-  try {
-    const response: PostgrestSingleResponse<Station[]> = await client
-      .from("stations")
-      .select(
-        `
-                id,
-                name,
-                duration,
-                order,
-                user_id,
-                skills (
-                  station_id,
-                    id,
-                    name,
-                    repetitions,
-                    order,
-                    description,
-                    user_id
-                )
-            `,
-      )
-      .eq("id", station_id);
-
-    if (response.error) {
-      throw response.error;
-    }
-    if (response.data[0]) {
-      return response.data[0];
-    } else {
-      throw new Error("No station found");
-    }
-  } catch (error) {
-    throw error;
-  }
-};
-
-//-----------------------------------------------------
-//-----------------------------------------------------
-
-export const updateStationName = async (
-  station_id: number,
-  stationName: string,
-) => {
-  try {
-    const { data, error } = await client
-      .from("stations")
-      .update({ name: stationName })
-      .eq("id", station_id);
-
-    if (error) {
-      throw error;
-    }
-    return data;
-  } catch (error) {
-    throw error;
-  }
-};
-
-export const updateStationDuration = async (
+export const updateSkillStation = async (
   station_id: number,
   duration: string | null,
+  name: string,
+  show_duration: boolean,
 ) => {
   try {
     const { data, error } = await client
-      .from("stations")
-      .update({ duration: duration })
+      .from("skill_stations")
+      .update({ duration: duration, name: name, show_duration: show_duration })
       .eq("id", station_id);
 
     if (error) {
@@ -130,10 +80,10 @@ export const updateStationDuration = async (
   }
 };
 
-export const deleteStation = async (station_id: number) => {
+export const deleteSkillStation = async (station_id: number) => {
   try {
     const { data, error } = await client
-      .from("stations")
+      .from("skill_stations")
       .delete()
       .eq("id", station_id);
 
@@ -146,13 +96,13 @@ export const deleteStation = async (station_id: number) => {
   }
 };
 
-export const createStation = async () => {
+export const createSkillStation = async () => {
   const user_id = await getUserId();
 
   try {
     const { data, error } = await client
-      .from("stations")
-      .insert([{ name: "", user_id: user_id }]);
+      .from("skill_stations")
+      .insert([{ name: "", user_id: user_id, order: 0 }]);
 
     if (error) {
       throw error;
@@ -218,4 +168,212 @@ export const updateSkill = async (
   } catch (error) {
     throw error;
   }
+};
+
+export const uploadDrillStationMedia = async (
+  station_id: number,
+  file: File,
+) => {
+  const user_id = await getUserId();
+
+  try {
+    await client.storage
+      .from("user-media")
+      .upload(`${user_id}/drills/${station_id}/${file.name}`, file);
+  } catch (error) {
+    throw error;
+  }
+};
+
+// ------------------ Drill Stations ------------------
+// ------------------ Drill Stations ------------------
+// ------------------ Drill Stations ------------------
+export const getDrillStationMedia = async () => {
+  const user_id = await getUserId();
+
+  try {
+    const { data: folderList, error } = await client.storage
+      .from("user-media")
+      .list(`${user_id}/drills`);
+
+    if (error) {
+      throw error;
+    }
+    if (folderList) {
+      const foldersWithFilesArray = await Promise.all(
+        folderList.map(async (folder) => {
+          const { data: fileList, error } = await client.storage
+            .from("user-media")
+            .list(`${user_id}/drills/${folder.name}`);
+
+          if (error) {
+            throw error;
+          }
+
+          const nameArray = fileList.map((file) => {
+            return {
+              name: file.name,
+              type: file.metadata.mimetype.split("/")[0] as string,
+            };
+          });
+
+          return { folderId: folder.name, mediaList: nameArray };
+        }),
+      );
+
+      const foldersWithSignedUrls = await Promise.all(
+        foldersWithFilesArray.map(async (folder) => {
+          const signedUrls = await Promise.all(
+            folder.mediaList.map(async (file) => {
+              const { data: signedUrl, error } = await client.storage
+                .from("user-media")
+                .createSignedUrl(
+                  `${user_id}/drills/${folder.folderId}/${file.name}`,
+                  120,
+                );
+              if (error) {
+                throw error;
+              }
+              return { url: signedUrl.signedUrl, type: file.type };
+            }),
+          );
+          return { drill_id: Number(folder.folderId), signedUrls: signedUrls };
+        }),
+      );
+      return foldersWithSignedUrls;
+    } else {
+      throw new Error("No media found");
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+//------------------ Drill Stations ------------------
+//------------------ Drill Stations ------------------
+//------------------ Drill Stations ------------------
+//------------------ Drill Stations ------------------
+
+export const getDrillStations = async (): Promise<drillStationType[]> => {
+  const user_id = await getUserId();
+  try {
+    const {
+      data: drillStationsNoMedia,
+      error,
+    }: PostgrestSingleResponse<DrillStationNoUrls[]> = await client
+      .from("drill_stations")
+      .select(
+        `
+                id,
+                user_id,
+                name,
+                duration,
+                show_duration,
+                description,
+                comments,
+                order,
+                type,
+                show_media,
+                show_comments
+            `,
+      )
+      .order("order", { ascending: true })
+      .eq("user_id", user_id);
+
+    if (error) {
+      throw error;
+    }
+
+    const drillStationMedia = await getDrillStationMedia();
+
+    const drillStations: drillStationType[] = drillStationsNoMedia.map(
+      (station) => {
+        const media = drillStationMedia.find(
+          (media) => media.drill_id === station.id,
+        );
+        if (media) {
+          return { ...station, mediaUrls: media.signedUrls };
+        } else {
+          return { ...station, mediaUrls: [] };
+        }
+      },
+    );
+
+    return drillStations;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const updateDrillStation = async ({
+  comments,
+  despcription,
+  duration,
+  name,
+  show_duration,
+  station_id,
+}: UpdateDrillStationArgs) => {
+  try {
+    const { data, error } = await client
+      .from("drill_stations")
+      .update({
+        duration: duration,
+        name: name,
+        show_duration: show_duration,
+        description: despcription,
+        comments: comments,
+      })
+      .eq("id", station_id);
+
+    if (error) {
+      throw error;
+    }
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const deleteDrillStation = async (station_id: number) => {
+  try {
+    const { data, error } = await client
+      .from("drill_stations")
+      .delete()
+      .eq("id", station_id);
+
+    if (error) {
+      throw error;
+    }
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const createDrillStation = async (order: number) => {
+  const user_id = await getUserId();
+
+  try {
+    const { data, error } = await client
+      .from("drill_stations")
+      .insert([{ name: "", user_id: user_id, order: order }]);
+
+    if (error) {
+      throw error;
+    }
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getAllStations = async () => {
+  const skillStations = await getSkillStations();
+  const drillStations = await getDrillStations();
+
+  const stations = [...skillStations, ...drillStations];
+
+  stations.sort((a, b) => a.order - b.order);
+
+  return stations;
 };

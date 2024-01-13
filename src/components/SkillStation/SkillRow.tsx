@@ -6,11 +6,11 @@ import {
 } from "react-icons/io5";
 import useDeleteSkill from "~/hooks/useDeleteSkill";
 import useUpdateSkill from "~/hooks/useUpdateSkill";
-import { Skill } from "~/utils/types";
+import { SkillType } from "~/utils/types";
 
 interface Props {
   isLast?: boolean;
-  skill: Skill;
+  skill: SkillType;
   editSkills?: boolean;
   index: number;
 }
@@ -127,7 +127,7 @@ const SkillRow = ({ isLast, skill, editSkills, index }: Props) => {
         >
           <IoInformationCircleOutline color={"var(--color-blue)"} size={28} />
         </button>
-
+        {/* description modal */}
         <div
           className="absolute left-10 w-80"
           style={{
@@ -139,7 +139,7 @@ const SkillRow = ({ isLast, skill, editSkills, index }: Props) => {
         >
           <div className="z-10 flex w-80 flex-col gap-4 rounded-[10px] bg-white p-4 shadow-xl">
             <div className="flex flex-row ">
-              <h2 className="flex-1 font-semibold">Description</h2>
+              <h3 className="flex-1 font-semibold">Description</h3>
               <button onClick={() => setShowInfo(false)}>
                 <IoCloseCircleSharp size={24} color={"var(--color-blue)"} />
               </button>

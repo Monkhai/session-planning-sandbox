@@ -1,13 +1,16 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteStation, getStations } from "~/services/supabaseFunctions";
-import { Station } from "~/utils/types";
+import {
+  deleteSkillStation,
+  getSkillStations,
+} from "~/services/supabaseFunctions";
+import { SkillStationType } from "~/utils/types";
 
-const useDeleteStation = () => {
+const useDeleteSkillStation = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (station_id: number) => {
-      await deleteStation(station_id);
-      const data = await getStations();
+      await deleteSkillStation(station_id);
+      const data = await getSkillStations();
       return data;
     },
 
@@ -16,13 +19,18 @@ const useDeleteStation = () => {
 
       const previousStations = queryClient.getQueryData(["stations"]) || [];
 
-      queryClient.setQueryData(["stations"], (old: Station[] | undefined) => {
-        if (old === undefined) {
-          return [];
-        }
+      queryClient.setQueryData(
+        ["stations"],
+        (old: SkillStationType[] | undefined) => {
+          if (old === undefined) {
+            return [];
+          }
 
-        return old.filter((station: Station) => station.id !== station_id);
-      });
+          return old.filter(
+            (station: SkillStationType) => station.id !== station_id,
+          );
+        },
+      );
 
       return () => queryClient.setQueryData(["stations"], previousStations);
     },
@@ -41,4 +49,4 @@ const useDeleteStation = () => {
   });
 };
 
-export default useDeleteStation;
+export default useDeleteSkillStation;

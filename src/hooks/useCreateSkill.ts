@@ -1,17 +1,17 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   createSkill,
-  getStations,
+  getSkillStations,
   getUserId,
 } from "~/services/supabaseFunctions";
-import { CreateSkillArgs, Station } from "~/utils/types";
+import { CreateSkillArgs, SkillStationType } from "~/utils/types";
 const useCreateSkill = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async ({ station_id }: CreateSkillArgs) => {
       await createSkill(station_id);
-      return await getStations();
+      return await getSkillStations();
     },
 
     onMutate: async ({ station_id }: CreateSkillArgs) => {
@@ -22,7 +22,7 @@ const useCreateSkill = () => {
         throw new Error("No user id found");
       }
 
-      const previousStations: Station[] =
+      const previousStations: SkillStationType[] =
         queryClient.getQueryData(["stations"]) || [];
       const parentStation = previousStations.find(
         (station) => station.id === station_id,

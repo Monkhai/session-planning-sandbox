@@ -10,6 +10,7 @@ export default {
         background: "var(--color-background)",
         gray: "var(--color-gray)",
         seperator: "var(--color-seperator)",
+        seperatorSecondary: "var(--color-seperator-secondary)",
         textInput: "var(--color-text-input)",
         darkBackground: "var(--color-dark-background)",
       },
