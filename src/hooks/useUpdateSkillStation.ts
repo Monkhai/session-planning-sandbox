@@ -30,7 +30,7 @@ const useUpdateSkillStation = () => {
         queryClient.getQueryData(["stations"]) || [];
 
       const newStations = previousStations.map((station) => {
-        if (station.id === station_id) {
+        if (station.id === station_id && station.type === "skillStation") {
           return {
             ...station,
             duration: duration,

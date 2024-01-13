@@ -21,7 +21,7 @@ const useDeleteDrillStation = () => {
         queryClient.getQueryData(["stations"]) || [];
 
       const newStations = previousStations.filter((station) => {
-        return station.id !== station_id;
+        return station.id !== station_id || station.type !== "drillStation";
       });
 
       queryClient.setQueryData(["stations"], newStations);

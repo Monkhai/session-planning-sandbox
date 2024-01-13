@@ -48,7 +48,7 @@ const useUpdateDrillStation = () => {
         queryClient.getQueryData(["stations"]) || [];
 
       const newStations: Station[] = previousStations.map((station) => {
-        if (station.id === station_id) {
+        if (station.id === station_id && station.type === "drillStation") {
           return {
             ...station,
             comments: comments,

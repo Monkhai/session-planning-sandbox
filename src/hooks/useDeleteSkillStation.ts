@@ -20,7 +20,7 @@ const useDeleteSkillStation = () => {
         queryClient.getQueryData(["stations"]) || [];
 
       const newStations = previousStations.filter((station) => {
-        return station.id !== station_id && station.type !== "skillStation";
+        return station.type !== "skillStation" || station.id !== station_id;
       });
 
       queryClient.setQueryData(["stations"], newStations);
