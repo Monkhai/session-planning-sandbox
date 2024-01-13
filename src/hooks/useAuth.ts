@@ -34,5 +34,5 @@ export function useAuth(redirectIfNotAuth = true) {
     return () => {
       authListener.subscription.unsubscribe();
     };
-  }, [router]);
+  }, []);
 }

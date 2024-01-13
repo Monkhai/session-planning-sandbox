@@ -23,6 +23,7 @@ export const useUserSeenOnboard = (dialogRef: RefObject<HTMLDialogElement>) => {
         }
       }
     };
+
     userSeenOnboard();
   }, []);
 };

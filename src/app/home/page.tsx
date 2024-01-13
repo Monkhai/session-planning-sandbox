@@ -39,7 +39,7 @@ export default function HomePage() {
   };
 
   const handleLogout = async () => {
-    await client.auth.signOut();
+    await client.auth.signOut().catch(console.error);
     router.replace("/login");
   };
 
