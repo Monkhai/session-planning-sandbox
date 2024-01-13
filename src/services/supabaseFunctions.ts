@@ -6,6 +6,7 @@ import {
   drillStationType,
   UpdateDrillStationArgs,
 } from "~/utils/types";
+import { getIamgeDimensions } from "./getImageDimension";
 
 export const getUserId = async () => {
   try {
@@ -211,6 +212,7 @@ export const getDrillStationMedia = async () => {
           }
 
           const nameArray = fileList.map((file) => {
+            // console.log(file.metadata);
             return {
               name: file.name,
               type: file.metadata.mimetype.split("/")[0] as string,
@@ -234,7 +236,14 @@ export const getDrillStationMedia = async () => {
               if (error) {
                 throw error;
               }
-              return { url: signedUrl.signedUrl, type: file.type };
+
+              const dimensions = await getIamgeDimensions(signedUrl.signedUrl);
+
+              return {
+                url: signedUrl.signedUrl,
+                type: file.type,
+                dimensions: dimensions,
+              };
             }),
           );
           return { drill_id: Number(folder.folderId), signedUrls: signedUrls };

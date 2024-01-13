@@ -29,7 +29,7 @@ export type drillStationType = {
   comments: string;
   show_comments: boolean;
   order: number;
-  mediaUrls: { url: string; type: string }[];
+  mediaUrls: SignedUrls[];
   show_media: boolean;
   type: "SkillStation" | "drillStation";
 };
@@ -48,9 +48,15 @@ export type DrillStationNoUrls = {
   type: "SkillStation" | "drillStation";
 };
 
+export type SignedUrls = {
+  url: string;
+  type: string;
+  dimensions: ImageDimensions;
+};
+
 export type SignedUrlList = {
   drill_id: number;
-  signedUrls: { url: string; type: string }[];
+  signedUrls: SignedUrls[];
 };
 
 export type CreateStationArgs = {};
@@ -90,3 +96,5 @@ export type UpdateDrillStationArgs = {
 };
 
 export type Station = SkillStationType | drillStationType;
+
+export type ImageDimensions = { height: number; width: number };

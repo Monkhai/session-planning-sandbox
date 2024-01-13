@@ -1,20 +1,14 @@
-import React, { useEffect } from "react";
-import StationHeader from "../StationHeader";
-import Spacer from "../utility/Spacer";
-import client from "~/utils/supabaseClient";
-import {
-  getDrillStationMedia,
-  getUserId,
-  uploadDrillStationMedia,
-} from "~/services/supabaseFunctions";
-import { FaCirclePlus } from "react-icons/fa6";
-import useUpdateDrillStation from "~/hooks/useUpdateDrillStation";
-import { drillStationType } from "~/utils/types";
-import useDeleteDrillStation from "~/hooks/useDeleteDrillStation";
-import { set } from "zod";
-import DrillStationHeader from "./DrillStationHeader";
-import { convertDurationToString } from "~/services/DurationFunctions";
 import Image from "next/image";
+import React, { useEffect } from "react";
+import { FaCirclePlus } from "react-icons/fa6";
+import useDeleteDrillStation from "~/hooks/useDeleteDrillStation";
+import useUpdateDrillStation from "~/hooks/useUpdateDrillStation";
+import { convertDurationToString } from "~/services/DurationFunctions";
+import { drillStationType } from "~/utils/types";
+import Spacer from "../utility/Spacer";
+import DrillStationHeader from "./DrillStationHeader";
+import { getIamgeDimensions } from "~/services/getImageDimension";
+import { d } from "node_modules/@tanstack/react-query-devtools/build/modern/devtools-0Hr18ibL";
 
 interface Props {
   station: drillStationType;
@@ -37,8 +31,8 @@ const DrillStation = ({ station }: Props) => {
   const [showComments, setShowComments] = React.useState<boolean>(false);
 
   const inputRef = React.useRef<HTMLInputElement>(null);
-  const descriptionRef = React.useRef<HTMLInputElement>(null);
-  const commentsRef = React.useRef<HTMLInputElement>(null);
+  const descriptionRef = React.useRef<HTMLTextAreaElement>(null);
+  const commentsRef = React.useRef<HTMLTextAreaElement>(null);
 
   const { mutate: updateDrillStation } = useUpdateDrillStation();
   const { mutate: deleteDrillStation } = useDeleteDrillStation();
@@ -73,6 +67,12 @@ const DrillStation = ({ station }: Props) => {
       show_comments: showComments,
       show_media: showMedia,
     });
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const file = e.target.files[0];
+    }
   };
 
   useEffect(() => {
@@ -177,6 +177,11 @@ const DrillStation = ({ station }: Props) => {
     showComments,
     showMedia,
   ]);
+
+  //---------------------------------------------
+  //---------------------------------------------
+  //---------------------------------------------
+
   return (
     <div className="print:py- relative flex w-full flex-row px-20 py-2">
       <div className="flex flex-1 px-2">
@@ -199,25 +204,26 @@ const DrillStation = ({ station }: Props) => {
       <div className="flex w-1/2 flex-col gap-4">
         <div className="flex flex-col gap-1">
           <p className="text-md ml-4 text-gray">Description</p>
-          <div className="flex w-full rounded-[10px] bg-white py-4 pl-4">
-            <input
+          <div className="flex w-full rounded-[10px] bg-white p-4">
+            <textarea
               ref={descriptionRef}
-              value={description}
+              value={description ? description : ""}
               onChange={(e) => setDescription(e.target.value)}
-              className="flex-1 text-xl outline-none active:outline-none print:text-sm"
+              className="h-[120px] w-full resize-none text-wrap text-xl outline-none active:outline-none print:text-sm"
               placeholder="Description"
+              rows={5}
             />
           </div>
         </div>
 
         <div className="flex flex-col gap-1">
           <p className="text-md ml-4 text-gray">Comments</p>
-          <div className="flex w-full rounded-[10px] bg-white py-4 pl-4">
-            <input
+          <div className="flex w-full rounded-[10px] bg-white p-4">
+            <textarea
               ref={commentsRef}
-              value={comments}
+              value={comments ? comments : ""}
               onChange={(e) => setComments(e.target.value)}
-              className="flex-1 text-xl outline-none active:outline-none print:text-sm"
+              className="h-[120px] w-full resize-none text-wrap text-xl outline-none active:outline-none print:text-sm"
               placeholder="Comments"
             />
           </div>
@@ -226,10 +232,22 @@ const DrillStation = ({ station }: Props) => {
           <div className=" flex flex-1 flex-row items-center gap-2">
             <p className="text-md ml-4 text-gray">Media</p>
             <button
-              className="transition-all duration-150 active:scale-95"
+              disabled={station.mediaUrls.length > 3}
+              className={
+                station.mediaUrls.length < 3
+                  ? "transition-all duration-150 active:scale-95"
+                  : ""
+              }
               onClick={() => inputRef.current?.click()}
             >
-              <FaCirclePlus color={"var(--color-blue)"} size={20} />
+              <FaCirclePlus
+                color={
+                  station.mediaUrls.length < 3
+                    ? "var(--color-blue)"
+                    : "var(--color-gray)"
+                }
+                size={20}
+              />
             </button>
             <input
               ref={inputRef}
@@ -243,23 +261,24 @@ const DrillStation = ({ station }: Props) => {
             {station.mediaUrls.map((media) => {
               if (media.type == "image") {
                 return (
-                  <div className="overflow-hidden rounded-xl">
-                    <Image
-                      className="h-40 min-w-20 max-w-60 overflow-hidden rounded-3xl border-2 border-black object-contain"
-                      src={media.url}
-                      width={4000}
-                      height={4000}
-                      alt="this is a random thing"
-                    />
-                  </div>
+                  <Image
+                    className="max-h-32 min-w-10 max-w-60 overflow-hidden rounded-3xl border-2 border-black object-cover object-center"
+                    src={media.url}
+                    alt="this is a random thing"
+                    width={media.dimensions.width}
+                    height={media.dimensions.height}
+                    key={media.url}
+                    priority={true}
+                  />
                 );
               } else {
                 return (
                   <video
-                    className="max-h-40 min-w-20 max-w-60  overflow-hidden rounded-[10px] border-2 object-contain"
+                    className="max-h-32 min-w-20 max-w-60  overflow-hidden rounded-[10px] object-contain"
                     src={media.url}
                     controls
                     muted
+                    key={media.url}
                   />
                 );
               }
