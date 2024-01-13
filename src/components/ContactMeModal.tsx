@@ -19,14 +19,14 @@ const ContactMeModal = ({ showContact }: Props) => {
       }}
       className="absolute bottom-10 right-5 h-32 flex-col items-center justify-center overflow-hidden rounded-[10px] bg-white shadow-xl"
     >
-      <button className="h-16 w-60 bg-white transition-all duration-150 hover:bg-seperatorSecondary">
+      <button className="h-16 w-60 bg-white text-primary transition-all duration-150 hover:bg-seperatorSecondary">
         <a target="_blank" rel="noopener noreferrer" href={FormLink}>
           Provide Feedback
         </a>
       </button>
       <div className="absolute h-[1px] w-full bg-seperatorSecondary" />
       <button
-        className="h-16 w-60 bg-white transition-all duration-150 hover:bg-seperatorSecondary"
+        className="h-16 w-60 bg-white text-primary transition-all duration-150 hover:bg-seperatorSecondary"
         onClick={() => dialogRef.current?.showModal()}
       >
         Remind me how to print
