@@ -8,6 +8,8 @@ export type SkillType = {
   user_id: string;
 };
 
+export type StationType = "skillStation" | "drillStation";
+
 export type SkillStationType = {
   id: number;
   name: string;
@@ -16,22 +18,7 @@ export type SkillStationType = {
   skills: SkillType[];
   user_id: string;
   show_duration: boolean;
-  type: "SkillStation" | "drillStation";
-};
-
-export type drillStationType = {
-  id: number;
-  user_id: string;
-  name: string;
-  duration: string;
-  show_duration: boolean;
-  description: string;
-  comments: string;
-  show_comments: boolean;
-  order: number;
-  mediaUrls: SignedUrls[];
-  show_media: boolean;
-  type: "SkillStation" | "drillStation";
+  type: StationType;
 };
 
 export type DrillStationNoUrls = {
@@ -45,13 +32,19 @@ export type DrillStationNoUrls = {
   show_comments: boolean;
   order: number;
   show_media: boolean;
-  type: "SkillStation" | "drillStation";
+  show_edit_media: boolean;
+  type: StationType;
 };
+
+export type drillStationType = DrillStationNoUrls & { mediaUrls: SignedUrls[] };
+
+export type Station = SkillStationType | drillStationType;
 
 export type SignedUrls = {
   url: string;
   type: string;
   dimensions: ImageDimensions;
+  name: string;
 };
 
 export type SignedUrlList = {
@@ -93,8 +86,12 @@ export type UpdateDrillStationArgs = {
   comments: string;
   show_comments: boolean;
   show_media: boolean;
+  show_edit_media: boolean;
 };
 
-export type Station = SkillStationType | drillStationType;
-
 export type ImageDimensions = { height: number; width: number };
+
+export type UploadMediaArgs = {
+  station_id: number;
+  file: File;
+};

@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteSkill, getSkillStations } from "~/services/supabaseFunctions";
+import { deleteSkill, getAllStations } from "~/services/supabaseFunctions";
 import { SkillStationType } from "~/utils/types";
 
 const useDeleteSkill = () => {
@@ -8,7 +8,7 @@ const useDeleteSkill = () => {
   return useMutation({
     mutationFn: async (id: number) => {
       await deleteSkill(id);
-      return await getSkillStations();
+      return await getAllStations();
     },
 
     onMutate: (id: number) => {

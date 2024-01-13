@@ -1,37 +1,53 @@
 import { UseQueryResult } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import client from "~/utils/supabaseClient";
-import { SkillStationType } from "~/utils/types";
+import { SkillStationType, Station, drillStationType } from "~/utils/types";
 import React from "react";
 import SkillStation from "./SkillStation/SkillStation";
+import DrillStation from "./DrillStations/DrillStation";
 
 interface Props {
-  stationResponse: UseQueryResult<SkillStationType[], Error>;
+  stations: Station[];
+  error: Error | null;
+  isLoading: boolean;
 }
 
-const StationResponseHandler = ({ stationResponse }: Props) => {
+const StationResponseHandler = ({ error, isLoading, stations }: Props) => {
   const router = useRouter();
-  const { data, error, isLoading } = stationResponse;
 
   if (isLoading) {
     return null;
   }
   if (error) {
-    if (stationResponse.error.message === "No user id found") {
+    if (error.message === "No user id found") {
       console.log("redirecting");
       client.auth.signOut();
       router.push("/login");
     }
     return <div>Error: {error.message}</div>;
   }
-  if (data && data.length > 0) {
+  if (stations && stations.length > 0) {
     return (
       <div className="w-full  pt-4">
-        {data.map((station, index) => {
-          const isLast = data.length - 1 === index;
-          return (
-            <SkillStation key={station.id} isLast={isLast} station={station} />
-          );
+        {stations.map((station, index) => {
+          const isLast = stations.length - 1 === index;
+          if (station.type === "skillStation") {
+            return (
+              <SkillStation
+                key={station.id + station.type}
+                isLast={isLast}
+                station={station as SkillStationType}
+              />
+            );
+          } else if (station.type === "drillStation") {
+            return (
+              <DrillStation
+                key={station.id + station.type}
+                isLast={isLast}
+                station={station as drillStationType}
+              />
+            );
+          }
         })}
       </div>
     );

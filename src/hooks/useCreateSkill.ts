@@ -1,17 +1,17 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   createSkill,
-  getSkillStations,
+  getAllStations,
   getUserId,
 } from "~/services/supabaseFunctions";
-import { CreateSkillArgs, SkillStationType } from "~/utils/types";
+import { CreateSkillArgs, SkillStationType, SkillType } from "~/utils/types";
 const useCreateSkill = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async ({ station_id }: CreateSkillArgs) => {
       await createSkill(station_id);
-      return await getSkillStations();
+      return await getAllStations();
     },
 
     onMutate: async ({ station_id }: CreateSkillArgs) => {
@@ -41,7 +41,7 @@ const useCreateSkill = () => {
         repetitions: 0,
         order: tempOrder,
         user_id,
-      };
+      } as SkillType;
 
       parentStation.skills.push(newSkill);
       const newStations = previousStations.map((station) => {

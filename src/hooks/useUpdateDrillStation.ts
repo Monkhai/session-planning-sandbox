@@ -16,6 +16,9 @@ const useUpdateDrillStation = () => {
       name,
       show_duration,
       station_id,
+      show_comments,
+      show_media,
+      show_edit_media,
     }: UpdateDrillStationArgs) => {
       await updateDrillStation({
         comments,
@@ -24,6 +27,9 @@ const useUpdateDrillStation = () => {
         name,
         show_duration,
         station_id,
+        show_comments,
+        show_media,
+        show_edit_media,
       });
       return await getAllStations();
     },
@@ -34,11 +40,14 @@ const useUpdateDrillStation = () => {
       name,
       show_duration,
       station_id,
+      show_comments,
+      show_media,
+      show_edit_media,
     }: UpdateDrillStationArgs) => {
       const previousStations: Station[] =
         queryClient.getQueryData(["stations"]) || [];
 
-      const newStations = previousStations.map((station) => {
+      const newStations: Station[] = previousStations.map((station) => {
         if (station.id === station_id) {
           return {
             ...station,
@@ -47,7 +56,10 @@ const useUpdateDrillStation = () => {
             duration: duration,
             name: name,
             show_duration: show_duration,
-          };
+            show_comments: show_comments,
+            show_media: show_media,
+            show_edit_media: show_edit_media,
+          } as Station;
         }
         return station;
       });

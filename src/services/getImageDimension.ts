@@ -1,6 +1,6 @@
 import { ImageDimensions } from "~/utils/types";
 
-export const getIamgeDimensions = (url: string) => {
+export const getImageDimensions = (url: string) => {
   return new Promise<ImageDimensions>((resolve, reject) => {
     const img = new Image();
     img.src = url;
@@ -9,6 +9,19 @@ export const getIamgeDimensions = (url: string) => {
     };
     img.onerror = () => {
       reject("Error loading image");
+    };
+  });
+};
+
+export const getVideoDimensions = (url: string) => {
+  return new Promise<ImageDimensions>((resolve, reject) => {
+    const video = document.createElement("video");
+    video.src = url;
+    video.onloadedmetadata = () => {
+      resolve({ height: video.videoHeight, width: video.videoWidth });
+    };
+    video.onerror = () => {
+      reject("Error loading video");
     };
   });
 };

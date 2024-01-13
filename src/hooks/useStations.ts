@@ -1,9 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import {
-  getAllStations,
-  getDrillStations,
-  getSkillStations,
-} from "~/services/supabaseFunctions";
+import { getAllStations } from "~/services/supabaseFunctions";
 
 const useStations = () => {
   return useQuery({

@@ -1,36 +1,29 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   deleteSkillStation,
-  getSkillStations,
+  getAllStations,
 } from "~/services/supabaseFunctions";
-import { SkillStationType } from "~/utils/types";
+import { Station } from "~/utils/types";
 
 const useDeleteSkillStation = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (station_id: number) => {
       await deleteSkillStation(station_id);
-      const data = await getSkillStations();
-      return data;
+      return await getAllStations();
     },
 
     onMutate: (station_id: number) => {
       queryClient.cancelQueries({ queryKey: ["stations"] });
 
-      const previousStations = queryClient.getQueryData(["stations"]) || [];
+      const previousStations: Station[] =
+        queryClient.getQueryData(["stations"]) || [];
 
-      queryClient.setQueryData(
-        ["stations"],
-        (old: SkillStationType[] | undefined) => {
-          if (old === undefined) {
-            return [];
-          }
+      const newStations = previousStations.filter((station) => {
+        return station.id !== station_id && station.type !== "skillStation";
+      });
 
-          return old.filter(
-            (station: SkillStationType) => station.id !== station_id,
-          );
-        },
-      );
+      queryClient.setQueryData(["stations"], newStations);
 
       return () => queryClient.setQueryData(["stations"], previousStations);
     },

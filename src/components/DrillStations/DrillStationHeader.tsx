@@ -1,7 +1,6 @@
 import React from "react";
 import { PiDotsThreeCircleFill } from "react-icons/pi";
 import StationDuration from "../StationDuration";
-import StationSettings from "../DrillStations/StationSettings";
 import StationTitle from "../StationTitle";
 import DrillStationSettings from "./DrillStationSettings";
 
@@ -19,6 +18,12 @@ interface Props {
   durationString: string | undefined;
   showDuration: boolean;
   handleDurationChange: (duration: string) => void;
+  editMedia: boolean;
+  onToggleShowComments: (show: boolean) => void;
+  onToggleShowMedia: (show: boolean) => void;
+  showComments: boolean;
+  showMedia: boolean;
+  onToggleEditMedia: (show: boolean) => void;
 }
 
 const DrillStationHeader = ({
@@ -35,6 +40,12 @@ const DrillStationHeader = ({
   stationName,
   stationNameRef,
   showDuration,
+  editMedia,
+  onToggleShowComments,
+  onToggleShowMedia,
+  showComments,
+  showMedia,
+  onToggleEditMedia,
 }: Props) => {
   return (
     <div className=" flex min-h-20 flex-1 flex-row items-start justify-around gap-2 py-2">
@@ -46,6 +57,12 @@ const DrillStationHeader = ({
           <PiDotsThreeCircleFill size={36} color={"gray"} />
         </button>
         <DrillStationSettings
+          editMedia={editMedia}
+          onToggleShowComments={onToggleShowComments}
+          onToggleShowMedia={onToggleShowMedia}
+          onToggleEditMedia={onToggleEditMedia}
+          showComments={showComments}
+          showMedia={showMedia}
           showDuration={showDuration}
           onToggleDuration={onToggleDuration}
           showSettingsModal={showSettingsModal}

@@ -7,6 +7,12 @@ interface Props {
   handleDeleteStation: () => void;
   onToggleDuration: (show: boolean) => void;
   showDuration: boolean;
+  showComments: boolean;
+  showMedia: boolean;
+  editMedia: boolean;
+  onToggleShowComments: (show: boolean) => void;
+  onToggleShowMedia: (show: boolean) => void;
+  onToggleEditMedia: (show: boolean) => void;
 }
 
 const DrillStationSettings = ({
@@ -15,6 +21,12 @@ const DrillStationSettings = ({
   setShowSettingsModal,
   showSettingsModal,
   onToggleDuration,
+  showComments,
+  editMedia,
+  onToggleShowComments,
+  onToggleShowMedia,
+  onToggleEditMedia,
+  showMedia,
 }: Props) => {
   return (
     <div className="z-10">
@@ -37,17 +49,55 @@ const DrillStationSettings = ({
               <IoCloseCircleSharp size={24} color={"var(--color-blue)"} />
             </button>
           </div>
+          {/*  */}
           <div className="flex w-full flex-1 flex-row items-center justify-between pr-1">
             <p className="">Show Duration</p>
             <input
               onChange={(e) => onToggleDuration(e.target.checked)}
-              checked={showDuration}
+              checked={showDuration ? showDuration : false}
               className="h-4 w-4"
               type="checkbox"
               name="showDuration"
               id="showDuration"
             />
           </div>
+          {/*  */}
+          <div className="flex w-full flex-1 flex-row items-center justify-between pr-1">
+            <p className="">Show Comments</p>
+            <input
+              onChange={(e) => onToggleShowComments(e.target.checked)}
+              checked={showComments ? showComments : false}
+              className="h-4 w-4"
+              type="checkbox"
+              name="showDuration"
+              id="showDuration"
+            />
+          </div>
+          {/*  */}
+          <div className="flex w-full flex-1 flex-row items-center justify-between pr-1">
+            <p className="">Show Media</p>
+            <input
+              onChange={(e) => onToggleShowMedia(e.target.checked)}
+              checked={showMedia ? showMedia : false}
+              className="h-4 w-4"
+              type="checkbox"
+              name="showDuration"
+              id="showDuration"
+            />
+          </div>
+          {/*  */}
+          <div className="flex w-full flex-1 flex-row items-center justify-between pr-1">
+            <p className="">Edit Media</p>
+            <input
+              onChange={(e) => onToggleEditMedia(e.target.checked)}
+              checked={editMedia ? editMedia : false}
+              className="h-4 w-4"
+              type="checkbox"
+              name="showDuration"
+              id="showDuration"
+            />
+          </div>
+          {/*  */}
           <div className=" w-full pt-2">
             <button
               onClick={handleDeleteStation}

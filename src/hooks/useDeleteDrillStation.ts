@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   deleteDrillStation,
+  deleteMedia,
   getAllStations,
 } from "~/services/supabaseFunctions";
 import { Station } from "~/utils/types";
@@ -11,6 +12,7 @@ const useDeleteDrillStation = () => {
   return useMutation({
     mutationFn: async (station_id: number) => {
       await deleteDrillStation(station_id);
+      await deleteMedia("", station_id);
       return await getAllStations();
     },
 

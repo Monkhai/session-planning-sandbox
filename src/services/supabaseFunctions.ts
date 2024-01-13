@@ -3,10 +3,10 @@ import client from "~/utils/supabaseClient";
 import {
   DrillStationNoUrls,
   SkillStationType,
-  drillStationType,
   UpdateDrillStationArgs,
+  drillStationType,
 } from "~/utils/types";
-import { getIamgeDimensions } from "./getImageDimension";
+import { getImageDimensions, getVideoDimensions } from "./getImageDimension";
 
 export const getUserId = async () => {
   try {
@@ -18,7 +18,6 @@ export const getUserId = async () => {
     return user_id;
   } catch (error) {
     console.log(error);
-    throw new Error("No user id found");
   }
 };
 
@@ -97,13 +96,13 @@ export const deleteSkillStation = async (station_id: number) => {
   }
 };
 
-export const createSkillStation = async () => {
+export const createSkillStation = async (lastOrder: number) => {
   const user_id = await getUserId();
 
   try {
     const { data, error } = await client
       .from("skill_stations")
-      .insert([{ name: "", user_id: user_id, order: 0 }]);
+      .insert([{ name: "", user_id: user_id, order: lastOrder }]);
 
     if (error) {
       throw error;
@@ -237,13 +236,27 @@ export const getDrillStationMedia = async () => {
                 throw error;
               }
 
-              const dimensions = await getIamgeDimensions(signedUrl.signedUrl);
-
-              return {
-                url: signedUrl.signedUrl,
-                type: file.type,
-                dimensions: dimensions,
-              };
+              if (file.type === "image") {
+                const dimensions = await getImageDimensions(
+                  signedUrl.signedUrl,
+                );
+                return {
+                  url: signedUrl.signedUrl,
+                  type: file.type,
+                  dimensions: dimensions,
+                  name: file.name,
+                };
+              } else {
+                const dimenstions = await getVideoDimensions(
+                  signedUrl.signedUrl,
+                );
+                return {
+                  url: signedUrl.signedUrl,
+                  type: file.type,
+                  dimensions: dimenstions,
+                  name: file.name,
+                };
+              }
             }),
           );
           return { drill_id: Number(folder.folderId), signedUrls: signedUrls };
@@ -283,7 +296,8 @@ export const getDrillStations = async (): Promise<drillStationType[]> => {
           order,
           type,
           show_media,
-          show_comments
+          show_comments,
+          show_edit_media
             `,
       )
       .order("order", { ascending: true })
@@ -320,6 +334,9 @@ export const updateDrillStation = async ({
   name,
   show_duration,
   station_id,
+  show_comments,
+  show_media,
+  show_edit_media,
 }: UpdateDrillStationArgs) => {
   try {
     const { data, error } = await client
@@ -330,6 +347,9 @@ export const updateDrillStation = async ({
         show_duration: show_duration,
         description: despcription,
         comments: comments,
+        show_comments: show_comments,
+        show_media: show_media,
+        show_edit_media: show_edit_media,
       })
       .eq("id", station_id);
 
@@ -358,13 +378,13 @@ export const deleteDrillStation = async (station_id: number) => {
   }
 };
 
-export const createDrillStation = async (order: number) => {
+export const createDrillStation = async (lastOrder: number) => {
   const user_id = await getUserId();
 
   try {
     const { data, error } = await client
       .from("drill_stations")
-      .insert([{ name: "", user_id: user_id, order: order }]);
+      .insert([{ name: "", user_id: user_id, order: lastOrder }]);
 
     if (error) {
       throw error;
@@ -384,4 +404,15 @@ export const getAllStations = async () => {
   stations.sort((a, b) => a.order - b.order);
 
   return stations;
+};
+
+export const deleteMedia = async (name: string, station_id: number) => {
+  const user_id = await getUserId();
+  try {
+    const { data, error } = await client.storage
+      .from("user-media")
+      .remove([`${user_id}/drills/${station_id}/${name}`]);
+  } catch (error) {
+    throw error;
+  }
 };

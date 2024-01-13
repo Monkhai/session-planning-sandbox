@@ -1,56 +1,41 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import CreateNewStationButton from "~/components/CreateNewStationButton";
-import DrillStation from "~/components/DrillStations/DrillStation";
 import HelpButton from "~/components/HelpButton";
 import LogoutButton from "~/components/LogoutButton";
 import NavBar from "~/components/NavBar";
 import OnboardingDialog from "~/components/OnboardingDialog";
 import StationResponseHandler from "~/components/StationResponseHandler";
 import Spacer from "~/components/utility/Spacer";
+import { useAuth } from "~/hooks/useAuth";
+import useCreateDrillStation from "~/hooks/useCreateDrillStation";
 import useCreateSkillStation from "~/hooks/useCreateSkillStation";
-import useSkillStations from "~/hooks/useSkillStations";
+import useStations from "~/hooks/useStations";
 import { useUserSeenOnboard } from "~/hooks/useUserSeenOnboard";
-import { getDrillStations, getUserId } from "~/services/supabaseFunctions";
+import { getUserId } from "~/services/supabaseFunctions";
 import client from "~/utils/supabaseClient";
-import { drillStationType } from "~/utils/types";
 
 export default function HomePage() {
   const router = useRouter();
+  useAuth();
+
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [showContact, setShowContact] = useState(false);
+
   useUserSeenOnboard(dialogRef);
 
-  const [station, setStation] = useState<drillStationType>();
+  const { data: allStations, error, isLoading } = useStations();
 
-  const getStation = async () => {
-    const newStation = await getDrillStations();
-    setStation(newStation[0]);
+  const { mutate: createSkillStation } = useCreateSkillStation();
+  const { mutate: createDrillStation } = useCreateDrillStation();
+
+  const handleCreateSkillStation = () => {
+    createSkillStation(allStations?.length || 0);
   };
 
-  useEffect(() => {
-    getStation();
-  }, []);
-
-  client.auth
-    .getSession()
-    .then(({ data }) => {
-      if (!data.session) {
-        client.auth.signOut();
-        router.push("/login");
-      }
-    })
-    .catch((error) => {
-      console.log("error");
-    });
-
-  const stationResponse = useSkillStations();
-
-  const { mutate: createStation } = useCreateSkillStation();
-
-  const handleCreateStation = async () => {
-    createStation();
+  const handleCreateDrillStation = () => {
+    createDrillStation(allStations?.length || 0);
   };
 
   const handleLogout = async () => {
@@ -81,15 +66,22 @@ export default function HomePage() {
     <main className="flex min-h-screen flex-col items-center justify-start bg-background  pb-4">
       <NavBar />
 
-      <StationResponseHandler stationResponse={stationResponse} />
-
-      {station && <DrillStation station={station} />}
+      {allStations && (
+        <StationResponseHandler
+          error={error}
+          stations={allStations}
+          isLoading={isLoading}
+        />
+      )}
 
       <Spacer />
 
       <div className="sticky bottom-10 mt-10 flex w-full flex-row items-center justify-center gap-4 px-10 print:hidden">
         <LogoutButton handleLogout={handleLogout} />
-        <CreateNewStationButton onClick={handleCreateStation} />
+        <CreateNewStationButton
+          onCreateSkillStation={handleCreateSkillStation}
+          onCreateDrillStation={handleCreateDrillStation}
+        />
         <HelpButton setShowContact={setShowContact} showContact={showContact} />
       </div>
 

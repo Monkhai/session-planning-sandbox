@@ -1,13 +1,15 @@
 "use client";
 
-import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { getUserId } from "~/services/supabaseFunctions";
 import client from "~/utils/supabaseClient";
 
 export function useAuth(redirectIfNotAuth = true) {
   const router = useRouter();
 
   useEffect(() => {
+    getUserId().catch(() => router.replace("/login"));
     // Check if the user is signed in
     client.auth.getSession().then(({ data: { session } }) => {
       if (!session) {

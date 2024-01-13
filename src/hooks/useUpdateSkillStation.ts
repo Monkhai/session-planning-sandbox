@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
-  getSkillStations,
+  getAllStations,
   updateSkillStation,
 } from "~/services/supabaseFunctions";
 import { SkillStationType, updateStationArgs } from "~/utils/types";
@@ -17,7 +17,7 @@ const useUpdateSkillStation = () => {
       station_id,
     }: updateStationArgs) => {
       await updateSkillStation(station_id, duration, name, show_duration);
-      return await getSkillStations();
+      return await getAllStations();
     },
 
     onMutate: ({
