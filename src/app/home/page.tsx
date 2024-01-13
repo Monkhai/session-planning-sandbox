@@ -18,7 +18,7 @@ import client from "~/utils/supabaseClient";
 
 export default function HomePage() {
   const router = useRouter();
-  useAuth();
+  useAuth(router);
 
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [showContact, setShowContact] = useState(false);
@@ -38,8 +38,8 @@ export default function HomePage() {
     createDrillStation(allStations?.length ?? 0);
   };
 
-  const handleLogout = async () => {
-    await client.auth.signOut().catch(console.error);
+  const handleLogout = () => {
+    void client.auth.signOut();
     router.replace("/login");
   };
 

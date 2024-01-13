@@ -1,27 +1,23 @@
 "use client";
 
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { getUserId } from "~/services/supabaseFunctions";
 import client from "~/utils/supabaseClient";
 
-export function useAuth(redirectIfNotAuth = true) {
-  const router = useRouter();
-
+export function useAuth(router: AppRouterInstance) {
   useEffect(() => {
     getUserId().catch(() => router.replace("/login"));
-    // Check if the user is signed in
+
     client.auth.getSession().then(({ data: { session } }) => {
       if (!session) {
-        router.push("/login"); // Redirect to login if no session
+        router.push("/login");
       } else {
-        if (redirectIfNotAuth) {
-          router.push("/home"); // Redirect to home if authenticated
-        }
+        router.push("/home");
       }
     });
 
-    // Listen to session changes
     const { data: authListener } = client.auth.onAuthStateChange(
       (_event, session) => {
         if (!session) {
@@ -30,7 +26,6 @@ export function useAuth(redirectIfNotAuth = true) {
       },
     );
 
-    // Cleanup listener on component unmount
     return () => {
       authListener.subscription.unsubscribe();
     };
