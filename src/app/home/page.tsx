@@ -39,7 +39,7 @@ export default function HomePage() {
   };
 
   const handleLogout = async () => {
-    client.auth.signOut();
+    await client.auth.signOut();
     router.replace("/login");
   };
 
@@ -66,13 +66,13 @@ export default function HomePage() {
     <main className="flex min-h-screen flex-col items-center justify-start bg-background  pb-4">
       <NavBar />
 
-      {allStations && (
+      {allStations ? (
         <StationResponseHandler
           error={error}
           stations={allStations}
           isLoading={isLoading}
         />
-      )}
+      ) : null}
 
       <Spacer />
 
