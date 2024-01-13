@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import CreateNewStationButton from "~/components/CreateNewStationButton";
 import DrillStation from "~/components/DrillStations/DrillStation";
 import HelpButton from "~/components/HelpButton";
@@ -9,18 +9,29 @@ import NavBar from "~/components/NavBar";
 import OnboardingDialog from "~/components/OnboardingDialog";
 import StationResponseHandler from "~/components/StationResponseHandler";
 import Spacer from "~/components/utility/Spacer";
-import { env } from "~/env";
 import useCreateSkillStation from "~/hooks/useCreateSkillStation";
 import useSkillStations from "~/hooks/useSkillStations";
 import { useUserSeenOnboard } from "~/hooks/useUserSeenOnboard";
-import { getUserId } from "~/services/supabaseFunctions";
+import { getDrillStations, getUserId } from "~/services/supabaseFunctions";
 import client from "~/utils/supabaseClient";
+import { drillStationType } from "~/utils/types";
 
 export default function HomePage() {
   const router = useRouter();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [showContact, setShowContact] = useState(false);
   useUserSeenOnboard(dialogRef);
+
+  const [station, setStation] = useState<drillStationType>();
+
+  const getStation = async () => {
+    const newStation = await getDrillStations();
+    setStation(newStation[0]);
+  };
+
+  useEffect(() => {
+    getStation();
+  }, []);
 
   client.auth
     .getSession()
@@ -72,20 +83,7 @@ export default function HomePage() {
 
       <StationResponseHandler stationResponse={stationResponse} />
 
-      <DrillStation
-        station={{
-          comments: "",
-          description: "",
-          duration: "",
-          id: 1,
-          mediaUrls: [],
-          name: "",
-          order: 1,
-          show_duration: true,
-          type: "drillStation",
-          user_id: env.NEXT_PUBLIC_STATIC_USER_ID,
-        }}
-      />
+      {station && <DrillStation station={station} />}
 
       <Spacer />
 

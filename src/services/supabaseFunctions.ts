@@ -264,17 +264,17 @@ export const getDrillStations = async (): Promise<drillStationType[]> => {
       .from("drill_stations")
       .select(
         `
-                id,
-                user_id,
-                name,
-                duration,
-                show_duration,
-                description,
-                comments,
-                order,
-                type,
-                show_media,
-                show_comments
+          id,
+          user_id,
+          name,
+          duration,
+          show_duration,
+          description,
+          comments,
+          order,
+          type,
+          show_media,
+          show_comments
             `,
       )
       .order("order", { ascending: true })
@@ -285,7 +285,6 @@ export const getDrillStations = async (): Promise<drillStationType[]> => {
     }
 
     const drillStationMedia = await getDrillStationMedia();
-
     const drillStations: drillStationType[] = drillStationsNoMedia.map(
       (station) => {
         const media = drillStationMedia.find(

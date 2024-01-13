@@ -14,6 +14,7 @@ import useDeleteDrillStation from "~/hooks/useDeleteDrillStation";
 import { set } from "zod";
 import DrillStationHeader from "./DrillStationHeader";
 import { convertDurationToString } from "~/services/DurationFunctions";
+import Image from "next/image";
 
 interface Props {
   station: drillStationType;
@@ -176,10 +177,6 @@ const DrillStation = ({ station }: Props) => {
     showComments,
     showMedia,
   ]);
-  const doIt = async () => {
-    const thing = await getDrillStationMedia();
-    console.log(thing);
-  };
   return (
     <div className="print:py- relative flex w-full flex-row px-20 py-2">
       <div className="flex flex-1 px-2">
@@ -243,8 +240,30 @@ const DrillStation = ({ station }: Props) => {
             />
           </div>
           <div className="flex max-h-80 min-h-[60px] w-full gap-10 rounded-[10px] bg-white px-4 py-4">
-            {/* render media here conditionally */}
-            <button onClick={doIt}>do it </button>
+            {station.mediaUrls.map((media) => {
+              if (media.type == "image") {
+                return (
+                  <div className="overflow-hidden rounded-xl">
+                    <Image
+                      className="h-40 min-w-20 max-w-60 overflow-hidden rounded-3xl border-2 border-black object-contain"
+                      src={media.url}
+                      width={4000}
+                      height={4000}
+                      alt="this is a random thing"
+                    />
+                  </div>
+                );
+              } else {
+                return (
+                  <video
+                    className="max-h-40 min-w-20 max-w-60  overflow-hidden rounded-[10px] border-2 object-contain"
+                    src={media.url}
+                    controls
+                    muted
+                  />
+                );
+              }
+            })}
           </div>
         </div>
       </div>
