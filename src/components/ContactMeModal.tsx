@@ -1,10 +1,8 @@
 import Image from "next/image";
-import React, { useRef, useState } from "react";
-import { IoIosMail } from "react-icons/io";
-import * as IGLogo from "../../public/instagram.png";
+import { useRef } from "react";
+import FormLink from "~/utils/FormLink";
 import * as PrintTip from "../../public/howToPrint.png";
 import Spacer from "./utility/Spacer";
-import FormLink from "~/utils/FormLink";
 interface Props {
   showContact: boolean;
 }

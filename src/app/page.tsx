@@ -1,10 +1,10 @@
 "use client";
 import { useAuth } from "~/hooks/useAuth";
 
-const page = () => {
+const Page = () => {
   useAuth();
 
   return null;
 };
 
-export default page;
+export default Page;

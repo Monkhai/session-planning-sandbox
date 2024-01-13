@@ -1,15 +1,12 @@
 "use client";
-import { ThemeSupa } from "@supabase/auth-ui-shared";
-import { SocialAuth, SignUp, Auth } from "@supabase/auth-ui-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import Spacer from "~/components/utility/Spacer";
+import { IoIosMail } from "react-icons/io";
+import NavBar from "~/components/NavBar";
 import introductionText from "~/utils/introductionText";
 import client from "~/utils/supabaseClient";
 import * as IGLogo from "../../../public/instagram.png";
-import { IoIosMail } from "react-icons/io";
-import NavBar from "~/components/NavBar";
 
 const Login = () => {
   const router = useRouter();
