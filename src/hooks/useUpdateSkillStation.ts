@@ -27,7 +27,7 @@ const useUpdateSkillStation = () => {
       station_id,
     }: updateStationArgs) => {
       const previousStations: SkillStationType[] =
-        queryClient.getQueryData(["stations"]) || [];
+        queryClient.getQueryData(["stations"]) ?? [];
 
       const newStations = previousStations.map((station) => {
         if (station.id === station_id && station.type === "skillStation") {

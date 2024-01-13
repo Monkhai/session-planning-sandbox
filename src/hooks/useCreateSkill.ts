@@ -23,7 +23,7 @@ const useCreateSkill = () => {
       }
 
       const previousStations: SkillStationType[] =
-        queryClient.getQueryData(["stations"]) || [];
+        queryClient.getQueryData(["stations"]) ?? [];
       const parentStation = previousStations.find(
         (station) => station.id === station_id,
       );

@@ -16,7 +16,7 @@ const useCreateDrillStation = () => {
 
     onMutate: (lastOrder: number) => {
       const previousStations: Station[] =
-        queryClient.getQueryData(["stations"]) || [];
+        queryClient.getQueryData(["stations"]) ?? [];
 
       const tempId = Math.floor(Math.random() * 1000000000);
 

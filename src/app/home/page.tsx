@@ -31,11 +31,11 @@ export default function HomePage() {
   const { mutate: createDrillStation } = useCreateDrillStation();
 
   const handleCreateSkillStation = () => {
-    createSkillStation(allStations?.length || 0);
+    createSkillStation(allStations?.length ?? 0);
   };
 
   const handleCreateDrillStation = () => {
-    createDrillStation(allStations?.length || 0);
+    createDrillStation(allStations?.length ?? 0);
   };
 
   const handleLogout = async () => {

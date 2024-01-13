@@ -17,7 +17,7 @@ export const useUserSeenOnboard = (dialogRef: RefObject<HTMLDialogElement>) => {
       }
 
       if (data) {
-        const seenOnboard = data[0]?.seen_onboard || false;
+        const seenOnboard = data[0]?.seen_onboard ?? false;
         if (!seenOnboard) {
           dialogRef.current?.showModal();
         }

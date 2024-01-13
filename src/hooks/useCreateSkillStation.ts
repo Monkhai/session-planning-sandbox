@@ -17,7 +17,7 @@ const useCreateSkillStation = () => {
     onMutate: (lastOrder: number) => {
       queryClient.cancelQueries({ queryKey: ["stations"] });
 
-      const previousStations = queryClient.getQueryData(["stations"]) || [];
+      const previousStations = queryClient.getQueryData(["stations"]) ?? [];
 
       queryClient.setQueryData(
         ["stations"],

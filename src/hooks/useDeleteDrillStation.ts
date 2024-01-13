@@ -18,7 +18,7 @@ const useDeleteDrillStation = () => {
 
     onMutate: async (station_id: number) => {
       const previousStations: Station[] =
-        queryClient.getQueryData(["stations"]) || [];
+        queryClient.getQueryData(["stations"]) ?? [];
 
       const newStations = previousStations.filter((station) => {
         return station.id !== station_id || station.type !== "drillStation";

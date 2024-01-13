@@ -45,7 +45,7 @@ const useUpdateDrillStation = () => {
       show_edit_media,
     }: UpdateDrillStationArgs) => {
       const previousStations: Station[] =
-        queryClient.getQueryData(["stations"]) || [];
+        queryClient.getQueryData(["stations"]) ?? [];
 
       const newStations: Station[] = previousStations.map((station) => {
         if (station.id === station_id && station.type === "drillStation") {

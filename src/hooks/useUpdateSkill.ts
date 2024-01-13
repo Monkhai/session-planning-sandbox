@@ -24,7 +24,7 @@ const useUpdateSkill = () => {
       description,
     }: updateSkillArgs) => {
       const previousStations: SkillStationType[] =
-        queryClient.getQueryData(["stations"]) || [];
+        queryClient.getQueryData(["stations"]) ?? [];
       const newStations: SkillStationType[] = previousStations.map(
         (station) => {
           const newSkills = station.skills.map((skill) => {

@@ -15,7 +15,7 @@ const useDeleteSkill = () => {
       queryClient.cancelQueries({ queryKey: ["stations"] });
 
       const previousStations: SkillStationType[] =
-        queryClient.getQueryData(["stations"]) || [];
+        queryClient.getQueryData(["stations"]) ?? [];
 
       const newStations = previousStations.map((station) => {
         const newSkills = station.skills.filter((skill) => skill.id !== id);

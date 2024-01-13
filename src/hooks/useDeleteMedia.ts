@@ -25,7 +25,7 @@ const useDeleteMedia = () => {
       station_id: number;
     }) => {
       const previousStations: Station[] =
-        queryClient.getQueryData(["stations"]) || [];
+        queryClient.getQueryData(["stations"]) ?? [];
 
       const station = previousStations.find(
         (station) => station.id === station_id,
