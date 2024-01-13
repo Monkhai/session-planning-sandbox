@@ -26,7 +26,7 @@ const Login = () => {
     <section className="flex h-screen flex-col items-center justify-start ">
       <NavBar />
 
-      <section className="flex h-full w-full flex-col items-center justify-start gap-4 pt-4">
+      <section className="flex h-full w-full flex-col items-center justify-center gap-4 pt-4">
         <div className="flex w-1/4">
           <p className="text-center text-xl font-semibold">
             {introductionText}
@@ -49,8 +49,8 @@ const Login = () => {
             </a>
           </div>
         </div>
-        <Spacer />
-        <div className="w-1/4">
+        {/* <Spacer /> */}
+        {/* <div className="w-1/4">
           <Auth
             onlyThirdPartyProviders
             appearance={{
@@ -68,8 +68,8 @@ const Login = () => {
             providers={["google"]}
             redirectTo="/home"
           />
-        </div>
-        <Spacer />
+        </div> */}
+        {/* <Spacer /> */}
       </section>
     </section>
   );
