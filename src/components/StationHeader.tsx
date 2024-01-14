@@ -56,7 +56,7 @@ const StationHeader = ({
         />
       </div>
 
-      <div className="z-10 flex-1">
+      <div className=" flex-1">
         <StationTitle
           stationName={stationName}
           setStationName={setStationName}
