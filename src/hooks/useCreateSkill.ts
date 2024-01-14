@@ -27,7 +27,6 @@ const useCreateSkill = () => {
         (station) => station.id === station_id,
       );
       if (parentStation === undefined) {
-        console.log("no parent station");
         return;
       }
 
@@ -57,7 +56,6 @@ const useCreateSkill = () => {
     },
 
     onSuccess: (data) => {
-      console.log("success");
       queryClient.setQueryData(["stations"], data);
     },
 
