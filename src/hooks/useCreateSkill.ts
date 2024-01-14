@@ -29,6 +29,7 @@ const useCreateSkill = () => {
         (station) => station.id === station_id,
       );
       if (parentStation === undefined) {
+        console.log("no parent station");
         return;
       }
 
