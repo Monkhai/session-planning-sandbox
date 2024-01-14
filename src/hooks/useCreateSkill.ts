@@ -52,19 +52,22 @@ const useCreateSkill = () => {
       });
 
       queryClient.setQueryData(["stations"], newStations);
+      console.log("mutated");
 
       return () => queryClient.setQueryData(["stations"], previousStations);
     },
 
     onSuccess: (data) => {
+      console.log("success");
       queryClient.setQueryData(["stations"], data);
     },
 
     onError: (error, _, rollback) => {
+      console.log("error");
       if (rollback) {
         rollback();
-        return error;
       }
+      return error;
     },
   });
 };
