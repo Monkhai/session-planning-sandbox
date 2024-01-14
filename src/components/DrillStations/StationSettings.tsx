@@ -21,7 +21,7 @@ const StationSettings = ({
   return (
     <div className="z-10">
       <div
-        className="absolute left-4 top-10 w-80"
+        className="absolute left-4 top-10 z-10 w-80"
         style={{
           transition: "all 0.150s ease-in-out",
           scale: showSettingsModal ? 1 : 0,
