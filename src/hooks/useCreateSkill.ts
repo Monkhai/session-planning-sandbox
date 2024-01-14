@@ -15,6 +15,7 @@ const useCreateSkill = () => {
     },
 
     onMutate: async ({ station_id }: CreateSkillArgs) => {
+      console.log("mutating");
       await queryClient.cancelQueries({ queryKey: ["stations"] });
 
       const user_id = await getUserId();
@@ -52,7 +53,6 @@ const useCreateSkill = () => {
       });
 
       queryClient.setQueryData(["stations"], newStations);
-      console.log("mutated");
 
       return () => queryClient.setQueryData(["stations"], previousStations);
     },
