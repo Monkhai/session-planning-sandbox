@@ -33,8 +33,9 @@ const useCreateSkillStation = () => {
             show_duration: false,
             type: "skillStation",
           };
-
+          console.log(old);
           if (old === undefined) {
+            console.log("no stations");
             return [newStation];
           }
           return [...old, newStation];
