@@ -7,7 +7,7 @@ const useStations = () => {
     queryFn: async () => {
       return await getAllStations();
     },
-    staleTime: 1000 * 60 * 60 * 24,
+    staleTime: 1000 * 60, // 1 minute
   });
 };
 
