@@ -88,24 +88,27 @@ const SkillStation = ({ station, isLast }: Props) => {
     };
   }, [stationName, station]);
 
-  const handledurationChange = useCallback((duration: string) => {
-    setDuration(duration);
-    if (duration) {
-      updateStation({
-        station_id: station.id,
-        duration: duration,
-        name: stationName,
-        show_duration: showDuration,
-      });
-    } else {
-      updateStation({
-        station_id: station.id,
-        duration: null,
-        name: stationName,
-        show_duration: showDuration,
-      });
-    }
-  }, []);
+  const handledurationChange = useCallback(
+    (duration: string) => {
+      setDuration(duration);
+      if (duration) {
+        updateStation({
+          station_id: station.id,
+          duration: duration,
+          name: stationName,
+          show_duration: showDuration,
+        });
+      } else {
+        updateStation({
+          station_id: station.id,
+          duration: null,
+          name: stationName,
+          show_duration: showDuration,
+        });
+      }
+    },
+    [stationName, showDuration, station],
+  );
 
   const handleCreateSkill = async () => {
     createSkill({
