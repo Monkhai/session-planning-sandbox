@@ -11,6 +11,7 @@ import Spacer from "../utility/Spacer";
 import DrillStationHeader from "./DrillStationHeader";
 import useDeleteMedia from "~/hooks/useDeleteMedia";
 import StationBottomBorder from "../SkillStation/StationBottomBorder";
+import { FetchStatus } from "@tanstack/react-query";
 
 interface Props {
   station: drillStationType;

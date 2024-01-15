@@ -10,7 +10,7 @@ const useDeleteSkillStation = () => {
   return useMutation({
     mutationFn: async (station_id: number) => {
       await deleteSkillStation(station_id);
-      return await getAllStations();
+      // return await getAllStations();
     },
 
     onMutate: (station_id: number) => {

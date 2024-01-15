@@ -73,6 +73,7 @@ export const updateSkillStation = async (
       .eq("id", station_id);
 
     if (error) {
+      console.log(error);
       throw error;
     }
     return data;
@@ -103,7 +104,8 @@ export const createSkillStation = async (lastOrder: number) => {
   try {
     const { data, error } = await client
       .from("skill_stations")
-      .insert([{ name: "", user_id: user_id, order: lastOrder }]);
+      .insert([{ name: "", user_id: user_id, order: lastOrder }])
+      .select();
 
     if (error) {
       throw error;

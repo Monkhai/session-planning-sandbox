@@ -3,12 +3,14 @@ import React, { useCallback, useEffect, useState } from "react";
 import useCreateSkill from "~/hooks/useCreateSkill";
 import useDeleteSkillStation from "~/hooks/useDeleteSkillStation";
 import useUpdateSkillStation from "~/hooks/useUpdateSkillStation";
-import { SkillStationType } from "~/utils/types";
-import StationBottomBorder from "./StationBottomBorder";
-import StationHeader from "../StationHeader";
-import StationSkills from "./StationSkills";
-import Spacer from "../utility/Spacer";
 import { convertDurationToString } from "~/services/DurationFunctions";
+import { SkillStationType } from "~/utils/types";
+import StationHeader from "../StationHeader";
+import Spacer from "../utility/Spacer";
+import StationBottomBorder from "./StationBottomBorder";
+import StationSkills from "./StationSkills";
+import { FetchStatus } from "@tanstack/react-query";
+import { queryClient } from "Providers/ReactQueryProvider";
 
 interface Props {
   station: SkillStationType;
@@ -129,6 +131,8 @@ const SkillStation = ({ station, isLast }: Props) => {
       show_duration: show,
     });
   };
+
+  const queryState = queryClient.getQueryState(["stations"]);
 
   return (
     <div className="relative flex w-full flex-row px-10 py-2 print:px-2 print:py-1">

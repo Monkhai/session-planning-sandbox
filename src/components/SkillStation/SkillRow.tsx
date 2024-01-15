@@ -1,3 +1,4 @@
+import { queryClient } from "Providers/ReactQueryProvider";
 import React, { useEffect, useState } from "react";
 import { IoMdRemoveCircle } from "react-icons/io";
 import {
@@ -103,15 +104,15 @@ const SkillRow = ({ isLast, skill, editSkills, index }: Props) => {
           ref={nameRef}
           value={skillName}
           onChange={(e) => setSkillName(e.target.value)}
-          className="h-[20px] flex-1 text-xl outline-none active:outline-none print:text-xs"
-          placeholder="Skill Name"
+          className="h-[24px] flex-1 text-xl outline-none active:outline-none print:text-xs"
+          placeholder={"Skill Name"}
         />
         {showReps && (
           <input
             ref={repsRef}
             value={reps ? reps : ""}
             onChange={(e) => setReps(Number(e.target.value))}
-            className="h-[20px] text-right text-xl outline-none active:outline-none print:text-sm"
+            className="h-[24px] text-right text-xl outline-none active:outline-none print:text-sm"
             placeholder="Reps"
           />
         )}

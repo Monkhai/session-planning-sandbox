@@ -13,7 +13,7 @@ const useUpdateSkill = () => {
       description,
     }: updateSkillArgs) => {
       await updateSkill(skill_id, name, repetitions, description);
-      return await getAllStations();
+      // return await getAllStations();
     },
 
     onMutate: ({

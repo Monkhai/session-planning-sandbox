@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "Providers/ReactQueryProvider";
 import {
   createSkill,
@@ -10,7 +10,7 @@ const useCreateSkill = () => {
   return useMutation({
     mutationFn: async ({ station_id }: CreateSkillArgs) => {
       await createSkill(station_id);
-      return await getAllStations();
+      // return await getAllStations();
     },
 
     onMutate: async ({ station_id }: CreateSkillArgs) => {

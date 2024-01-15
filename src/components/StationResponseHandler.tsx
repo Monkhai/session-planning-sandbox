@@ -1,8 +1,8 @@
-import { UseQueryResult } from "@tanstack/react-query";
+import { FetchStatus, UseQueryResult } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import client from "~/utils/supabaseClient";
 import { SkillStationType, Station, drillStationType } from "~/utils/types";
-import React from "react";
+import React, { useEffect } from "react";
 import SkillStation from "./SkillStation/SkillStation";
 import DrillStation from "./DrillStations/DrillStation";
 

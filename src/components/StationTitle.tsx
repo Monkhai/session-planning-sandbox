@@ -1,4 +1,6 @@
-import React from "react";
+import { FetchStatus } from "@tanstack/react-query";
+import { queryClient } from "Providers/ReactQueryProvider";
+import React, { useEffect } from "react";
 
 interface Props {
   stationName: string;
@@ -13,6 +15,7 @@ const StationTitle = ({
 }: Props) => {
   return (
     <input
+      inputMode="text"
       value={stationName}
       onChange={(event) => setStationName(event.target.value)}
       ref={stationNameRef}
