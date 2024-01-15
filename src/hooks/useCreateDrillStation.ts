@@ -1,4 +1,5 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
+import { queryClient } from "Providers/ReactQueryProvider";
 import {
   createDrillStation,
   getAllStations,
@@ -6,8 +7,6 @@ import {
 import { Station, drillStationType } from "~/utils/types";
 
 const useCreateDrillStation = () => {
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: async (lastOrder: number) => {
       await createDrillStation(lastOrder);
@@ -15,6 +14,8 @@ const useCreateDrillStation = () => {
     },
 
     onMutate: (lastOrder: number) => {
+      queryClient.cancelQueries({ queryKey: ["stations"] });
+
       const previousStations: Station[] =
         queryClient.getQueryData(["stations"]) ?? [];
 
@@ -39,8 +40,9 @@ const useCreateDrillStation = () => {
       return () => queryClient.setQueryData(["stations"], previousStations);
     },
 
-    onSuccess: (data) => {
-      queryClient.setQueryData(["stations"], data);
+    onSuccess: (newStations) => {
+      // queryClient.setQueryData(["stations"], newStations);
+      queryClient.invalidateQueries({ queryKey: ["stations"] });
     },
 
     onError: (error, _, rollback) => {

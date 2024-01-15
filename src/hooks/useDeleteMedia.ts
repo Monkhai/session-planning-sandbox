@@ -1,10 +1,9 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
+import { queryClient } from "Providers/ReactQueryProvider";
 import { deleteMedia, getAllStations } from "~/services/supabaseFunctions";
 import { Station, drillStationType } from "~/utils/types";
 
 const useDeleteMedia = () => {
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: async ({
       name,
@@ -50,7 +49,8 @@ const useDeleteMedia = () => {
     },
 
     onSuccess: (data) => {
-      queryClient.setQueryData(["stations"], data);
+      // queryClient.setQueryData(["stations"], data);
+      queryClient.invalidateQueries({ queryKey: ["stations"] });
     },
 
     onError: (error) => {

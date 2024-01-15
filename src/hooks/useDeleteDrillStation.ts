@@ -1,4 +1,5 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
+import { queryClient } from "Providers/ReactQueryProvider";
 import {
   deleteDrillStation,
   deleteMedia,
@@ -7,8 +8,6 @@ import {
 import { Station } from "~/utils/types";
 
 const useDeleteDrillStation = () => {
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: async (station_id: number) => {
       await deleteDrillStation(station_id);
@@ -32,7 +31,8 @@ const useDeleteDrillStation = () => {
     },
 
     onSuccess: (data) => {
-      queryClient.setQueryData(["stations"], data);
+      // queryClient.setQueryData(["stations"], data);
+      queryClient.invalidateQueries({ queryKey: ["stations"] });
     },
 
     onError: (error, variables, rollback) => {

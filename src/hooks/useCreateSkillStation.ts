@@ -1,4 +1,5 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
+import { queryClient } from "Providers/ReactQueryProvider";
 import {
   createSkillStation,
   getAllStations,
@@ -6,8 +7,6 @@ import {
 import { SkillStationType } from "~/utils/types";
 
 const useCreateSkillStation = () => {
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: async (lastOrder: number) => {
       await createSkillStation(lastOrder);
@@ -33,9 +32,7 @@ const useCreateSkillStation = () => {
             show_duration: false,
             type: "skillStation",
           };
-          console.log(old);
           if (old === undefined) {
-            console.log("no stations");
             return [newStation];
           }
           return [...old, newStation];
@@ -45,8 +42,9 @@ const useCreateSkillStation = () => {
       return () => queryClient.setQueryData(["stations"], previousStations);
     },
 
-    onSuccess: (data) => {
-      queryClient.setQueryData(["stations"], data);
+    onSuccess: (newStations) => {
+      // queryClient.setQueryData(["stations"], newStations);
+      queryClient.invalidateQueries({ queryKey: ["stations"] });
     },
 
     onError: (error, _, rollback) => {

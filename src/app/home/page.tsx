@@ -3,7 +3,6 @@ import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import CreateNewStationButton from "~/components/CreateNewStationButton";
 import HelpButton from "~/components/HelpButton";
-import LogoutButton from "~/components/LogoutButton";
 import NavBar from "~/components/NavBar";
 import OnboardingDialog from "~/components/OnboardingDialog";
 import StationResponseHandler from "~/components/StationResponseHandler";

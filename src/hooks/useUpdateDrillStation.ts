@@ -1,4 +1,5 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
+import { queryClient } from "Providers/ReactQueryProvider";
 import {
   getAllStations,
   updateDrillStation,
@@ -6,8 +7,6 @@ import {
 import { Station, UpdateDrillStationArgs } from "~/utils/types";
 
 const useUpdateDrillStation = () => {
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: async ({
       comments,
@@ -72,7 +71,8 @@ const useUpdateDrillStation = () => {
     },
 
     onSuccess: (data) => {
-      queryClient.setQueryData(["stations"], data);
+      // queryClient.setQueryData(["stations"], data);
+      queryClient.invalidateQueries({ queryKey: ["stations"] });
     },
 
     onError: (error, _, rollback) => {

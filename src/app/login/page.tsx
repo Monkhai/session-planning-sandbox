@@ -1,4 +1,6 @@
 "use client";
+import { Auth } from "@supabase/auth-ui-react";
+import { ThemeSupa } from "@supabase/auth-ui-shared";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -7,8 +9,6 @@ import NavBar from "~/components/NavBar";
 import introductionText from "~/utils/introductionText";
 import client from "~/utils/supabaseClient";
 import * as IGLogo from "../../../public/instagram.png";
-import { Auth } from "@supabase/auth-ui-react";
-import { ThemeSupa } from "@supabase/auth-ui-shared";
 
 const Login = () => {
   const router = useRouter();

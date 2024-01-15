@@ -1,4 +1,5 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
+import { queryClient } from "Providers/ReactQueryProvider";
 import {
   getAllStations,
   uploadDrillStationMedia,
@@ -6,8 +7,6 @@ import {
 import { Station, UploadMediaArgs } from "~/utils/types";
 
 const useUploadMedia = () => {
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: async ({ station_id, file }: UploadMediaArgs) => {
       await uploadDrillStationMedia(station_id, file);
@@ -15,7 +14,8 @@ const useUploadMedia = () => {
     },
 
     onSuccess: (data) => {
-      queryClient.setQueryData<Station[]>(["stations"], data);
+      // queryClient.setQueryData<Station[]>(["stations"], data);
+      queryClient.invalidateQueries({ queryKey: ["stations"] });
     },
 
     onError: (error) => {
