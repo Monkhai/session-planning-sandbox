@@ -51,7 +51,7 @@ const Login = () => {
         {/* <Spacer /> */}
         <div className="w-1/4">
           <Auth
-            onlyThirdPartyProviders
+            // onlyThirdPartyProviders
             appearance={{
               theme: ThemeSupa,
               variables: {
