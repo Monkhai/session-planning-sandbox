@@ -19,7 +19,7 @@ const StationDuration = ({
   handledurationChange,
   showDuration,
 }: Props) => {
-  const fetchStatus = useContext(FetchContext);
+  const { fetchStatus } = useContext(FetchContext);
 
   if (!showDuration) return null;
   const durationStyleClasses = `
