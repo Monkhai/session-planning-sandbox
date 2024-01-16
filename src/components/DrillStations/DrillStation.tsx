@@ -287,7 +287,7 @@ const DrillStation = ({ station, isLast }: Props) => {
               ref={descriptionRef}
               value={description ? description : ""}
               onChange={(e) => setDescription(e.target.value)}
-              className="h-[120px] w-full resize-none text-wrap text-xl outline-none active:outline-none print:h-[80px]  print:text-sm"
+              className="h-[90px] w-full resize-none text-wrap text-xl outline-none active:outline-none print:h-[80px]  print:text-sm"
               placeholder="Description"
               rows={5}
             />
@@ -303,7 +303,7 @@ const DrillStation = ({ station, isLast }: Props) => {
                 ref={commentsRef}
                 value={comments ? comments : ""}
                 onChange={(e) => setComments(e.target.value)}
-                className="h-[120px] w-full resize-none text-wrap text-xl outline-none active:outline-none print:h-[80px] print:text-sm "
+                className="h-[90px] w-full resize-none text-wrap text-xl outline-none active:outline-none print:h-[80px] print:text-sm "
                 placeholder="Comments"
               />
             </div>
