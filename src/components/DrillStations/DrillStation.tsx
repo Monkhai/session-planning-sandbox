@@ -1,5 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import { FaCirclePlus } from "react-icons/fa6";
+import { FetchContext } from "~/context/FetchContext";
 import useDeleteDrillStation from "~/hooks/useDeleteDrillStation";
 import useDeleteMedia from "~/hooks/useDeleteMedia";
 import useUpdateDrillStation from "~/hooks/useUpdateDrillStation";
@@ -10,7 +11,6 @@ import StationBottomBorder from "../SkillStation/StationBottomBorder";
 import Spacer from "../utility/Spacer";
 import DrillStationHeader from "./DrillStationHeader";
 import MediaHandler from "./MediaHandler";
-import { FetchContext } from "~/context/FetchContext";
 
 interface Props {
   station: drillStationType;
@@ -33,7 +33,6 @@ const DrillStation = ({ station, isLast }: Props) => {
   const [showMedia, setShowMedia] = React.useState<boolean>(false);
   const [showComments, setShowComments] = React.useState<boolean>(false);
   const [editMedia, setEditMedia] = React.useState<boolean>(false);
-  const [showBigImage, setShowBigImage] = React.useState<boolean>(false);
 
   const inputRef = React.useRef<HTMLInputElement>(null);
   const descriptionRef = React.useRef<HTMLTextAreaElement>(null);
@@ -255,8 +254,8 @@ const DrillStation = ({ station, isLast }: Props) => {
   //---------------------------------------------
 
   return (
-    <div className="relative flex w-full flex-row px-10 py-2 print:px-0">
-      <div className="flex flex-1 px-2">
+    <div className="relative flex w-full flex-row px-10 py-2 print:px-2 print:py-1">
+      <div className="flex flex-1">
         <DrillStationHeader
           editMedia={editMedia}
           onToggleShowComments={handleToggleComments}

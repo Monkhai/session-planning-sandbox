@@ -130,14 +130,6 @@ const SkillStation = ({ station, isLast }: Props) => {
     });
   };
 
-  // const queryState = queryClient.getQueryState(["stations"]);
-  // // const isFetching = queryClient.isFetching();
-
-  // useEffect(() => {
-  //   console.log(queryState?.fetchStatus);
-  //   // console.log(isFetching);
-  // }, [queryState]);
-
   return (
     <div className="relative flex w-full flex-row px-10 py-2 print:px-2 print:py-1">
       <div className="flex flex-1">

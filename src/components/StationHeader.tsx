@@ -42,9 +42,12 @@ const StationHeader = ({
   const { fetchStatus } = useContext(FetchContext);
 
   return (
-    <div className=" flex min-h-20 w-full flex-row items-start justify-around gap-2 py-2">
+    <div className="flex min-h-20 w-full flex-row items-start justify-around gap-2 py-2">
       <div className="relative bottom-1 flex flex-row print:hidden">
         <button
+          style={{
+            opacity: fetchStatus === "fetching" ? 0.5 : 1,
+          }}
           disabled={fetchStatus === "fetching"}
           className="transition-all duration-150 active:scale-95"
           onClick={() => setShowSettingsModal(!showSettingsModal)}
