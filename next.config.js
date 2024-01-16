@@ -13,6 +13,11 @@ const config = {
         // pathname: "/storage/v1/object/user-media/**",
         hostname: "srilvebciftclqzzfycz.supabase.co",
       },
+      {
+        protocol: "https",
+        // pathname: "/storage/v1/object/user-media/**",
+        hostname: "zyjjhihnsbvsapsaeoev.supabase.co",
+      },
     ],
   },
 };

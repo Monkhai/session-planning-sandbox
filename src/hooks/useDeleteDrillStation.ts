@@ -3,6 +3,7 @@ import { queryClient } from "Providers/ReactQueryProvider";
 import {
   deleteDrillStation,
   deleteMedia,
+  deleteStationMedia,
   getAllStations,
 } from "~/services/supabaseFunctions";
 import { Station } from "~/utils/types";
@@ -10,9 +11,9 @@ import { Station } from "~/utils/types";
 const useDeleteDrillStation = () => {
   return useMutation({
     mutationFn: async (station_id: number) => {
+      await deleteStationMedia(station_id);
       await deleteDrillStation(station_id);
-      await deleteMedia("", station_id);
-      return await getAllStations();
+      // return await getAllStations();
     },
 
     onMutate: async (station_id: number) => {

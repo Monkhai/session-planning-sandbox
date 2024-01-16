@@ -1,17 +1,15 @@
-import Image from "next/image";
-import React, { use, useEffect } from "react";
+import React, { useEffect } from "react";
 import { FaCirclePlus } from "react-icons/fa6";
-import { IoMdRemoveCircle } from "react-icons/io";
 import useDeleteDrillStation from "~/hooks/useDeleteDrillStation";
+import useDeleteMedia from "~/hooks/useDeleteMedia";
 import useUpdateDrillStation from "~/hooks/useUpdateDrillStation";
 import useUploadMedia from "~/hooks/useUploadMedia";
 import { convertDurationToString } from "~/services/DurationFunctions";
 import { drillStationType } from "~/utils/types";
+import StationBottomBorder from "../SkillStation/StationBottomBorder";
 import Spacer from "../utility/Spacer";
 import DrillStationHeader from "./DrillStationHeader";
-import useDeleteMedia from "~/hooks/useDeleteMedia";
-import StationBottomBorder from "../SkillStation/StationBottomBorder";
-import { FetchStatus } from "@tanstack/react-query";
+import MediaHandler from "./MediaHandler";
 
 interface Props {
   station: drillStationType;
@@ -337,71 +335,11 @@ const DrillStation = ({ station, isLast }: Props) => {
               />
             </div>
             <div className="flex h-[200px] w-full items-center justify-start gap-10 rounded-[10px] bg-white px-4 py-4">
-              {station.mediaUrls.map((media) => {
-                if (media.type == "image") {
-                  return (
-                    <div
-                      key={media.url}
-                      className="flex flex-col items-center justify-center gap-4"
-                    >
-                      <Image
-                        onClick={() => setShowBigImage(true)}
-                        className="h-32 w-60 cursor-pointer rounded-[10px] border-black object-cover"
-                        src={media.url}
-                        alt="Image describing a drill"
-                        width={media.dimensions.width}
-                        height={media.dimensions.height}
-                      />
-                      {editMedia && (
-                        <button
-                          className="transition-all duration-150 active:scale-95"
-                          onClick={() => handleDeleteMedia(media.name)}
-                        >
-                          <IoMdRemoveCircle color={"red"} size={24} />
-                        </button>
-                      )}
-                      {showBigImage && (
-                        <div
-                          onClick={() => setShowBigImage(false)}
-                          className="fixed inset-0 bottom-0 left-0 z-10 flex items-center justify-center bg-seperatorSecondary"
-                        >
-                          <Image
-                            className="h-4/5 w-4/5 rounded-[10px] object-contain"
-                            src={media.url}
-                            alt="Image describing a drill"
-                            width={media.dimensions.width}
-                            height={media.dimensions.height}
-                          />
-                        </div>
-                      )}
-                    </div>
-                  );
-                } else {
-                  return (
-                    <div
-                      key={media.url}
-                      className="flex  flex-col items-center justify-center gap-4"
-                    >
-                      <video
-                        className="h-32 w-60 overflow-hidden rounded-[10px] object-contain"
-                        src={media.url}
-                        width={media.dimensions.width}
-                        height={media.dimensions.height}
-                        controls
-                        muted
-                      />
-                      {editMedia && (
-                        <button
-                          className="transition-all duration-150 active:scale-95"
-                          onClick={() => handleDeleteMedia(media.name)}
-                        >
-                          <IoMdRemoveCircle color={"red"} size={24} />
-                        </button>
-                      )}
-                    </div>
-                  );
-                }
-              })}
+              <MediaHandler
+                editMedia={editMedia}
+                mediaUrls={station.mediaUrls}
+                onDeleteMedia={handleDeleteMedia}
+              />
             </div>
           </div>
         )}

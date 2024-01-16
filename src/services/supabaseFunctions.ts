@@ -430,3 +430,40 @@ export const deleteMedia = async (name: string, station_id: number) => {
     throw error;
   }
 };
+
+export const deleteStationMedia = async (station_id: number) => {
+  const user_id = await getUserId();
+  try {
+    const allMedia = await getAllMediaFromStation(station_id);
+
+    allMedia.forEach(async (media) => {
+      await deleteMedia(media.name, station_id);
+    });
+    const { data, error } = await client.storage
+      .from("user-media")
+      .remove([`${user_id}/drills/${station_id}`]);
+
+    if (error) {
+      console.log(error);
+      throw error;
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+const getAllMediaFromStation = async (station_id: number) => {
+  const user_id = await getUserId();
+  try {
+    const { data, error } = await client.storage
+      .from("user-media")
+      .list(`${user_id}/drills/${station_id}`);
+
+    if (error) {
+      throw error;
+    }
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
