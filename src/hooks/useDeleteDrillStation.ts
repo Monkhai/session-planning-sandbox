@@ -10,13 +10,23 @@ import { Station } from "~/utils/types";
 
 const useDeleteDrillStation = () => {
   return useMutation({
-    mutationFn: async (station_id: number) => {
-      await deleteStationMedia(station_id);
+    mutationFn: async ({
+      deleteMedia,
+      station_id,
+    }: {
+      station_id: number;
+      deleteMedia: boolean;
+    }) => {
+      if (deleteMedia) {
+        await deleteStationMedia(station_id);
+      }
       await deleteDrillStation(station_id);
       // return await getAllStations();
     },
 
-    onMutate: async (station_id: number) => {
+    onMutate: async ({ station_id }) => {
+      queryClient.cancelQueries({ queryKey: ["stations"] });
+
       const previousStations: Station[] =
         queryClient.getQueryData(["stations"]) ?? [];
 

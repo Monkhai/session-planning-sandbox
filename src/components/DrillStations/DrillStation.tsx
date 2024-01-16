@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { FaCirclePlus } from "react-icons/fa6";
 import useDeleteDrillStation from "~/hooks/useDeleteDrillStation";
 import useDeleteMedia from "~/hooks/useDeleteMedia";
@@ -10,6 +10,7 @@ import StationBottomBorder from "../SkillStation/StationBottomBorder";
 import Spacer from "../utility/Spacer";
 import DrillStationHeader from "./DrillStationHeader";
 import MediaHandler from "./MediaHandler";
+import { FetchContext } from "~/context/FetchContext";
 
 interface Props {
   station: drillStationType;
@@ -38,8 +39,11 @@ const DrillStation = ({ station, isLast }: Props) => {
   const descriptionRef = React.useRef<HTMLTextAreaElement>(null);
   const commentsRef = React.useRef<HTMLTextAreaElement>(null);
 
+  const { fetchStatus, isPendingCreateDrillStation } = useContext(FetchContext);
+
   const { mutate: updateDrillStation } = useUpdateDrillStation();
-  const { mutate: deleteDrillStation } = useDeleteDrillStation();
+  const { mutate: deleteDrillStation, isPending: isPendingDeleteStation } =
+    useDeleteDrillStation();
   const { mutate: uploadMedia } = useUploadMedia();
   const { mutate: deleteMedia } = useDeleteMedia();
 
@@ -59,7 +63,8 @@ const DrillStation = ({ station, isLast }: Props) => {
   };
 
   const handleDeleteStation = () => {
-    deleteDrillStation(station.id);
+    const deleteMedia = station.mediaUrls.length > 0;
+    deleteDrillStation({ station_id: station.id, deleteMedia });
   };
 
   const handleDeleteMedia = (name: string) => {
@@ -279,6 +284,7 @@ const DrillStation = ({ station, isLast }: Props) => {
           <p className="text-md ml-4 text-gray print:text-xs">Description</p>
           <div className="flex w-full rounded-[10px] bg-white p-4">
             <textarea
+              disabled={isPendingCreateDrillStation || isPendingDeleteStation}
               ref={descriptionRef}
               value={description ? description : ""}
               onChange={(e) => setDescription(e.target.value)}
@@ -294,6 +300,7 @@ const DrillStation = ({ station, isLast }: Props) => {
             <p className="text-md ml-4 text-gray print:text-xs">Comments</p>
             <div className="flex w-full rounded-[10px] bg-white p-4">
               <textarea
+                disabled={isPendingCreateDrillStation || isPendingDeleteStation}
                 ref={commentsRef}
                 value={comments ? comments : ""}
                 onChange={(e) => setComments(e.target.value)}
@@ -309,7 +316,9 @@ const DrillStation = ({ station, isLast }: Props) => {
             <div className=" flex flex-1 flex-row items-center gap-2">
               <p className="text-md ml-4 text-gray">Media</p>
               <button
-                disabled={station.mediaUrls.length > 2}
+                disabled={
+                  station.mediaUrls.length > 2 || fetchStatus === "fetching"
+                }
                 className={
                   station.mediaUrls.length < 2
                     ? "transition-all duration-150 active:scale-95"

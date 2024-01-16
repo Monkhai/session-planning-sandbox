@@ -9,8 +9,6 @@ import StationHeader from "../StationHeader";
 import Spacer from "../utility/Spacer";
 import StationBottomBorder from "./StationBottomBorder";
 import StationSkills from "./StationSkills";
-import { FetchStatus } from "@tanstack/react-query";
-import { queryClient } from "Providers/ReactQueryProvider";
 
 interface Props {
   station: SkillStationType;
@@ -132,7 +130,13 @@ const SkillStation = ({ station, isLast }: Props) => {
     });
   };
 
-  const queryState = queryClient.getQueryState(["stations"]);
+  // const queryState = queryClient.getQueryState(["stations"]);
+  // // const isFetching = queryClient.isFetching();
+
+  // useEffect(() => {
+  //   console.log(queryState?.fetchStatus);
+  //   // console.log(isFetching);
+  // }, [queryState]);
 
   return (
     <div className="relative flex w-full flex-row px-10 py-2 print:px-2 print:py-1">

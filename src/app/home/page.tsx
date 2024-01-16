@@ -1,6 +1,8 @@
 "use client";
+import { FetchStatus } from "@tanstack/react-query";
 import { queryClient } from "Providers/ReactQueryProvider";
 import { useRouter } from "next/navigation";
+import React from "react";
 import { useEffect, useRef, useState } from "react";
 import CreateNewStationButton from "~/components/CreateNewStationButton";
 import HelpButton from "~/components/HelpButton";
@@ -8,6 +10,7 @@ import NavBar from "~/components/NavBar";
 import OnboardingDialog from "~/components/OnboardingDialog";
 import StationResponseHandler from "~/components/StationResponseHandler";
 import Spacer from "~/components/utility/Spacer";
+import { FetchContext } from "~/context/FetchContext";
 import { useAuth } from "~/hooks/useAuth";
 import useCreateDrillStation from "~/hooks/useCreateDrillStation";
 import useCreateSkillStation from "~/hooks/useCreateSkillStation";
@@ -25,10 +28,12 @@ export default function HomePage() {
 
   useUserSeenOnboard(dialogRef);
 
-  const { data: allStations, error, isLoading } = useStations();
+  const { data: allStations, error, isLoading, fetchStatus } = useStations();
 
-  const { mutate: createSkillStation } = useCreateSkillStation();
-  const { mutate: createDrillStation } = useCreateDrillStation();
+  const { mutate: createSkillStation, isPending: isPendingCreateSkillStation } =
+    useCreateSkillStation();
+  const { mutate: createDrillStation, isPending: isPendingCreateDrillStation } =
+    useCreateDrillStation();
 
   const handleCreateSkillStation = () => {
     createSkillStation(allStations?.length ?? 0);
@@ -67,11 +72,19 @@ export default function HomePage() {
       <NavBar />
 
       {allStations ? (
-        <StationResponseHandler
-          error={error}
-          stations={allStations}
-          isLoading={isLoading}
-        />
+        <FetchContext.Provider
+          value={{
+            fetchStatus,
+            isPendingCreateSkillStation,
+            isPendingCreateDrillStation,
+          }}
+        >
+          <StationResponseHandler
+            error={error}
+            stations={allStations}
+            isLoading={isLoading}
+          />
+        </FetchContext.Provider>
       ) : null}
 
       <Spacer />

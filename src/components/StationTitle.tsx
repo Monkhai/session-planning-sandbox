@@ -1,6 +1,5 @@
-import { FetchStatus } from "@tanstack/react-query";
-import { queryClient } from "Providers/ReactQueryProvider";
-import React, { useEffect } from "react";
+import React, { useContext } from "react";
+import { FetchContext } from "~/context/FetchContext";
 
 interface Props {
   stationName: string;
@@ -13,8 +12,11 @@ const StationTitle = ({
   setStationName,
   stationNameRef,
 }: Props) => {
+  const { fetchStatus } = useContext(FetchContext);
+
   return (
     <input
+      disabled={fetchStatus === "fetching"}
       inputMode="text"
       value={stationName}
       onChange={(event) => setStationName(event.target.value)}

@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useContext } from "react";
 import DurationPicker from "./DurationPicker";
+import { FetchContext } from "~/context/FetchContext";
 
 interface Props {
   duration: string;
@@ -18,6 +19,8 @@ const StationDuration = ({
   handledurationChange,
   showDuration,
 }: Props) => {
+  const fetchStatus = useContext(FetchContext);
+
   if (!showDuration) return null;
   const durationStyleClasses = `
   pl-2 
@@ -38,7 +41,10 @@ const StationDuration = ({
   if (showDuration) {
     return (
       <>
-        <button onClick={() => setHideDurationPicker(!hideDurationPicker)}>
+        <button
+          disabled={fetchStatus === "fetching"}
+          onClick={() => setHideDurationPicker(!hideDurationPicker)}
+        >
           <p className={durationStyleClasses}>
             {durationString ? durationString : "Duration"}
           </p>

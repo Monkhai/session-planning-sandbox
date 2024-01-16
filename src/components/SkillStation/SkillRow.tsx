@@ -1,10 +1,11 @@
 import { queryClient } from "Providers/ReactQueryProvider";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { IoMdRemoveCircle } from "react-icons/io";
 import {
   IoCloseCircleSharp,
   IoInformationCircleOutline,
 } from "react-icons/io5";
+import { FetchContext } from "~/context/FetchContext";
 import useDeleteSkill from "~/hooks/useDeleteSkill";
 import useUpdateSkill from "~/hooks/useUpdateSkill";
 import { SkillType } from "~/utils/types";
@@ -29,6 +30,8 @@ const SkillRow = ({ isLast, skill, editSkills, index }: Props) => {
 
   const { mutate: deleteSkill } = useDeleteSkill();
   const { mutate: updateSkill } = useUpdateSkill();
+
+  const { fetchStatus } = useContext(FetchContext);
 
   useEffect(() => {
     setSkillName(skill.name);
@@ -101,6 +104,7 @@ const SkillRow = ({ isLast, skill, editSkills, index }: Props) => {
         }
       >
         <input
+          disabled={fetchStatus === "fetching"}
           ref={nameRef}
           value={skillName}
           onChange={(e) => setSkillName(e.target.value)}
@@ -109,6 +113,7 @@ const SkillRow = ({ isLast, skill, editSkills, index }: Props) => {
         />
         {showReps && (
           <input
+            disabled={fetchStatus === "fetching"}
             ref={repsRef}
             value={reps ? reps : ""}
             onChange={(e) => setReps(Number(e.target.value))}

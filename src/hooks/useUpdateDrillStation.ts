@@ -43,6 +43,8 @@ const useUpdateDrillStation = () => {
       show_media,
       show_edit_media,
     }: UpdateDrillStationArgs) => {
+      queryClient.cancelQueries({ queryKey: ["stations"] });
+
       const previousStations: Station[] =
         queryClient.getQueryData(["stations"]) ?? [];
 

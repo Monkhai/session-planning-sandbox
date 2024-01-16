@@ -317,6 +317,10 @@ export const getDrillStations = async (): Promise<drillStationType[]> => {
       throw error;
     }
 
+    if (drillStationsNoMedia.length < 1) {
+      return [];
+    }
+
     const drillStationMedia = await getDrillStationMedia();
     const drillStations: drillStationType[] = drillStationsNoMedia.map(
       (station) => {
@@ -436,10 +440,13 @@ export const deleteStationMedia = async (station_id: number) => {
   try {
     const allMedia = await getAllMediaFromStation(station_id);
 
-    allMedia.forEach(async (media) => {
-      await deleteMedia(media.name, station_id);
-    });
-    const { data, error } = await client.storage
+    if (allMedia.length < 0) {
+      allMedia.forEach(async (media) => {
+        await deleteMedia(media.name, station_id);
+      });
+    }
+
+    const { error } = await client.storage
       .from("user-media")
       .remove([`${user_id}/drills/${station_id}`]);
 

@@ -16,7 +16,6 @@ const useUpdateSkillStation = () => {
       station_id,
     }: updateStationArgs) => {
       await updateSkillStation(station_id, duration, name, show_duration);
-      // return await getAllStations();
     },
 
     onMutate: ({
