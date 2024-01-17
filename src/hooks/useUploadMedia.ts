@@ -22,8 +22,6 @@ const useUploadMedia = () => {
     onSuccess: (newStation) => {
       if (!newStation) return;
 
-      console.log(newStation);
-
       const previousStations: Station[] =
         queryClient.getQueryData<Station[]>(["stations"]) ?? [];
 
