@@ -10,6 +10,7 @@ import {
   drillStationType,
 } from "~/utils/types";
 import { getImageDimensions, getVideoDimensions } from "./getImageDimension";
+import { get } from "http";
 
 export const getUserId = () => {
   // try {
@@ -497,36 +498,7 @@ export const getOneDrillStation = async (station_id: number) => {
       return null;
     }
 
-    const media = await getAllMediaFromStation(station_id);
-
-    const signedUrls: SignedUrls[] = await Promise.all(
-      media.map(async (file) => {
-        const { data: signedUrl, error } = await client.storage
-          .from("user-media")
-          .createSignedUrl(`${user_id}/drills/${station_id}/${file.name}`, 120);
-        if (error) {
-          throw error;
-        }
-
-        if (file.metadata.mimetype.split("/")[0] === "image") {
-          const dimensions = await getImageDimensions(signedUrl.signedUrl);
-          return {
-            url: signedUrl.signedUrl,
-            type: file.metadata.mimetype.split("/")[0],
-            dimensions: dimensions,
-            name: file.name,
-          };
-        } else {
-          const dimenstions = await getVideoDimensions(signedUrl.signedUrl);
-          return {
-            url: signedUrl.signedUrl,
-            type: file.metadata.mimetype.split("/")[0],
-            dimensions: dimenstions,
-            name: file.name,
-          };
-        }
-      }),
-    );
+    const signedUrls: SignedUrls[] = await getMediaUrlsForStation(station_id);
 
     const station = data[0] as DrillStationNoUrls;
 
@@ -577,8 +549,7 @@ export const deleteStationMedia = async (station_id: number) => {
 
   try {
     const allMedia = await getAllMediaFromStation(station_id);
-
-    if (allMedia.length < 0) {
+    if (allMedia.length > 0) {
       allMedia.forEach(async (media) => {
         await deleteMedia(media.name, station_id);
       });
@@ -589,8 +560,7 @@ export const deleteStationMedia = async (station_id: number) => {
       .remove([`${user_id}/drills/${station_id}`]);
 
     if (error) {
-      console.log(error);
-      throw error;
+      console.error(error);
     }
   } catch (error) {
     throw error;
@@ -614,6 +584,51 @@ const getAllMediaFromStation = async (station_id: number) => {
       throw error;
     }
     return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getMediaUrlsForStation = async (station_id: number) => {
+  const user_id = getUserId();
+  if (!user_id) {
+    console.error("User not found");
+    return [];
+  }
+
+  try {
+    const media = await getAllMediaFromStation(station_id);
+
+    const signedUrls: SignedUrls[] = await Promise.all(
+      media.map(async (file) => {
+        const { data: signedUrl, error } = await client.storage
+          .from("user-media")
+          .createSignedUrl(`${user_id}/drills/${station_id}/${file.name}`, 120);
+        if (error) {
+          throw error;
+        }
+
+        if (file.metadata.mimetype.split("/")[0] === "image") {
+          const dimensions = await getImageDimensions(signedUrl.signedUrl);
+          return {
+            url: signedUrl.signedUrl,
+            type: file.metadata.mimetype.split("/")[0],
+            dimensions: dimensions,
+            name: file.name,
+          };
+        } else {
+          const dimenstions = await getVideoDimensions(signedUrl.signedUrl);
+          return {
+            url: signedUrl.signedUrl,
+            type: file.metadata.mimetype.split("/")[0],
+            dimensions: dimenstions,
+            name: file.name,
+          };
+        }
+      }),
+    );
+
+    return signedUrls;
   } catch (error) {
     throw error;
   }

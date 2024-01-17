@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import useDeleteDrillStation from "~/hooks/useDeleteDrillStation";
 import useDeleteMedia from "~/hooks/useDeleteMedia";
 import useDrillStationStates from "~/hooks/useDrillStationStates";
@@ -9,6 +9,7 @@ import Spacer from "../utility/Spacer";
 import DrillStationHeader from "./DrillStationHeader";
 import DrillStationMedia from "./DrillStationMedia";
 import DrillStationTextArea from "./DrillStationTextArea";
+import { queryClient } from "Providers/ReactQueryProvider";
 
 interface Props {
   station: drillStationType;

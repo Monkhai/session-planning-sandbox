@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "Providers/ReactQueryProvider";
-import { deleteMedia, getAllStations } from "~/services/supabaseFunctions";
+import { deleteMedia } from "~/services/supabaseFunctions";
 import { Station, drillStationType } from "~/utils/types";
 
 const useDeleteMedia = () => {
