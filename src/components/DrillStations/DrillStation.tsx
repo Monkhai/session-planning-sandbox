@@ -11,6 +11,7 @@ import DrillStationTextArea from "./DrillStationTextArea";
 import useGetDrillStationMedia from "~/hooks/useGetDrillStationMedia";
 import DrillStationMedia from "./DrillStationMedia";
 import Loader from "../Loader";
+import { FaChessKing } from "react-icons/fa6";
 
 interface Props {
   station: DrillStationType;
@@ -141,6 +142,7 @@ const DrillStation = ({ station, isLast }: Props) => {
           alert("no file found");
         }
       }
+      e.target.value = "";
     },
     [uploadMedia, station],
   );

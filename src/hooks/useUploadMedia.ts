@@ -10,6 +10,7 @@ import { SignedUrls, UploadMediaArgs } from "~/utils/types";
 const useUploadMedia = () => {
   return useMutation({
     mutationFn: async ({ station_id, file }: UploadMediaArgs) => {
+      console.log(file.name);
       await uploadDrillStationMedia(station_id, file);
       return await getMediaUrlsForStation(station_id);
     },
@@ -42,29 +43,7 @@ const useUploadMedia = () => {
     },
 
     onSuccess: (newMedia, { station_id }) => {
-      const oldMedia = queryClient.getQueryData([
-        "drillStationMedia",
-        station_id,
-      ]) as SignedUrls[];
-
-      const newItem = newMedia.find(
-        (newItem) => !oldMedia.some((oldItem) => oldItem.url === newItem.url),
-      );
-
-      if (!newItem) {
-        return;
-      }
-
-      const updatedMedia = oldMedia.map((media) => {
-        if (media.type === "loader") {
-          return newItem;
-        } else {
-          return media;
-        }
-      });
-
       queryClient.setQueryData(["drillStationMedia", station_id], newMedia);
-      // queryClient.setQueryData(["drillStationMedia", station_id], updatedMedia);
     },
 
     onError: (error, _, callback) => {

@@ -1,29 +1,16 @@
 import { PostgrestSingleResponse } from "@supabase/supabase-js";
 import client from "~/utils/supabaseClient";
 import {
+  DrillStationType,
   FolderWithSignedUrls,
   SignedUrls,
   SkillStationType,
   SkillType,
   UpdateDrillStationArgs,
-  DrillStationType,
 } from "~/utils/types";
 import { getImageDimensions, getVideoDimensions } from "./getImageDimension";
-import { get } from "http";
 
 export const getUserId = () => {
-  // try {
-  //   const { data } = await client.auth.getUser();
-  //   const user_id = data.user?.id;
-
-  //   if (!user_id) {
-  //     throw new Error("No user id found");
-  //   }
-  //   return user_id;
-  // } catch (error) {
-  //   console.log(error);
-  //   throw new Error("No user id found");
-  // }
   let sessionName: string = "";
 
   for (let i = 0; i < localStorage.length; i++) {
@@ -236,7 +223,8 @@ export const uploadDrillStationMedia = async (
       throw error;
     }
   } catch (error) {
-    throw error;
+    console.error(error);
+    return;
   }
 };
 
