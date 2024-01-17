@@ -2,6 +2,7 @@ import Image from "next/image";
 import React, { useState } from "react";
 import { IoMdRemoveCircle } from "react-icons/io";
 import { SignedUrls } from "~/utils/types";
+import Spacer from "../utility/Spacer";
 
 interface Props {
   media: SignedUrls;
@@ -14,8 +15,10 @@ const ImageComponent = ({ editMedia, media, onDeleteMedia }: Props) => {
   return (
     <div
       key={media.url}
-      className="flex flex-col items-center justify-center gap-4"
+      className="flex flex-col items-center justify-center gap-1"
     >
+      {editMedia && <div className="h-[24px]" />}
+
       <Image
         onClick={() => setShowBigImage(true)}
         className="h-32 w-60 cursor-pointer rounded-[10px] border-black object-cover"
