@@ -36,8 +36,6 @@ export type DrillStationType = {
   type: StationType;
 };
 
-// export type drillStationType = DrillStationNoUrls & { mediaUrls: SignedUrls[] };
-
 export type Station = SkillStationType | DrillStationType;
 
 export type SignedUrls = {

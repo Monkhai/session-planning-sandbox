@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "Providers/ReactQueryProvider";
 import { createDrillStation } from "~/services/supabaseFunctions";
-import { SignedUrls, Station, drillStationType } from "~/utils/types";
+import { SignedUrls, Station, DrillStationType } from "~/utils/types";
 
 const useCreateDrillStation = () => {
   return useMutation({
@@ -29,8 +29,7 @@ const useCreateDrillStation = () => {
         show_media: false,
         comments: "",
         description: "",
-        mediaUrls: [] as SignedUrls[],
-      } as drillStationType;
+      } as DrillStationType;
 
       const newStations = [...previousStations, newStation];
 
@@ -52,7 +51,7 @@ const useCreateDrillStation = () => {
       const newStationWithMedia = {
         ...newStation,
         mediaUrls: [] as SignedUrls[],
-      } as drillStationType;
+      } as DrillStationType;
 
       const newStations = previousStations.map((station) => {
         if (

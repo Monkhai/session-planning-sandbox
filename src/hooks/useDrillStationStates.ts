@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { Station, drillStationType } from "~/utils/types";
+import { Station, DrillStationType } from "~/utils/types";
 import useUpdateDrillStation from "./useUpdateDrillStation";
 import { convertDurationToString } from "~/services/DurationFunctions";
 
 type useDrillStationStatesArgs = {
-  station: drillStationType;
+  station: DrillStationType;
   stationNameRef: React.RefObject<HTMLInputElement>;
   descriptionRef: React.RefObject<HTMLTextAreaElement>;
   commentsRef: React.RefObject<HTMLTextAreaElement>;
