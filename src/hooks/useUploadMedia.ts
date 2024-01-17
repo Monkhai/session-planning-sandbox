@@ -14,30 +14,64 @@ const useUploadMedia = () => {
       return await getMediaUrlsForStation(station_id);
     },
 
-    onSuccess: (newMedia, { station_id }) => {
-      const oldMedia = queryClient.getQueryData([
+    onMutate: async ({ station_id, file }) => {
+      const previousMedia = queryClient.getQueryData([
         "drillStationMedia",
         station_id,
       ]) as SignedUrls[] | undefined;
 
-      if (!oldMedia) {
-        queryClient.setQueryData(["drillStationMedia", station_id], newMedia);
-        return;
-      }
+      const tempMediaPlacehoder = {
+        dimensions: { width: 0, height: 0 },
+        name: "loader-image",
+        type: "loader",
+        url: "",
+      } as SignedUrls;
 
-      const uniqueMedia = newMedia.find((media) => !oldMedia.includes(media));
+      const newMedia = previousMedia
+        ? [...previousMedia, tempMediaPlacehoder]
+        : [tempMediaPlacehoder];
 
-      if (!uniqueMedia) {
-        return;
-      }
+      queryClient.setQueryData(["drillStationMedia", station_id], newMedia);
 
-      const updatedMedia = [...oldMedia, uniqueMedia];
-
-      queryClient.setQueryData(["drillStationMedia", station_id], updatedMedia);
+      return () => {
+        queryClient.setQueryData(
+          ["drillStationMedia", station_id],
+          previousMedia,
+        );
+      };
     },
 
-    onError: (error) => {
-      return error;
+    onSuccess: (newMedia, { station_id }) => {
+      const oldMedia = queryClient.getQueryData([
+        "drillStationMedia",
+        station_id,
+      ]) as SignedUrls[];
+
+      const newItem = newMedia.find(
+        (newItem) => !oldMedia.some((oldItem) => oldItem.url === newItem.url),
+      );
+
+      if (!newItem) {
+        return;
+      }
+
+      const updatedMedia = oldMedia.map((media) => {
+        if (media.type === "loader") {
+          return newItem;
+        } else {
+          return media;
+        }
+      });
+
+      queryClient.setQueryData(["drillStationMedia", station_id], newMedia);
+      // queryClient.setQueryData(["drillStationMedia", station_id], updatedMedia);
+    },
+
+    onError: (error, _, callback) => {
+      console.error(error);
+      if (callback) {
+        callback();
+      }
     },
   });
 };

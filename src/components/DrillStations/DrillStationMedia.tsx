@@ -1,9 +1,8 @@
-import React, { useContext } from "react";
+import React from "react";
 import { FaCirclePlus } from "react-icons/fa6";
-import { FetchContext } from "~/context/FetchContext";
 import { SignedUrls } from "~/utils/types";
-import MediaHandler from "./MediaHandler";
 import Loader from "../Loader";
+import MediaHandler from "./MediaHandler";
 
 interface Props {
   mediaUrls: SignedUrls[] | undefined;
@@ -24,9 +23,8 @@ const DrillStationMedia = ({
   onDeleteMedia,
   isMediaLoading,
 }: Props) => {
-  const { fetchStatus } = useContext(FetchContext);
-
   if (!showMedia) return null;
+
   if (isMediaLoading) {
     return (
       <div className="flex flex-col gap-1 print:hidden">
@@ -49,7 +47,7 @@ const DrillStationMedia = ({
         {!isMediaLoading && (
           <>
             <button
-              disabled={mediaUrls.length > 2 || fetchStatus === "fetching"}
+              disabled={mediaUrls.length > 2}
               className={
                 mediaUrls.length < 3
                   ? "transition-all duration-150 active:scale-95"

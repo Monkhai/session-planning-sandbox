@@ -3,6 +3,7 @@ import React, { Suspense } from "react";
 import { SignedUrls } from "~/utils/types";
 import ImageComponent from "./ImageComponent";
 import VideoComponent from "./VideoComponent";
+import Loader from "../Loader";
 
 interface Props {
   editMedia: boolean;
@@ -14,10 +15,12 @@ const MediaHandler = ({ editMedia, mediaUrls, onDeleteMedia }: Props) => {
   return (
     <>
       {mediaUrls.map((media: SignedUrls) => {
-        if (media.type == "image") {
+        if (media.type == "loader") {
+          return <Loader key={media.name} />;
+        } else if (media.type == "image") {
           return (
             <ImageComponent
-              key={media.url}
+              key={media.name}
               editMedia={editMedia}
               media={media}
               onDeleteMedia={onDeleteMedia}
@@ -26,7 +29,7 @@ const MediaHandler = ({ editMedia, mediaUrls, onDeleteMedia }: Props) => {
         } else {
           return (
             <VideoComponent
-              key={media.url}
+              key={media.name}
               editMedia={editMedia}
               media={media}
               onDeleteMedia={onDeleteMedia}
