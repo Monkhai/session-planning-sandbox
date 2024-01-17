@@ -65,4 +65,4 @@ const CreateNewStationButton = ({
     </div>
   );
 };
-export default CreateNewStationButton;
+export default React.memo(CreateNewStationButton);

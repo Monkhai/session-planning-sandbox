@@ -23,4 +23,4 @@ const HelpButton = ({ showContact, setShowContact }: Props) => {
   );
 };
 
-export default HelpButton;
+export default React.memo(HelpButton);

@@ -3,6 +3,7 @@ import { useRef } from "react";
 import FormLink from "~/utils/FormLink";
 import * as PrintTip from "../../public/howToPrint.png";
 import Spacer from "./utility/Spacer";
+import React from "react";
 interface Props {
   showContact: boolean;
 }
@@ -55,4 +56,4 @@ const ContactMeModal = ({ showContact }: Props) => {
   );
 };
 
-export default ContactMeModal;
+export default React.memo(ContactMeModal);

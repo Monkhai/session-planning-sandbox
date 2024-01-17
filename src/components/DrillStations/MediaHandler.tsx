@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React from "react";
+import React, { Suspense } from "react";
 import { SignedUrls } from "~/utils/types";
 import ImageComponent from "./ImageComponent";
 import VideoComponent from "./VideoComponent";

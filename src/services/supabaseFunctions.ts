@@ -2,28 +2,60 @@ import { PostgrestSingleResponse } from "@supabase/supabase-js";
 import client from "~/utils/supabaseClient";
 import {
   DrillStationNoUrls,
+  FolderWithSignedUrls,
   SkillStationType,
   UpdateDrillStationArgs,
   drillStationType,
 } from "~/utils/types";
 import { getImageDimensions, getVideoDimensions } from "./getImageDimension";
 
-export const getUserId = async () => {
-  try {
-    const { data } = await client.auth.getUser();
-    const user_id = data.user?.id;
-    if (!user_id) {
-      throw new Error("No user id found");
+export const getUserId = () => {
+  // try {
+  //   const { data } = await client.auth.getUser();
+  //   const user_id = data.user?.id;
+
+  //   if (!user_id) {
+  //     throw new Error("No user id found");
+  //   }
+  //   return user_id;
+  // } catch (error) {
+  //   console.log(error);
+  //   throw new Error("No user id found");
+  // }
+  let sessionName: string = "";
+
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key) {
+      const splitted = key?.split("-");
+      if (
+        splitted &&
+        splitted[0] === "sb" &&
+        splitted[splitted.length - 2] === "auth" &&
+        splitted[splitted.length - 1] === "token"
+      ) {
+        sessionName = key;
+        break;
+      }
     }
-    return user_id;
-  } catch (error) {
-    console.log(error);
-    throw new Error("No user id found");
   }
+
+  const data = localStorage.getItem(sessionName);
+  if (!data) {
+    return null;
+  }
+  const jsonedData = JSON.parse(data);
+  const user_id: string = jsonedData.user.id;
+  return user_id;
 };
 
 export const getSkillStations = async (): Promise<SkillStationType[]> => {
-  const user_id = await getUserId();
+  const user_id = getUserId();
+  if (!user_id) {
+    console.error("User not found");
+    return [];
+  }
+
   try {
     const response: PostgrestSingleResponse<SkillStationType[]> = await client
       .from("skill_stations")
@@ -99,7 +131,11 @@ export const deleteSkillStation = async (station_id: number) => {
 };
 
 export const createSkillStation = async (lastOrder: number) => {
-  const user_id = await getUserId();
+  const user_id = getUserId();
+  if (!user_id) {
+    console.error("User not found");
+    return;
+  }
 
   try {
     const { data, error } = await client
@@ -110,14 +146,17 @@ export const createSkillStation = async (lastOrder: number) => {
     if (error) {
       throw error;
     }
-    return data;
   } catch (error) {
     throw error;
   }
 };
 
 export const createSkill = async (station_id: number) => {
-  const user_id = await getUserId();
+  const user_id = getUserId();
+  if (!user_id) {
+    console.error("User not found");
+    return;
+  }
   try {
     const { data, error } = await client
       .from("skills")
@@ -126,7 +165,6 @@ export const createSkill = async (station_id: number) => {
     if (error) {
       throw error;
     }
-    return data;
   } catch (error) {
     throw error;
   }
@@ -177,7 +215,11 @@ export const uploadDrillStationMedia = async (
   station_id: number,
   file: File,
 ) => {
-  const user_id = await getUserId();
+  const user_id = getUserId();
+  if (!user_id) {
+    console.error("User not found");
+    return;
+  }
 
   const fileName = file.name.replace(/[^a-zA-Z0-9.]/g, "_");
 
@@ -199,7 +241,11 @@ export const uploadDrillStationMedia = async (
 // ------------------ Drill Stations ------------------
 // ------------------ Drill Stations ------------------
 export const getDrillStationMedia = async () => {
-  const user_id = await getUserId();
+  const user_id = getUserId();
+  if (!user_id) {
+    console.error("User not found");
+    return [];
+  }
 
   try {
     const { data: folderList, error } = await client.storage
@@ -209,75 +255,86 @@ export const getDrillStationMedia = async () => {
     if (error) {
       throw error;
     }
+
     if (folderList) {
-      const foldersWithFilesArray = await Promise.all(
-        folderList.map(async (folder) => {
-          const { data: fileList, error } = await client.storage
-            .from("user-media")
-            .list(`${user_id}/drills/${folder.name}`);
+      if (folderList[0]?.name === ".emptyFolderPlaceholder") {
+        return [] as FolderWithSignedUrls[];
+      } else {
+        const foldersWithFilesArray = await Promise.all(
+          folderList.map(async (folder) => {
+            const { data: fileList, error } = await client.storage
+              .from("user-media")
+              .list(`${user_id}/drills/${folder.name}`);
 
-          if (error) {
-            throw error;
-          }
+            if (error) {
+              throw error;
+            }
 
-          const nameArray = fileList.map((file) => {
-            // console.log(file.metadata);
+            const nameArray = fileList.map((file) => {
+              // console.log(file.metadata);
+              return {
+                name: file.name,
+                type: file.metadata.mimetype.split("/")[0] as string,
+              };
+            });
+
+            return { folderId: folder.name, mediaList: nameArray };
+          }),
+        );
+
+        const foldersWithSignedUrls = await Promise.all(
+          foldersWithFilesArray.map(async (folder) => {
+            const signedUrls = await Promise.all(
+              folder.mediaList.map(async (file) => {
+                const { data: signedUrl, error } = await client.storage
+                  .from("user-media")
+                  .createSignedUrl(
+                    `${user_id}/drills/${folder.folderId}/${file.name}`,
+                    120,
+                  );
+                if (error) {
+                  throw error;
+                }
+
+                if (file.type === "image") {
+                  const dimensions = await getImageDimensions(
+                    signedUrl.signedUrl,
+                  );
+                  return {
+                    url: signedUrl.signedUrl,
+                    type: file.type,
+                    dimensions: dimensions,
+                    name: file.name,
+                  };
+                } else {
+                  const dimenstions = await getVideoDimensions(
+                    signedUrl.signedUrl,
+                  );
+                  return {
+                    url: signedUrl.signedUrl,
+                    type: file.type,
+                    dimensions: dimenstions,
+                    name: file.name,
+                  };
+                }
+              }),
+            );
             return {
-              name: file.name,
-              type: file.metadata.mimetype.split("/")[0] as string,
+              drill_id: Number(folder.folderId),
+              signedUrls: signedUrls,
             };
-          });
+          }),
+        );
 
-          return { folderId: folder.name, mediaList: nameArray };
-        }),
-      );
-
-      const foldersWithSignedUrls = await Promise.all(
-        foldersWithFilesArray.map(async (folder) => {
-          const signedUrls = await Promise.all(
-            folder.mediaList.map(async (file) => {
-              const { data: signedUrl, error } = await client.storage
-                .from("user-media")
-                .createSignedUrl(
-                  `${user_id}/drills/${folder.folderId}/${file.name}`,
-                  120,
-                );
-              if (error) {
-                throw error;
-              }
-
-              if (file.type === "image") {
-                const dimensions = await getImageDimensions(
-                  signedUrl.signedUrl,
-                );
-                return {
-                  url: signedUrl.signedUrl,
-                  type: file.type,
-                  dimensions: dimensions,
-                  name: file.name,
-                };
-              } else {
-                const dimenstions = await getVideoDimensions(
-                  signedUrl.signedUrl,
-                );
-                return {
-                  url: signedUrl.signedUrl,
-                  type: file.type,
-                  dimensions: dimenstions,
-                  name: file.name,
-                };
-              }
-            }),
-          );
-          return { drill_id: Number(folder.folderId), signedUrls: signedUrls };
-        }),
-      );
-      return foldersWithSignedUrls;
+        return foldersWithSignedUrls;
+      }
     } else {
-      throw new Error("No media found");
+      console.error("No folder list found");
+      return [] as FolderWithSignedUrls[];
     }
   } catch (error) {
-    throw error;
+    console.error(error);
+    return [] as FolderWithSignedUrls[];
   }
 };
 
@@ -287,7 +344,12 @@ export const getDrillStationMedia = async () => {
 //------------------ Drill Stations ------------------
 
 export const getDrillStations = async (): Promise<drillStationType[]> => {
-  const user_id = await getUserId();
+  const user_id = getUserId();
+  if (!user_id) {
+    console.error("User not found");
+    return [];
+  }
+
   try {
     const {
       data: drillStationsNoMedia,
@@ -322,6 +384,7 @@ export const getDrillStations = async (): Promise<drillStationType[]> => {
     }
 
     const drillStationMedia = await getDrillStationMedia();
+
     const drillStations: drillStationType[] = drillStationsNoMedia.map(
       (station) => {
         const media = drillStationMedia.find(
@@ -393,7 +456,11 @@ export const deleteDrillStation = async (station_id: number) => {
 };
 
 export const createDrillStation = async (lastOrder: number) => {
-  const user_id = await getUserId();
+  const user_id = getUserId();
+  if (!user_id) {
+    console.error("User not found");
+    return;
+  }
 
   try {
     const { data, error } = await client
@@ -403,7 +470,6 @@ export const createDrillStation = async (lastOrder: number) => {
     if (error) {
       throw error;
     }
-    return data;
   } catch (error) {
     throw error;
   }
@@ -421,7 +487,12 @@ export const getAllStations = async () => {
 };
 
 export const deleteMedia = async (name: string, station_id: number) => {
-  const user_id = await getUserId();
+  const user_id = getUserId();
+  if (!user_id) {
+    console.error("User not found");
+    return;
+  }
+
   try {
     const { data, error } = await client.storage
       .from("user-media")
@@ -436,7 +507,12 @@ export const deleteMedia = async (name: string, station_id: number) => {
 };
 
 export const deleteStationMedia = async (station_id: number) => {
-  const user_id = await getUserId();
+  const user_id = getUserId();
+  if (!user_id) {
+    console.error("User not found");
+    return;
+  }
+
   try {
     const allMedia = await getAllMediaFromStation(station_id);
 
@@ -460,7 +536,12 @@ export const deleteStationMedia = async (station_id: number) => {
 };
 
 const getAllMediaFromStation = async (station_id: number) => {
-  const user_id = await getUserId();
+  const user_id = getUserId();
+  if (!user_id) {
+    console.error("User not found");
+    return [];
+  }
+
   try {
     const { data, error } = await client.storage
       .from("user-media")

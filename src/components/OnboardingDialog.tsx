@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useRef } from "react";
 import {
   onBoardText1,
   onBoardText2,
@@ -7,13 +7,37 @@ import {
   onBoardTextList,
 } from "~/utils/onBoardText";
 import Spacer from "./utility/Spacer";
+import { getUserId } from "~/services/supabaseFunctions";
+import client from "~/utils/supabaseClient";
+import { useUserSeenOnboard } from "~/hooks/useUserSeenOnboard";
 
-interface Props {
-  dialogRef: React.MutableRefObject<HTMLDialogElement | null>;
-  onOnboardSeen: () => void;
-}
+const OnboardingDialog = () => {
+  const dialogRef = useRef<HTMLDialogElement>(null);
 
-const OnboardingDialog = ({ dialogRef, onOnboardSeen }: Props) => {
+  useUserSeenOnboard(dialogRef);
+  const handleSeenOnboard = useCallback(async () => {
+    dialogRef.current?.close();
+    try {
+      const user_id = getUserId();
+      if (!user_id) {
+        console.error("User not found");
+        return;
+      }
+      const { error } = await client
+        .from("user_data")
+        .update({ seen_onboard: true })
+        .eq("user_id", user_id);
+
+      if (error) {
+        console.error(error);
+        return;
+      }
+    } catch (error) {
+      const e = error as Error;
+      console.log(e.message);
+    }
+  }, []);
+
   return (
     <dialog
       ref={dialogRef}
@@ -37,7 +61,7 @@ const OnboardingDialog = ({ dialogRef, onOnboardSeen }: Props) => {
         <Spacer />
 
         <button
-          onClick={onOnboardSeen}
+          onClick={handleSeenOnboard}
           className="self-center rounded-[12px] bg-primary p-4 transition-all duration-150 active:scale-95 print:hidden"
         >
           <p className="text-center text-lg text-white">Got it!</p>
@@ -47,4 +71,4 @@ const OnboardingDialog = ({ dialogRef, onOnboardSeen }: Props) => {
   );
 };
 
-export default OnboardingDialog;
+export default React.memo(OnboardingDialog);

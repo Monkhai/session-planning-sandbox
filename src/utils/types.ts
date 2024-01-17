@@ -96,3 +96,13 @@ export type UploadMediaArgs = {
   station_id: number;
   file: File;
 };
+
+export type FolderWithSignedUrls = {
+  drill_id: number;
+  signedUrls: {
+    url: string;
+    type: string;
+    dimensions: ImageDimensions;
+    name: string;
+  }[];
+};

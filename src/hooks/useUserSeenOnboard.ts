@@ -5,7 +5,11 @@ import client from "~/utils/supabaseClient";
 export const useUserSeenOnboard = (dialogRef: RefObject<HTMLDialogElement>) => {
   useEffect(() => {
     const userSeenOnboard = async () => {
-      const userId = await getUserId();
+      const userId = getUserId();
+      if (!userId) {
+        console.error("User not found");
+        return;
+      }
       const { data, error } = await client
         .from("user_data")
         .select("seen_onboard")

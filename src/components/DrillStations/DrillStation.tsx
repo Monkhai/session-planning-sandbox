@@ -1,16 +1,14 @@
-import React, { useContext, useEffect } from "react";
-import { FaCirclePlus } from "react-icons/fa6";
-import { FetchContext } from "~/context/FetchContext";
+import React, { useCallback } from "react";
 import useDeleteDrillStation from "~/hooks/useDeleteDrillStation";
 import useDeleteMedia from "~/hooks/useDeleteMedia";
-import useUpdateDrillStation from "~/hooks/useUpdateDrillStation";
+import useDrillStationStates from "~/hooks/useDrillStationStates";
 import useUploadMedia from "~/hooks/useUploadMedia";
-import { convertDurationToString } from "~/services/DurationFunctions";
 import { drillStationType } from "~/utils/types";
 import StationBottomBorder from "../SkillStation/StationBottomBorder";
 import Spacer from "../utility/Spacer";
 import DrillStationHeader from "./DrillStationHeader";
-import MediaHandler from "./MediaHandler";
+import DrillStationMedia from "./DrillStationMedia";
+import DrillStationTextArea from "./DrillStationTextArea";
 
 interface Props {
   station: drillStationType;
@@ -18,236 +16,212 @@ interface Props {
 }
 
 const DrillStation = ({ station, isLast }: Props) => {
-  const stationNameRef = React.useRef<HTMLInputElement>(null);
-  const [stationName, setStationName] = React.useState<string>("");
+  const [hideDurationPicker, setHideDurationPicker] = React.useState(true);
   const [showSettingsModal, setShowSettingsModal] =
     React.useState<boolean>(false);
-  const [duration, setDuration] = React.useState<string>("00:00:00");
-  const [durationString, setDurationString] = React.useState<
-    string | undefined
-  >();
-  const [showDuration, setShowDuration] = React.useState<boolean>(false);
-  const [comments, setComments] = React.useState<string>("");
-  const [description, setDescription] = React.useState<string>("");
-  const [hideDurationPicker, setHideDurationPicker] = React.useState(true);
-  const [showMedia, setShowMedia] = React.useState<boolean>(false);
-  const [showComments, setShowComments] = React.useState<boolean>(false);
-  const [editMedia, setEditMedia] = React.useState<boolean>(false);
 
+  const stationNameRef = React.useRef<HTMLInputElement>(null);
   const inputRef = React.useRef<HTMLInputElement>(null);
   const descriptionRef = React.useRef<HTMLTextAreaElement>(null);
   const commentsRef = React.useRef<HTMLTextAreaElement>(null);
 
-  const { fetchStatus, isPendingCreateDrillStation } = useContext(FetchContext);
+  const {
+    updateDrillStation,
+    stationName,
+    setStationName,
+    duration,
+    setDuration,
+    showDuration,
+    setShowDuration,
+    comments,
+    setComments,
+    description,
+    setDescription,
+    editMedia,
+    setEditMedia,
+    showComments,
+    setShowComments,
+    showMedia,
+    setShowMedia,
+    durationString,
+  } = useDrillStationStates({
+    station,
+    stationNameRef,
+    descriptionRef,
+    commentsRef,
+  });
 
-  const { mutate: updateDrillStation } = useUpdateDrillStation();
+  // const { mutate: updateDrillStation } = useUpdateDrillStation();
   const { mutate: deleteDrillStation, isPending: isPendingDeleteStation } =
     useDeleteDrillStation();
   const { mutate: uploadMedia } = useUploadMedia();
   const { mutate: deleteMedia } = useDeleteMedia();
 
-  const handleToggleDuration = (show: boolean) => {
-    setShowDuration(show);
-    updateDrillStation({
-      duration: duration,
-      comments: comments,
-      despcription: description,
-      name: stationName,
-      station_id: station.id,
-      show_duration: show,
-      show_comments: showComments,
-      show_media: showMedia,
-      show_edit_media: editMedia,
-    });
-  };
+  const handleToggleDuration = useCallback(
+    (show: boolean) => {
+      setShowDuration(show);
+      updateDrillStation({
+        duration: duration,
+        comments: comments,
+        despcription: description,
+        name: stationName,
+        station_id: station.id,
+        show_duration: show,
+        show_comments: showComments,
+        show_media: showMedia,
+        show_edit_media: editMedia,
+      });
+    },
+    [
+      duration,
+      comments,
+      description,
+      stationName,
+      station.id,
+      showComments,
+      showMedia,
+      editMedia,
+      updateDrillStation,
+    ],
+  );
 
-  const handleDeleteStation = () => {
+  const handleDeleteStation = useCallback(() => {
     const deleteMedia = station.mediaUrls.length > 0;
     deleteDrillStation({ station_id: station.id, deleteMedia });
-  };
+  }, [deleteDrillStation, station]);
 
-  const handleDeleteMedia = (name: string) => {
-    deleteMedia({ name, station_id: station.id });
-  };
+  const handleDeleteMedia = useCallback(
+    (name: string) => {
+      deleteMedia({ name, station_id: station.id });
+    },
+    [deleteMedia, station],
+  );
 
-  const handleDurationChange = (newDuration: string) => {
-    setDuration(newDuration);
-    updateDrillStation({
-      duration: newDuration,
-      comments: comments,
-      despcription: description,
-      name: stationName,
-      station_id: station.id,
-      show_duration: showDuration,
-      show_comments: showComments,
-      show_media: showMedia,
-      show_edit_media: editMedia,
-    });
-  };
+  const handleDurationChange = useCallback(
+    (newDuration: string) => {
+      setDuration(newDuration);
+      updateDrillStation({
+        duration: newDuration,
+        comments: comments,
+        despcription: description,
+        name: stationName,
+        station_id: station.id,
+        show_duration: showDuration,
+        show_comments: showComments,
+        show_media: showMedia,
+        show_edit_media: editMedia,
+      });
+    },
+    [
+      comments,
+      description,
+      stationName,
+      station.id,
+      showDuration,
+      showComments,
+      showMedia,
+      editMedia,
+      updateDrillStation,
+    ],
+  );
 
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      const file = e.target.files[0];
-      if (file) {
-        uploadMedia({ station_id: station.id, file: file });
-      } else {
-        alert("no file found");
+  const handleFileUpload = useCallback(
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (e.target.files) {
+        const file = e.target.files[0];
+        if (file) {
+          uploadMedia({ station_id: station.id, file: file });
+        } else {
+          alert("no file found");
+        }
       }
-    }
-  };
+    },
+    [uploadMedia, station],
+  );
 
-  useEffect(() => {
-    setDuration(station.duration);
-  }, [station.duration]);
+  const handleToggleComments = useCallback(
+    (show: boolean) => {
+      setShowComments(show);
+      updateDrillStation({
+        duration: duration,
+        comments: comments,
+        despcription: description,
+        name: stationName,
+        station_id: station.id,
+        show_duration: showDuration,
+        show_comments: show,
+        show_media: showMedia,
+        show_edit_media: editMedia,
+      });
+    },
+    [
+      duration,
+      comments,
+      description,
+      stationName,
+      station.id,
+      showDuration,
+      showMedia,
+      editMedia,
+      updateDrillStation,
+    ],
+  );
 
-  useEffect(() => {
-    setShowDuration(station.show_duration);
-  }, [station.show_duration]);
+  const handleToggleShowMedia = useCallback(
+    (show: boolean) => {
+      setShowMedia(show);
+      updateDrillStation({
+        duration: duration,
+        comments: comments,
+        despcription: description,
+        name: stationName,
+        station_id: station.id,
+        show_duration: showDuration,
+        show_comments: showComments,
+        show_media: show,
+        show_edit_media: editMedia,
+      });
+    },
+    [
+      duration,
+      comments,
+      description,
+      stationName,
+      station.id,
+      showDuration,
+      showComments,
+      editMedia,
+      updateDrillStation,
+    ],
+  );
 
-  useEffect(() => {
-    setStationName(station.name);
-  }, [station.name]);
-
-  useEffect(() => {
-    setComments(station.comments);
-  }, [station.comments]);
-
-  useEffect(() => {
-    setDescription(station.description);
-  }, [station.description]);
-
-  useEffect(() => {
-    setShowMedia(station.show_media);
-  }, [station.show_media]);
-
-  useEffect(() => {
-    setShowComments(station.show_comments);
-  }, [station.show_comments]);
-
-  useEffect(() => {
-    setEditMedia(station.show_edit_media);
-  }, [station.show_edit_media]);
-
-  useEffect(() => {
-    const newDurationString = convertDurationToString(duration);
-    if (newDurationString) {
-      if (newDurationString[0] == "0") {
-        setDurationString("");
-        setDuration("00:00:00");
-      } else {
-        setDurationString(newDurationString);
-      }
-    } else {
-      setDurationString("");
-    }
-  }, [duration]);
-
-  useEffect(() => {
-    const handleBlur = () => {
-      if (
-        stationName !== station.name ||
-        duration !== station.duration ||
-        comments !== station.comments ||
-        description !== station.description ||
-        showDuration !== station.show_duration ||
-        showComments !== station.show_comments ||
-        showMedia !== station.show_media
-      ) {
-        updateDrillStation({
-          duration: duration,
-          comments: comments,
-          despcription: description,
-          name: stationName,
-          station_id: station.id,
-          show_duration: showDuration,
-          show_comments: showComments,
-          show_media: showMedia,
-          show_edit_media: editMedia,
-        });
-      }
-    };
-
-    const nameElement = stationNameRef.current;
-    if (nameElement) {
-      nameElement.addEventListener("blur", handleBlur);
-    }
-
-    const descriptionElement = descriptionRef.current;
-    if (descriptionElement) {
-      descriptionElement.addEventListener("blur", handleBlur);
-    }
-
-    const commentsElement = commentsRef.current;
-    if (commentsElement) {
-      commentsElement.addEventListener("blur", handleBlur);
-    }
-
-    return () => {
-      if (nameElement) {
-        nameElement.removeEventListener("blur", handleBlur);
-      }
-      if (descriptionElement) {
-        descriptionElement.removeEventListener("blur", handleBlur);
-      }
-      if (commentsElement) {
-        commentsElement.removeEventListener("blur", handleBlur);
-      }
-    };
-  }, [
-    stationName,
-    station,
-    duration,
-    comments,
-    description,
-    showDuration,
-    showComments,
-    showMedia,
-  ]);
-
-  const handleToggleComments = (show: boolean) => {
-    setShowComments(show);
-    updateDrillStation({
-      duration: duration,
-      comments: comments,
-      despcription: description,
-      name: stationName,
-      station_id: station.id,
-      show_duration: showDuration,
-      show_comments: show,
-      show_media: showMedia,
-      show_edit_media: editMedia,
-    });
-  };
-
-  const handleToggleShowMedia = (show: boolean) => {
-    setShowMedia(show);
-    updateDrillStation({
-      duration: duration,
-      comments: comments,
-      despcription: description,
-      name: stationName,
-      station_id: station.id,
-      show_duration: showDuration,
-      show_comments: showComments,
-      show_media: show,
-      show_edit_media: editMedia,
-    });
-  };
-
-  const handleToggleEditMedia = (show: boolean) => {
-    setEditMedia(show);
-    updateDrillStation({
-      duration: duration,
-      comments: comments,
-      despcription: description,
-      name: stationName,
-      station_id: station.id,
-      show_duration: showDuration,
-      show_comments: showComments,
-      show_media: showMedia,
-      show_edit_media: show,
-    });
-  };
+  const handleToggleEditMedia = useCallback(
+    (show: boolean) => {
+      setEditMedia(show);
+      updateDrillStation({
+        duration: duration,
+        comments: comments,
+        despcription: description,
+        name: stationName,
+        station_id: station.id,
+        show_duration: showDuration,
+        show_comments: showComments,
+        show_media: showMedia,
+        show_edit_media: show,
+      });
+    },
+    [
+      duration,
+      comments,
+      description,
+      stationName,
+      station.id,
+      showDuration,
+      showComments,
+      showMedia,
+      updateDrillStation,
+    ],
+  );
 
   //---------------------------------------------
   //---------------------------------------------
@@ -279,78 +253,33 @@ const DrillStation = ({ station, isLast }: Props) => {
         />
       </div>
       <div className="flex w-1/2 flex-col gap-4 print:w-3/5">
-        <div className="flex flex-col gap-1">
-          <p className="text-md ml-4 text-gray print:text-xs">Description</p>
-          <div className="flex w-full rounded-[10px] bg-white p-4">
-            <textarea
-              disabled={isPendingCreateDrillStation || isPendingDeleteStation}
-              ref={descriptionRef}
-              value={description ? description : ""}
-              onChange={(e) => setDescription(e.target.value)}
-              className="h-[90px] w-full resize-none text-wrap text-xl outline-none active:outline-none print:h-[80px]  print:text-sm"
-              placeholder="Description"
-              rows={5}
-            />
-          </div>
-        </div>
-        {/*  */}
-        {showComments && (
-          <div className="flex flex-col gap-1">
-            <p className="text-md ml-4 text-gray print:text-xs">Comments</p>
-            <div className="flex w-full rounded-[10px] bg-white p-4">
-              <textarea
-                disabled={isPendingCreateDrillStation || isPendingDeleteStation}
-                ref={commentsRef}
-                value={comments ? comments : ""}
-                onChange={(e) => setComments(e.target.value)}
-                className="h-[90px] w-full resize-none text-wrap text-xl outline-none active:outline-none print:h-[80px] print:text-sm "
-                placeholder="Comments"
-              />
-            </div>
-          </div>
-        )}
-        {/*  */}
-        {showMedia && (
-          <div className="flex flex-col gap-1 print:hidden">
-            <div className=" flex flex-1 flex-row items-center gap-2">
-              <p className="text-md ml-4 text-gray">Media</p>
-              <button
-                disabled={
-                  station.mediaUrls.length > 2 || fetchStatus === "fetching"
-                }
-                className={
-                  station.mediaUrls.length < 2
-                    ? "transition-all duration-150 active:scale-95"
-                    : ""
-                }
-                onClick={() => inputRef.current?.click()}
-              >
-                <FaCirclePlus
-                  color={
-                    station.mediaUrls.length < 2
-                      ? "var(--color-blue)"
-                      : "var(--color-gray)"
-                  }
-                  size={20}
-                />
-              </button>
-              <input
-                ref={inputRef}
-                type="file"
-                className="hidden"
-                onChange={handleFileUpload}
-                accept="video/*, image/*"
-              />
-            </div>
-            <div className="flex h-[200px] w-full items-center justify-start gap-10 rounded-[10px] bg-white px-4 py-4">
-              <MediaHandler
-                editMedia={editMedia}
-                mediaUrls={station.mediaUrls}
-                onDeleteMedia={handleDeleteMedia}
-              />
-            </div>
-          </div>
-        )}
+        <DrillStationTextArea
+          value={description}
+          setValue={setDescription}
+          textAreaRef={descriptionRef}
+          isPendingDeleteStation={isPendingDeleteStation}
+          title="Description"
+          placeholder="Enter station description"
+        />
+
+        <DrillStationTextArea
+          value={comments}
+          setValue={setComments}
+          textAreaRef={commentsRef}
+          isPendingDeleteStation={isPendingDeleteStation}
+          title="Comments"
+          placeholder="Enter station comments"
+          showComments={showComments}
+        />
+
+        <DrillStationMedia
+          mediaInputRef={inputRef}
+          mediaUrls={station.mediaUrls}
+          editMedia={editMedia}
+          onDeleteMedia={handleDeleteMedia}
+          onFileUpload={handleFileUpload}
+          showMedia={showMedia}
+        />
       </div>
       <StationBottomBorder isLast={isLast} />
       <Spacer />

@@ -4,7 +4,7 @@ export const convertDurationToString = (
   if (duration !== null && duration !== undefined) {
     if (duration == "00:00:00") return undefined;
 
-    const [hours, minutes, seconds] = duration.split(":");
+    const [hours, minutes] = duration.split(":");
 
     if (hours) {
       const hoursInt = parseInt(hours);
@@ -43,4 +43,17 @@ export const convertNumberOfMinutesToDuration = (
   const formattedHours = hours < 10 ? `0${hours}` : hours;
   const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
   return `${formattedHours}:${formattedMinutes}:00`;
+};
+
+export const convertDurationToDisplayDuration = (duration: string): string => {
+  const newDurationString = convertDurationToString(duration);
+  if (newDurationString) {
+    if (newDurationString[0] == "0") {
+      return "";
+    } else {
+      return newDurationString;
+    }
+  } else {
+    return "";
+  }
 };

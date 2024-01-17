@@ -1,28 +1,25 @@
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "Providers/ReactQueryProvider";
-import {
-  createSkill,
-  getAllStations,
-  getUserId,
-} from "~/services/supabaseFunctions";
+import { createSkill, getUserId } from "~/services/supabaseFunctions";
+import client from "~/utils/supabaseClient";
 import { CreateSkillArgs, SkillStationType, SkillType } from "~/utils/types";
 const useCreateSkill = () => {
   return useMutation({
     mutationFn: async ({ station_id }: CreateSkillArgs) => {
       await createSkill(station_id);
-      // return await getAllStations();
     },
 
     onMutate: async ({ station_id }: CreateSkillArgs) => {
       await queryClient.cancelQueries({ queryKey: ["stations"] });
-
-      const user_id = await getUserId();
+      const user_id = getUserId();
       if (!user_id) {
-        throw new Error("No user id found");
+        console.error("User not found");
+        return;
       }
 
       const previousStations: SkillStationType[] =
         queryClient.getQueryData(["stations"]) ?? [];
+
       const parentStation = previousStations.find(
         (station) => station.id === station_id,
       );
@@ -43,6 +40,7 @@ const useCreateSkill = () => {
       } as SkillType;
 
       parentStation.skills.push(newSkill);
+
       const newStations = previousStations.map((station) => {
         if (station.id === station_id && station.type === "skillStation") {
           return parentStation;
@@ -55,13 +53,12 @@ const useCreateSkill = () => {
       return () => queryClient.setQueryData(["stations"], previousStations);
     },
 
-    onSuccess: (data) => {
-      // queryClient.setQueryData(["stations"], data);
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["stations"] });
     },
 
     onError: (error, _, rollback) => {
-      console.log("error");
+      console.log(error);
       if (rollback) {
         rollback();
       }

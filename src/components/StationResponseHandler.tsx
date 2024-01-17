@@ -5,9 +5,10 @@ import { SkillStationType, Station, drillStationType } from "~/utils/types";
 import React, { useEffect } from "react";
 import SkillStation from "./SkillStation/SkillStation";
 import DrillStation from "./DrillStations/DrillStation";
+import Loader from "./Loader";
 
 interface Props {
-  stations: Station[];
+  stations: Station[] | undefined;
   error: Error | null;
   isLoading: boolean;
 }
@@ -16,7 +17,11 @@ const StationResponseHandler = ({ error, isLoading, stations }: Props) => {
   const router = useRouter();
 
   if (isLoading) {
-    return null;
+    return (
+      <div className="flex h-full w-full flex-1 items-center justify-center">
+        <Loader />
+      </div>
+    );
   }
   if (error) {
     if (error.message === "No user id found") {

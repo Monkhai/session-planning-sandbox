@@ -18,6 +18,9 @@ const ImageComponent = ({ editMedia, media, onDeleteMedia }: Props) => {
       className="flex flex-col items-center justify-center gap-4"
     >
       <Image
+        // loader={(p) => "https://via.placeholder.com/150"}
+        // placeholder={"blur"}
+        // blurDataURL="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
         onClick={() => setShowBigImage(true)}
         className="h-32 w-60 cursor-pointer rounded-[10px] border-black object-cover"
         src={media.url}

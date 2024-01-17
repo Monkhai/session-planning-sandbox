@@ -2,26 +2,25 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { getUserId } from "~/services/supabaseFunctions";
 import client from "~/utils/supabaseClient";
 
 export function useAuth() {
   const router = useRouter();
   useEffect(() => {
-    getUserId().catch(() => router.replace("/login"));
-
-    client.auth.getSession().then(({ data: { session } }) => {
-      if (!session) {
-        router.push("/login");
+    client.auth.getSession().then((response) => {
+      if (!response || !response.data.session || response.error) {
+        router.replace("/login");
       } else {
-        router.push("/home");
+        router.replace("/home");
       }
     });
 
     const { data: authListener } = client.auth.onAuthStateChange(
       (_event, session) => {
         if (!session) {
-          router.push("/login");
+          router.replace("/login");
+        } else {
+          router.replace("/home");
         }
       },
     );

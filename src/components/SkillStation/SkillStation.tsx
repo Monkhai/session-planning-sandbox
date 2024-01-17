@@ -1,9 +1,8 @@
 "use client";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import useCreateSkill from "~/hooks/useCreateSkill";
 import useDeleteSkillStation from "~/hooks/useDeleteSkillStation";
-import useUpdateSkillStation from "~/hooks/useUpdateSkillStation";
-import { convertDurationToString } from "~/services/DurationFunctions";
+import useSkillStationStates from "~/hooks/useSkillStationStates";
 import { SkillStationType } from "~/utils/types";
 import StationHeader from "../StationHeader";
 import Spacer from "../utility/Spacer";
@@ -17,78 +16,28 @@ interface Props {
 
 const SkillStation = ({ station, isLast }: Props) => {
   const [hideDurationPicker, setHideDurationPicker] = useState(true);
-  const [duration, setDuration] = useState<string>("00:00:00");
-  const [durationString, setDurationString] = useState<string | undefined>(
-    station.duration ? convertDurationToString(station.duration) : undefined,
-  );
-  const [stationName, setStationName] = useState<string>(station.name ?? "");
-  const [showEditModal, setShowEditModal] = useState<boolean>(false);
-  const [showDuration, setShowDuration] = useState<boolean>(
-    station.show_duration ?? false,
-  );
-  const [editSkills, setEditSkills] = useState<boolean>(false);
 
   const stationNameRef = React.useRef<HTMLInputElement>(null);
 
+  const {
+    updateStation,
+    setShowDuration,
+    setDuration,
+    durationString,
+    duration,
+    setStationName,
+    showDuration,
+    stationName,
+    setShowEditModal,
+    showEditModal,
+    editSkills,
+    setEditSkills,
+  } = useSkillStationStates({ station, stationNameRef });
+
   const { mutate: createSkill } = useCreateSkill();
   const { mutate: deleteStation } = useDeleteSkillStation();
-  const { mutate: updateStation } = useUpdateSkillStation();
 
-  useEffect(() => {
-    setDuration(station.duration);
-  }, [station.duration]);
-
-  useEffect(() => {
-    setShowDuration(station.show_duration);
-  }, [station.show_duration]);
-
-  useEffect(() => {
-    setStationName(station.name);
-  }, [station.name]);
-
-  useEffect(() => {
-    setShowDuration(station.show_duration);
-  }, [station.show_duration]);
-
-  useEffect(() => {
-    const newDurationString = convertDurationToString(duration);
-    if (newDurationString) {
-      if (newDurationString[0] == "0") {
-        setDurationString("");
-        setDuration("00:00:00");
-      } else {
-        setDurationString(newDurationString);
-      }
-    } else {
-      setDurationString("");
-    }
-  }, [duration]);
-
-  useEffect(() => {
-    const handleBlur = () => {
-      if (stationName !== station.name) {
-        updateStation({
-          station_id: station.id,
-          duration: duration,
-          name: stationName,
-          show_duration: showDuration,
-        });
-      }
-    };
-
-    const element = stationNameRef.current;
-    if (element) {
-      element.addEventListener("blur", handleBlur);
-    }
-
-    return () => {
-      if (element) {
-        element.removeEventListener("blur", handleBlur);
-      }
-    };
-  }, [stationName, station]);
-
-  const handledurationChange = useCallback(
+  const handleDurationChange = useCallback(
     (duration: string) => {
       setDuration(duration);
       if (duration) {
@@ -110,25 +59,28 @@ const SkillStation = ({ station, isLast }: Props) => {
     [stationName, showDuration, station],
   );
 
-  const handleCreateSkill = async () => {
+  const handleCreateSkill = useCallback(async () => {
     createSkill({
       station_id: station.id,
     });
-  };
+  }, [station.id, createSkill]);
 
-  const handleDeleteStation = () => {
+  const handleDeleteStation = useCallback(() => {
     deleteStation(station.id);
-  };
+  }, [station.id, deleteStation]);
 
-  const handleToggleDuration = (show: boolean) => {
-    setShowDuration(show);
-    updateStation({
-      station_id: station.id,
-      duration: duration,
-      name: stationName,
-      show_duration: show,
-    });
-  };
+  const handleToggleDuration = useCallback(
+    (show: boolean) => {
+      setShowDuration(show);
+      updateStation({
+        station_id: station.id,
+        duration: duration,
+        name: stationName,
+        show_duration: show,
+      });
+    },
+    [station.id, duration, stationName],
+  );
 
   return (
     <div className="relative flex w-full flex-row px-10 py-2 print:px-2 print:py-1">
@@ -136,7 +88,7 @@ const SkillStation = ({ station, isLast }: Props) => {
         <StationHeader
           duration={duration}
           durationString={durationString}
-          handleDurationChange={handledurationChange}
+          handleDurationChange={handleDurationChange}
           hideDurationPicker={hideDurationPicker}
           setHideDurationPicker={setHideDurationPicker}
           setShowSettingsModal={setShowEditModal}

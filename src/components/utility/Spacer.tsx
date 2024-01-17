@@ -4,4 +4,4 @@ const Spacer = () => {
   return <div className="flex flex-1" />;
 };
 
-export default Spacer;
+export default React.memo(Spacer);
