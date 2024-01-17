@@ -30,9 +30,9 @@ const DrillStationMedia = ({
       <div className=" flex flex-1 flex-row items-center gap-2">
         <p className="text-md ml-4 text-gray">Media</p>
         <button
-          disabled={mediaUrls.length > 2 || fetchStatus === "fetching"}
+          disabled={mediaUrls.length > 3 || fetchStatus === "fetching"}
           className={
-            mediaUrls.length < 2
+            mediaUrls.length < 3
               ? "transition-all duration-150 active:scale-95"
               : ""
           }
@@ -40,7 +40,7 @@ const DrillStationMedia = ({
         >
           <FaCirclePlus
             color={
-              mediaUrls.length < 2 ? "var(--color-blue)" : "var(--color-gray)"
+              mediaUrls.length < 3 ? "var(--color-blue)" : "var(--color-gray)"
             }
             size={20}
           />

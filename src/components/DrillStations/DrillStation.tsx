@@ -86,7 +86,6 @@ const DrillStation = ({ station, isLast }: Props) => {
   );
 
   const handleDeleteStation = useCallback(() => {
-    console.log(station.mediaUrls);
     const deleteMedia = station.mediaUrls.length > 0;
     deleteDrillStation({ station_id: station.id, deleteMedia });
   }, [deleteDrillStation, station]);

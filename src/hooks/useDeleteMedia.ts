@@ -13,7 +13,6 @@ const useDeleteMedia = () => {
       station_id: number;
     }) => {
       await deleteMedia(name, station_id);
-      return await getAllStations();
     },
 
     onMutate: async ({
@@ -48,9 +47,27 @@ const useDeleteMedia = () => {
       };
     },
 
-    onSuccess: (data) => {
-      // queryClient.setQueryData(["stations"], data);
-      queryClient.invalidateQueries({ queryKey: ["stations"] });
+    onSuccess: (_, { name, station_id }) => {
+      const previousStations: Station[] =
+        queryClient.getQueryData(["stations"]) ?? [];
+
+      const station = previousStations.find(
+        (station) =>
+          station.id === station_id && station.type === "drillStation",
+      ) as drillStationType;
+
+      const newStation = station.mediaUrls.filter(
+        (media) => media.name !== name,
+      );
+
+      const newStations = previousStations.map((station) => {
+        if (station.id === station_id) {
+          return { ...station, mediaUrls: newStation };
+        }
+        return station;
+      });
+
+      queryClient.setQueryData(["stations"], newStations);
     },
 
     onError: (error) => {
