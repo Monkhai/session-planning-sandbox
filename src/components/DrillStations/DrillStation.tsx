@@ -1,18 +1,19 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback } from "react";
 import useDeleteDrillStation from "~/hooks/useDeleteDrillStation";
 import useDeleteMedia from "~/hooks/useDeleteMedia";
 import useDrillStationStates from "~/hooks/useDrillStationStates";
 import useUploadMedia from "~/hooks/useUploadMedia";
-import { drillStationType } from "~/utils/types";
+import { DrillStationType } from "~/utils/types";
 import StationBottomBorder from "../SkillStation/StationBottomBorder";
 import Spacer from "../utility/Spacer";
 import DrillStationHeader from "./DrillStationHeader";
-import DrillStationMedia from "./DrillStationMedia";
 import DrillStationTextArea from "./DrillStationTextArea";
-import { queryClient } from "Providers/ReactQueryProvider";
+import useGetDrillStationMedia from "~/hooks/useGetDrillStationMedia";
+import DrillStationMedia from "./DrillStationMedia";
+import Loader from "../Loader";
 
 interface Props {
-  station: drillStationType;
+  station: DrillStationType;
   isLast: boolean;
 }
 
@@ -58,6 +59,9 @@ const DrillStation = ({ station, isLast }: Props) => {
   const { mutate: uploadMedia } = useUploadMedia();
   const { mutate: deleteMedia } = useDeleteMedia();
 
+  const { data: stationMedia, isLoading: isMediaLoading } =
+    useGetDrillStationMedia(station.id);
+
   const handleToggleDuration = useCallback(
     (show: boolean) => {
       setShowDuration(show);
@@ -87,7 +91,8 @@ const DrillStation = ({ station, isLast }: Props) => {
   );
 
   const handleDeleteStation = useCallback(() => {
-    const deleteMedia = station.mediaUrls.length > 0;
+    // const deleteMedia = station.mediaUrls.length > 0;
+    const deleteMedia = true;
     deleteDrillStation({ station_id: station.id, deleteMedia });
   }, [deleteDrillStation, station]);
 
@@ -275,7 +280,8 @@ const DrillStation = ({ station, isLast }: Props) => {
 
         <DrillStationMedia
           mediaInputRef={inputRef}
-          mediaUrls={station.mediaUrls}
+          mediaUrls={stationMedia}
+          isMediaLoading={isMediaLoading}
           editMedia={editMedia}
           onDeleteMedia={handleDeleteMedia}
           onFileUpload={handleFileUpload}

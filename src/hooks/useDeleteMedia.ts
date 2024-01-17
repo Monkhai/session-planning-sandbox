@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "Providers/ReactQueryProvider";
 import { deleteMedia } from "~/services/supabaseFunctions";
-import { Station, drillStationType } from "~/utils/types";
+import { SignedUrls } from "~/utils/types";
 
 const useDeleteMedia = () => {
   return useMutation({
@@ -22,56 +22,41 @@ const useDeleteMedia = () => {
       name: string;
       station_id: number;
     }) => {
-      const previousStations: Station[] =
-        queryClient.getQueryData(["stations"]) ?? [];
+      const previousMedia = queryClient.getQueryData([
+        "drillStationMedia",
+        station_id,
+      ]) as SignedUrls[] | undefined;
 
-      const station = previousStations.find(
-        (station) => station.id === station_id,
-      ) as drillStationType;
+      const newMedia = previousMedia?.filter((media) => media.name !== name);
 
-      const newStation = station.mediaUrls.filter(
-        (media) => media.name !== name,
-      );
+      queryClient.setQueryData(["drillStationMedia", station_id], newMedia);
 
-      const newStations = previousStations.map((station) => {
-        if (station.id === station_id) {
-          return { ...station, mediaUrls: newStation };
-        }
-        return station;
-      });
-
-      queryClient.setQueryData(["stations"], newStations);
-
-      return () => {
-        queryClient.setQueryData(["stations"], previousStations);
+      return {
+        previousMedia,
+        rollback: () =>
+          queryClient.setQueryData(
+            ["drillStationMedia", station_id],
+            previousMedia,
+          ),
       };
     },
 
     onSuccess: (_, { name, station_id }) => {
-      const previousStations: Station[] =
-        queryClient.getQueryData(["stations"]) ?? [];
+      const oldMedia = queryClient.getQueryData([
+        "drillStationMedia",
+        station_id,
+      ]) as SignedUrls[] | undefined;
 
-      const station = previousStations.find(
-        (station) =>
-          station.id === station_id && station.type === "drillStation",
-      ) as drillStationType;
+      const updatedMedia = oldMedia?.filter((media) => media.name !== name);
 
-      const newStation = station.mediaUrls.filter(
-        (media) => media.name !== name,
-      );
-
-      const newStations = previousStations.map((station) => {
-        if (station.id === station_id) {
-          return { ...station, mediaUrls: newStation };
-        }
-        return station;
-      });
-
-      queryClient.setQueryData(["stations"], newStations);
+      queryClient.setQueryData(["drillStationMedia", station_id], updatedMedia);
     },
 
-    onError: (error) => {
-      throw error;
+    onError: (error, _, context) => {
+      console.error(error);
+      if (context) {
+        context.rollback();
+      }
     },
   });
 };

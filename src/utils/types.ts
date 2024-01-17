@@ -21,7 +21,7 @@ export type SkillStationType = {
   type: StationType;
 };
 
-export type DrillStationNoUrls = {
+export type DrillStationType = {
   id: number;
   user_id: string;
   name: string;
@@ -36,9 +36,9 @@ export type DrillStationNoUrls = {
   type: StationType;
 };
 
-export type drillStationType = DrillStationNoUrls & { mediaUrls: SignedUrls[] };
+// export type drillStationType = DrillStationNoUrls & { mediaUrls: SignedUrls[] };
 
-export type Station = SkillStationType | drillStationType;
+export type Station = SkillStationType | DrillStationType;
 
 export type SignedUrls = {
   url: string;

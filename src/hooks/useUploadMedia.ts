@@ -1,51 +1,39 @@
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "Providers/ReactQueryProvider";
+import { set } from "zod";
 import {
-  getAllStations,
-  getOneDrillStation,
+  getMediaUrlsForStation,
   uploadDrillStationMedia,
 } from "~/services/supabaseFunctions";
-import {
-  SignedUrls,
-  Station,
-  UploadMediaArgs,
-  drillStationType,
-} from "~/utils/types";
+import { SignedUrls, UploadMediaArgs } from "~/utils/types";
 
 const useUploadMedia = () => {
   return useMutation({
     mutationFn: async ({ station_id, file }: UploadMediaArgs) => {
       await uploadDrillStationMedia(station_id, file);
-      return await getOneDrillStation(station_id);
+      return await getMediaUrlsForStation(station_id);
     },
 
-    onSuccess: (newStation) => {
-      if (!newStation) return;
+    onSuccess: (newMedia, { station_id }) => {
+      const oldMedia = queryClient.getQueryData([
+        "drillStationMedia",
+        station_id,
+      ]) as SignedUrls[] | undefined;
 
-      const previousStations: Station[] =
-        queryClient.getQueryData<Station[]>(["stations"]) ?? [];
+      if (!oldMedia) {
+        queryClient.setQueryData(["drillStationMedia", station_id], newMedia);
+        return;
+      }
 
-      const targetStation = previousStations.find(
-        (station) =>
-          station.id === newStation.id && station.type === "drillStation",
-      ) as drillStationType;
+      const uniqueMedia = newMedia.find((media) => !oldMedia.includes(media));
 
-      const newMedia = newStation.mediaUrls;
+      if (!uniqueMedia) {
+        return;
+      }
 
-      const oldMedia = targetStation.mediaUrls;
+      const updatedMedia = [...oldMedia, uniqueMedia];
 
-      const newUrl = newMedia.find((url) => !oldMedia.includes(url));
-
-      targetStation.mediaUrls = [...oldMedia, newUrl as SignedUrls];
-
-      const newStations = previousStations.map((station) => {
-        if (station.id === newStation.id) {
-          return targetStation;
-        }
-        return station;
-      });
-
-      queryClient.setQueryData(["stations"], newStations);
+      queryClient.setQueryData(["drillStationMedia", station_id], updatedMedia);
     },
 
     onError: (error) => {

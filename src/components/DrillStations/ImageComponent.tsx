@@ -11,7 +11,6 @@ interface Props {
 
 const ImageComponent = ({ editMedia, media, onDeleteMedia }: Props) => {
   const [showBigImage, setShowBigImage] = useState<boolean>(false);
-
   return (
     <div
       key={media.url}

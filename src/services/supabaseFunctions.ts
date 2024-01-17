@@ -1,13 +1,12 @@
 import { PostgrestSingleResponse } from "@supabase/supabase-js";
 import client from "~/utils/supabaseClient";
 import {
-  DrillStationNoUrls,
   FolderWithSignedUrls,
   SignedUrls,
   SkillStationType,
   SkillType,
   UpdateDrillStationArgs,
-  drillStationType,
+  DrillStationType,
 } from "~/utils/types";
 import { getImageDimensions, getVideoDimensions } from "./getImageDimension";
 import { get } from "http";
@@ -344,7 +343,7 @@ export const getDrillStationMedia = async () => {
 //------------------ Drill Stations ------------------
 //------------------ Drill Stations ------------------
 
-export const getDrillStations = async (): Promise<drillStationType[]> => {
+export const getDrillStations = async (): Promise<DrillStationType[]> => {
   const user_id = getUserId();
   if (!user_id) {
     console.error("User not found");
@@ -353,9 +352,9 @@ export const getDrillStations = async (): Promise<drillStationType[]> => {
 
   try {
     const {
-      data: drillStationsNoMedia,
+      data: drillStations,
       error,
-    }: PostgrestSingleResponse<DrillStationNoUrls[]> = await client
+    }: PostgrestSingleResponse<DrillStationType[]> = await client
       .from("drill_stations")
       .select(
         `
@@ -380,24 +379,9 @@ export const getDrillStations = async (): Promise<drillStationType[]> => {
       return [];
     }
 
-    if (drillStationsNoMedia.length < 1) {
+    if (drillStations.length < 1) {
       return [];
     }
-
-    const drillStationMedia = await getDrillStationMedia();
-
-    const drillStations: drillStationType[] = drillStationsNoMedia.map(
-      (station) => {
-        const media = drillStationMedia.find(
-          (media) => media.drill_id === station.id,
-        );
-        if (media) {
-          return { ...station, mediaUrls: media.signedUrls };
-        } else {
-          return { ...station, mediaUrls: [] };
-        }
-      },
-    );
 
     return drillStations;
   } catch (error) {
@@ -472,7 +456,7 @@ export const createDrillStation = async (lastOrder: number) => {
     if (error) {
       throw error;
     }
-    return data as drillStationType[];
+    return data as DrillStationType[];
   } catch (error) {
     console.error(error);
     return [];
@@ -498,11 +482,7 @@ export const getOneDrillStation = async (station_id: number) => {
       return null;
     }
 
-    const signedUrls: SignedUrls[] = await getMediaUrlsForStation(station_id);
-
-    const station = data[0] as DrillStationNoUrls;
-
-    return { ...station, mediaUrls: signedUrls } as drillStationType;
+    return data[0] as DrillStationType;
   } catch (error) {
     console.error(error);
     return null;
@@ -581,15 +561,16 @@ const getAllMediaFromStation = async (station_id: number) => {
 
     if (error) {
       return [];
-      throw error;
     }
     return data;
   } catch (error) {
-    throw error;
+    return [];
   }
 };
 
-export const getMediaUrlsForStation = async (station_id: number) => {
+export const getMediaUrlsForStation = async (
+  station_id: number,
+): Promise<SignedUrls[]> => {
   const user_id = getUserId();
   if (!user_id) {
     console.error("User not found");
@@ -604,15 +585,18 @@ export const getMediaUrlsForStation = async (station_id: number) => {
         const { data: signedUrl, error } = await client.storage
           .from("user-media")
           .createSignedUrl(`${user_id}/drills/${station_id}/${file.name}`, 120);
+
         if (error) {
-          throw error;
+          console.error(error);
+          return {} as SignedUrls;
         }
 
         if (file.metadata.mimetype.split("/")[0] === "image") {
           const dimensions = await getImageDimensions(signedUrl.signedUrl);
+          const fileType: string = file.metadata.mimetype.split("/")[0];
           return {
             url: signedUrl.signedUrl,
-            type: file.metadata.mimetype.split("/")[0],
+            type: fileType,
             dimensions: dimensions,
             name: file.name,
           };
