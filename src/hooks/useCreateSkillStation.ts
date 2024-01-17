@@ -6,27 +6,27 @@ import { SkillStationType } from "~/utils/types";
 const useCreateSkillStation = () => {
   return useMutation({
     mutationFn: async (lastOrder: number) => {
-      const data = await createSkillStation(lastOrder);
-      return data;
-      // return await getAllStations();
+      return await createSkillStation(lastOrder);
     },
 
     onMutate: (lastOrder: number) => {
       queryClient.cancelQueries({ queryKey: ["stations"] });
       const previousStations = queryClient.getQueryData(["stations"]) ?? [];
       const tempId = Math.floor(Math.random() * 1000000000);
+
+      const newStation = {
+        id: tempId,
+        name: "",
+        duration: "00:00:00",
+        order: lastOrder,
+        skills: [],
+        show_duration: false,
+        type: "skillStation",
+      };
+
       queryClient.setQueryData(
         ["stations"],
         (old: SkillStationType[] | undefined) => {
-          const newStation = {
-            id: tempId,
-            name: "",
-            duration: "00:00:00",
-            order: lastOrder,
-            skills: [],
-            show_duration: false,
-            type: "skillStation",
-          };
           if (old === undefined) {
             return [newStation];
           }
@@ -34,16 +34,33 @@ const useCreateSkillStation = () => {
         },
       );
 
-      return () => queryClient.setQueryData(["stations"], previousStations);
+      return {
+        rollback: () =>
+          queryClient.setQueryData(["stations"], previousStations),
+        optimisticStation: newStation,
+      };
     },
 
-    onSuccess: (newStations) => {
-      queryClient.invalidateQueries({ queryKey: ["stations"] });
+    onSuccess: (newStation, _, { optimisticStation }) => {
+      const previousStations: SkillStationType[] =
+        queryClient.getQueryData(["stations"]) ?? [];
+
+      const newStations = previousStations.map((station) => {
+        if (
+          station.id === optimisticStation.id &&
+          station.type === "skillStation"
+        ) {
+          return newStation[0];
+        }
+        return station;
+      });
+
+      queryClient.setQueryData(["stations"], newStations);
     },
 
-    onError: (error, _, rollback) => {
-      if (rollback) {
-        rollback();
+    onError: (error, _, context) => {
+      if (context) {
+        context.rollback();
         return error;
       }
     },

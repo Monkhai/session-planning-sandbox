@@ -1,16 +1,12 @@
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "Providers/ReactQueryProvider";
-import {
-  createDrillStation,
-  getAllStations,
-} from "~/services/supabaseFunctions";
-import { Station, drillStationType } from "~/utils/types";
+import { createDrillStation } from "~/services/supabaseFunctions";
+import { SignedUrls, Station, drillStationType } from "~/utils/types";
 
 const useCreateDrillStation = () => {
   return useMutation({
     mutationFn: async (lastOrder: number) => {
-      await createDrillStation(lastOrder);
-      return await getAllStations();
+      return await createDrillStation(lastOrder);
     },
 
     onMutate: (lastOrder: number) => {
@@ -31,23 +27,49 @@ const useCreateDrillStation = () => {
         show_edit_media: false,
         type: "drillStation",
         show_media: false,
+        comments: "",
+        description: "",
+        mediaUrls: [] as SignedUrls[],
       } as drillStationType;
 
       const newStations = [...previousStations, newStation];
 
       queryClient.setQueryData(["stations"], newStations);
 
-      return () => queryClient.setQueryData(["stations"], previousStations);
+      return {
+        rollback: () =>
+          queryClient.setQueryData(["stations"], previousStations),
+        optimisticStation: newStation,
+      };
     },
 
-    onSuccess: (newStations) => {
-      // queryClient.setQueryData(["stations"], newStations);
-      queryClient.invalidateQueries({ queryKey: ["stations"] });
+    onSuccess: (stationFromDB, _, { optimisticStation }) => {
+      const previousStations: Station[] =
+        queryClient.getQueryData(["stations"]) ?? [];
+
+      const newStation = stationFromDB[0];
+
+      const newStationWithMedia = {
+        ...newStation,
+        mediaUrls: [] as SignedUrls[],
+      } as drillStationType;
+
+      const newStations = previousStations.map((station) => {
+        if (
+          station.id === optimisticStation.id &&
+          station.type === "drillStation"
+        ) {
+          return newStationWithMedia;
+        }
+        return station;
+      });
+
+      queryClient.setQueryData(["stations"], newStations);
     },
 
-    onError: (error, _, rollback) => {
-      if (rollback) {
-        rollback();
+    onError: (error, _, context) => {
+      if (context) {
+        context.rollback();
         return error;
       }
     },

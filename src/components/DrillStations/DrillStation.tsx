@@ -86,6 +86,7 @@ const DrillStation = ({ station, isLast }: Props) => {
   );
 
   const handleDeleteStation = useCallback(() => {
+    console.log(station.mediaUrls);
     const deleteMedia = station.mediaUrls.length > 0;
     deleteDrillStation({ station_id: station.id, deleteMedia });
   }, [deleteDrillStation, station]);
@@ -94,7 +95,7 @@ const DrillStation = ({ station, isLast }: Props) => {
     (name: string) => {
       deleteMedia({ name, station_id: station.id });
     },
-    [deleteMedia, station],
+    [deleteMedia, station.id],
   );
 
   const handleDurationChange = useCallback(
@@ -287,4 +288,4 @@ const DrillStation = ({ station, isLast }: Props) => {
   );
 };
 
-export default DrillStation;
+export default React.memo(DrillStation);

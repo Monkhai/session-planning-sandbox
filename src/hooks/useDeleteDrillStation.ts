@@ -2,9 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "Providers/ReactQueryProvider";
 import {
   deleteDrillStation,
-  deleteMedia,
   deleteStationMedia,
-  getAllStations,
 } from "~/services/supabaseFunctions";
 import { Station } from "~/utils/types";
 
@@ -20,8 +18,7 @@ const useDeleteDrillStation = () => {
       if (deleteMedia) {
         await deleteStationMedia(station_id);
       }
-      await deleteDrillStation(station_id);
-      // return await getAllStations();
+      return await deleteDrillStation(station_id);
     },
 
     onMutate: async ({ station_id }) => {
@@ -41,12 +38,18 @@ const useDeleteDrillStation = () => {
       };
     },
 
-    onSuccess: (data) => {
-      // queryClient.setQueryData(["stations"], data);
-      queryClient.invalidateQueries({ queryKey: ["stations"] });
+    onSuccess: (_, { station_id }) => {
+      const previousStations: Station[] =
+        queryClient.getQueryData(["stations"]) ?? [];
+
+      const newStations = previousStations.filter((station) => {
+        return station.id !== station_id || station.type !== "drillStation";
+      });
+
+      queryClient.setQueryData(["stations"], newStations);
     },
 
-    onError: (error, variables, rollback) => {
+    onError: (error, _, rollback) => {
       if (rollback) {
         rollback();
       }

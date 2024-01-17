@@ -4,6 +4,7 @@ import {
   DrillStationNoUrls,
   FolderWithSignedUrls,
   SkillStationType,
+  SkillType,
   UpdateDrillStationArgs,
   drillStationType,
 } from "~/utils/types";
@@ -124,7 +125,6 @@ export const deleteSkillStation = async (station_id: number) => {
     if (error) {
       throw error;
     }
-    return data;
   } catch (error) {
     throw error;
   }
@@ -134,7 +134,7 @@ export const createSkillStation = async (lastOrder: number) => {
   const user_id = getUserId();
   if (!user_id) {
     console.error("User not found");
-    return;
+    return [];
   }
 
   try {
@@ -146,6 +146,7 @@ export const createSkillStation = async (lastOrder: number) => {
     if (error) {
       throw error;
     }
+    return data as SkillStationType[];
   } catch (error) {
     throw error;
   }
@@ -155,16 +156,18 @@ export const createSkill = async (station_id: number) => {
   const user_id = getUserId();
   if (!user_id) {
     console.error("User not found");
-    return;
+    return [];
   }
   try {
     const { data, error } = await client
       .from("skills")
-      .insert([{ name: "", station_id: station_id, user_id: user_id }]);
+      .insert([{ name: "", station_id: station_id, user_id: user_id }])
+      .select();
 
     if (error) {
       throw error;
     }
+    return data as SkillType[];
   } catch (error) {
     throw error;
   }
@@ -180,7 +183,6 @@ export const deleteSkill = async (skill_id: number) => {
     if (error) {
       throw error;
     }
-    return data;
   } catch (error) {
     throw error;
   }
@@ -449,7 +451,6 @@ export const deleteDrillStation = async (station_id: number) => {
     if (error) {
       throw error;
     }
-    return data;
   } catch (error) {
     throw error;
   }
@@ -459,17 +460,19 @@ export const createDrillStation = async (lastOrder: number) => {
   const user_id = getUserId();
   if (!user_id) {
     console.error("User not found");
-    return;
+    return [];
   }
 
   try {
     const { data, error } = await client
       .from("drill_stations")
-      .insert([{ name: "", user_id: user_id, order: lastOrder }]);
+      .insert([{ name: "", user_id: user_id, order: lastOrder }])
+      .select();
 
     if (error) {
       throw error;
     }
+    return data as drillStationType[];
   } catch (error) {
     throw error;
   }

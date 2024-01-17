@@ -64,4 +64,4 @@ const DrillStationMedia = ({
   );
 };
 
-export default DrillStationMedia;
+export default React.memo(DrillStationMedia);

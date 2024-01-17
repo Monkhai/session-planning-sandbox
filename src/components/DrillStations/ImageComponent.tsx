@@ -54,4 +54,4 @@ const ImageComponent = ({ editMedia, media, onDeleteMedia }: Props) => {
   );
 };
 
-export default ImageComponent;
+export default React.memo(ImageComponent);

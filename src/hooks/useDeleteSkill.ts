@@ -1,19 +1,12 @@
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "Providers/ReactQueryProvider";
-import { deleteSkill, getAllStations } from "~/services/supabaseFunctions";
+import { deleteSkill } from "~/services/supabaseFunctions";
 import { SkillStationType } from "~/utils/types";
 
 const useDeleteSkill = () => {
   return useMutation({
-    mutationFn: async ({
-      id,
-      station_id,
-    }: {
-      id: number;
-      station_id: number;
-    }) => {
+    mutationFn: async ({ id }: { id: number; station_id: number }) => {
       await deleteSkill(id);
-      return await getAllStations();
     },
 
     onMutate: ({ id, station_id }: { id: number; station_id: number }) => {
@@ -51,20 +44,47 @@ const useDeleteSkill = () => {
 
       queryClient.setQueryData(["stations"], newStations);
 
-      return () => {
-        queryClient.setQueryData(["stations"], previousStations);
+      return {
+        rollback: () =>
+          queryClient.setQueryData(["stations"], previousStations),
+        targetSkill: targetSkill,
       };
     },
 
-    onSuccess: (data) => {
-      // queryClient.setQueryData(["stations"], data);
-      queryClient.invalidateQueries({ queryKey: ["stations"] });
+    onSuccess: (_, { id, station_id }) => {
+      const previousStations: SkillStationType[] =
+        queryClient.getQueryData(["stations"]) ?? [];
+
+      const parentStation = previousStations.find(
+        (station) =>
+          station.id === station_id && station.type === "skillStation",
+      );
+
+      if (!parentStation) {
+        return;
+      }
+
+      const newSkills = parentStation.skills.filter((skill) => skill.id !== id);
+
+      const newStation = {
+        ...parentStation,
+        skills: newSkills,
+      };
+
+      const newStations = previousStations.map((station) => {
+        if (station.id === station_id && station.type === "skillStation") {
+          return newStation;
+        }
+        return station;
+      });
+
+      queryClient.setQueryData(["stations"], newStations);
     },
 
-    onError: (error, _, rollback) => {
+    onError: (error, _, context) => {
       console.log(error);
-      if (rollback) {
-        rollback();
+      if (context) {
+        context.rollback();
       }
       return error;
     },

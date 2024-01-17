@@ -38,4 +38,4 @@ const MediaHandler = ({ editMedia, mediaUrls, onDeleteMedia }: Props) => {
   );
 };
 
-export default MediaHandler;
+export default React.memo(MediaHandler);

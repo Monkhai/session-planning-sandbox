@@ -72,11 +72,6 @@ const useUpdateDrillStation = () => {
       };
     },
 
-    onSuccess: (data) => {
-      // queryClient.setQueryData(["stations"], data);
-      queryClient.invalidateQueries({ queryKey: ["stations"] });
-    },
-
     onError: (error, _, rollback) => {
       if (rollback) {
         rollback();
