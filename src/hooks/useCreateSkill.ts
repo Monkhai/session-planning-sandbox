@@ -39,11 +39,22 @@ const useCreateSkill = () => {
         user_id,
       } as SkillType;
 
-      parentStation.skills.push(newSkill);
+      let newSkills = [];
+
+      if (parentStation.skills === undefined) {
+        newSkills = [newSkill];
+      } else {
+        newSkills = [...parentStation.skills, newSkill];
+      }
+
+      const newStation = {
+        ...parentStation,
+        skills: newSkills,
+      };
 
       const newStations = previousStations.map((station) => {
         if (station.id === station_id && station.type === "skillStation") {
-          return parentStation;
+          return newStation;
         }
         return station;
       });
