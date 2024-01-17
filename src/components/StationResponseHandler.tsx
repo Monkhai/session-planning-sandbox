@@ -1,7 +1,7 @@
 import { FetchStatus, UseQueryResult } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import client from "~/utils/supabaseClient";
-import { SkillStationType, Station, drillStationType } from "~/utils/types";
+import { SkillStationType, Station, DrillStationType } from "~/utils/types";
 import React, { useEffect } from "react";
 import SkillStation from "./SkillStation/SkillStation";
 import DrillStation from "./DrillStations/DrillStation";
@@ -49,7 +49,7 @@ const StationResponseHandler = ({ error, isLoading, stations }: Props) => {
               <DrillStation
                 key={station.id + station.type}
                 isLast={isLast}
-                station={station as drillStationType}
+                station={station as DrillStationType}
               />
             );
           }
