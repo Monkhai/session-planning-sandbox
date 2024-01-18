@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import ReactDOM from "react-dom";
 import { IoCloseCircleSharp } from "react-icons/io5";
 import {
   convertDurationToNumberOfMinutes,

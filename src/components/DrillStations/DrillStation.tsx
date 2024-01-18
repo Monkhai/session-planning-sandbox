@@ -2,16 +2,14 @@ import React, { useCallback } from "react";
 import useDeleteDrillStation from "~/hooks/useDeleteDrillStation";
 import useDeleteMedia from "~/hooks/useDeleteMedia";
 import useDrillStationStates from "~/hooks/useDrillStationStates";
+import useGetDrillStationMedia from "~/hooks/useGetDrillStationMedia";
 import useUploadMedia from "~/hooks/useUploadMedia";
 import { DrillStationType } from "~/utils/types";
 import StationBottomBorder from "../SkillStation/StationBottomBorder";
 import Spacer from "../utility/Spacer";
 import DrillStationHeader from "./DrillStationHeader";
-import DrillStationTextArea from "./DrillStationTextArea";
-import useGetDrillStationMedia from "~/hooks/useGetDrillStationMedia";
 import DrillStationMedia from "./DrillStationMedia";
-import Loader from "../Loader";
-import { FaChessKing } from "react-icons/fa6";
+import DrillStationTextArea from "./DrillStationTextArea";
 
 interface Props {
   station: DrillStationType;
@@ -55,8 +53,7 @@ const DrillStation = ({ station, isLast }: Props) => {
   });
 
   // const { mutate: updateDrillStation } = useUpdateDrillStation();
-  const { mutate: deleteDrillStation, isPending: isPendingDeleteStation } =
-    useDeleteDrillStation();
+  const { mutate: deleteDrillStation } = useDeleteDrillStation();
   const { mutate: uploadMedia } = useUploadMedia();
   const { mutate: deleteMedia } = useDeleteMedia();
 
@@ -265,7 +262,6 @@ const DrillStation = ({ station, isLast }: Props) => {
           value={description}
           setValue={setDescription}
           textAreaRef={descriptionRef}
-          isPendingDeleteStation={isPendingDeleteStation}
           title="Description"
           placeholder="Enter station description"
         />
@@ -274,7 +270,6 @@ const DrillStation = ({ station, isLast }: Props) => {
           value={comments}
           setValue={setComments}
           textAreaRef={commentsRef}
-          isPendingDeleteStation={isPendingDeleteStation}
           title="Comments"
           placeholder="Enter station comments"
           showComments={showComments}

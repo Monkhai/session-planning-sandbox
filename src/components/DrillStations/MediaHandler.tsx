@@ -1,9 +1,8 @@
-import Image from "next/image";
-import React, { Suspense } from "react";
+import React from "react";
 import { SignedUrls } from "~/utils/types";
+import Loader from "../Loader";
 import ImageComponent from "./ImageComponent";
 import VideoComponent from "./VideoComponent";
-import Loader from "../Loader";
 
 interface Props {
   editMedia: boolean;

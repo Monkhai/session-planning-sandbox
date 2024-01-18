@@ -1,10 +1,9 @@
-import React, { useContext, useEffect } from "react";
+import React, { useEffect } from "react";
 
 interface Props {
   value: string;
   setValue: React.Dispatch<React.SetStateAction<string>>;
   textAreaRef: React.RefObject<HTMLTextAreaElement>;
-  isPendingDeleteStation: boolean;
   title: string;
   placeholder: string;
   showComments?: boolean;
@@ -13,7 +12,6 @@ interface Props {
 const DrillStationTextArea = ({
   value,
   textAreaRef,
-  isPendingDeleteStation,
   setValue,
   title,
   placeholder,

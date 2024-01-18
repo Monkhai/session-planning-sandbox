@@ -2,7 +2,6 @@ import Image from "next/image";
 import React, { useState } from "react";
 import { IoMdRemoveCircle } from "react-icons/io";
 import { SignedUrls } from "~/utils/types";
-import Spacer from "../utility/Spacer";
 
 interface Props {
   media: SignedUrls;

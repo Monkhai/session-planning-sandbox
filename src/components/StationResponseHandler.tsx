@@ -1,11 +1,10 @@
-import { FetchStatus, UseQueryResult } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import React from "react";
 import client from "~/utils/supabaseClient";
-import { SkillStationType, Station, DrillStationType } from "~/utils/types";
-import React, { useEffect } from "react";
-import SkillStation from "./SkillStation/SkillStation";
+import { DrillStationType, SkillStationType, Station } from "~/utils/types";
 import DrillStation from "./DrillStations/DrillStation";
 import Loader from "./Loader";
+import SkillStation from "./SkillStation/SkillStation";
 
 interface Props {
   stations: Station[] | undefined;

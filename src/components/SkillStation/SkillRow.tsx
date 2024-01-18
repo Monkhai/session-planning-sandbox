@@ -121,7 +121,6 @@ const SkillRow = ({ isLast, skill, editSkills, index }: Props) => {
           setDescription={setDescription}
           setShowInfo={setShowInfo}
           showInfo={showInfo}
-          setShowReps={setShowReps}
         />
       </div>
     </div>

@@ -1,9 +1,8 @@
-import React, { useContext } from "react";
+import React from "react";
 import { PiDotsThreeCircleFill } from "react-icons/pi";
 import StationDuration from "../StationDuration";
 import StationTitle from "../StationTitle";
 import DrillStationSettings from "./DrillStationSettings";
-import { FetchStatus } from "@tanstack/react-query";
 
 interface Props {
   setShowSettingsModal: React.Dispatch<React.SetStateAction<boolean>>;

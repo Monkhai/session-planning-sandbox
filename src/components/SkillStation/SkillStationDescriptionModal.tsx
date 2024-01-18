@@ -7,7 +7,6 @@ interface Props {
   description: string;
   setDescription: React.Dispatch<React.SetStateAction<string>>;
   descriptionRef: React.RefObject<HTMLTextAreaElement>;
-  setShowReps: React.Dispatch<React.SetStateAction<boolean>>;
   showReps: boolean;
   handleToggleReps: (show: boolean) => void;
 }
@@ -16,7 +15,6 @@ const SkillStationDescriptionModal = ({
   descriptionRef,
   setDescription,
   setShowInfo,
-  setShowReps,
   showInfo,
   showReps,
   handleToggleReps,
