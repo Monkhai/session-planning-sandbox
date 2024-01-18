@@ -71,15 +71,15 @@ const SkillRow = ({ isLast, skill, editSkills, index }: Props) => {
         }}
         className={
           !isLast
-            ? "dark:bg-darkSecondaryBackground flex h-[50px] w-full flex-row border-b-[1px] border-b-seperator bg-white p-4 print:h-[35px] print:border-none  print:p-2 print:py-0"
-            : "dark:bg-darkSecondaryBackground flex h-[50px] w-full  flex-row bg-white p-4 print:h-[35px]  print:p-2 print:py-0"
+            ? "dark:bg-darkSecondaryBackground flex h-[50px] w-full flex-row items-center border-b-[1px] border-b-seperator bg-white p-4 print:h-[35px] print:border-none  print:p-2 print:py-0"
+            : "dark:bg-darkSecondaryBackground flex h-[50px] w-full  flex-row items-center bg-white p-4 print:h-[35px]  print:p-2 print:py-0"
         }
       >
         <input
           ref={nameRef}
           value={skillName}
           onChange={(e) => setSkillName(e.target.value)}
-          className="dark:bg-darkSecondaryBackground h-[24px] flex-1 text-xl outline-none active:outline-none print:text-xs"
+          className="h-[24px] flex-1 text-xl outline-none active:outline-none print:text-xs dark:bg-transparent"
           placeholder={"Skill name"}
         />
         {showReps && (
@@ -87,7 +87,7 @@ const SkillRow = ({ isLast, skill, editSkills, index }: Props) => {
             ref={repsRef}
             value={reps ? reps : ""}
             onChange={(e) => setReps(Number(e.target.value))}
-            className="dark:bg-darkSecondaryBackground h-[24px] text-right text-xl outline-none active:outline-none print:text-sm"
+            className="h-[24px] text-right text-xl outline-none active:outline-none print:text-sm dark:bg-transparent"
             placeholder="Reps"
           />
         )}
