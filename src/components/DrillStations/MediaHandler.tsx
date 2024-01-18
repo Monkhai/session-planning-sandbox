@@ -14,11 +14,11 @@ interface Props {
 const MediaHandler = ({ editMedia, mediaUrls, onDeleteMedia }: Props) => {
   return (
     <>
-      {mediaUrls.map((media: SignedUrls) => {
+      {mediaUrls.map((media: SignedUrls, index) => {
         if (media.type == "loader") {
           return (
             <div className="flex h-32 w-60 items-center justify-center">
-              <Loader size="small" key={media.name} />
+              <Loader size="small" key={media.name + " " + index} />
             </div>
           );
         } else if (media.type == "image") {
