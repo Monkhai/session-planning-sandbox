@@ -6,6 +6,8 @@ import {
   SignedUrls,
   SkillStationType,
   SkillType,
+  Station,
+  StationType,
   UpdateDrillStationArgs,
 } from "~/utils/types";
 import { getImageDimensions, getVideoDimensions } from "./getImageDimension";
@@ -128,7 +130,7 @@ export const createSkillStation = async (lastOrder: number) => {
   try {
     const { data, error } = await client
       .from("skill_stations")
-      .insert([{ name: "", user_id: user_id, order: lastOrder }])
+      .insert([{ name: "", user_id: user_id, order: lastOrder + 1 }])
       .select();
 
     if (error) {
@@ -438,7 +440,7 @@ export const createDrillStation = async (lastOrder: number) => {
   try {
     const { data, error } = await client
       .from("drill_stations")
-      .insert([{ name: "", user_id: user_id, order: lastOrder }])
+      .insert([{ name: "", user_id: user_id, order: lastOrder + 1 }])
       .select();
 
     if (error) {
@@ -602,6 +604,36 @@ export const getMediaUrlsForStation = async (
 
     return signedUrls;
   } catch (error) {
+    throw error;
+  }
+};
+
+export const decrementStationOrder = async (station: Station) => {
+  const stationType = {
+    skillStation: "skill_stations",
+    drillStation: "drill_stations",
+  };
+
+  try {
+    const { data, error } = await client
+      .from(stationType[station.type])
+      .update({ order: station.order - 1 })
+      .eq("id", station.id)
+      .select();
+
+    if (error) {
+      console.error(error);
+      throw error;
+    }
+
+    if (!data) {
+      console.error("No data");
+      throw new Error("No data");
+    }
+
+    return data[0] as Station;
+  } catch (error) {
+    console.error(error);
     throw error;
   }
 };

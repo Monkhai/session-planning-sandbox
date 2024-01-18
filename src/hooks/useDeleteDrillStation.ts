@@ -1,6 +1,7 @@
 import { queryOptions, useMutation } from "@tanstack/react-query";
 import { queryClient } from "Providers/ReactQueryProvider";
 import {
+  decrementStationOrder,
   deleteDrillStation,
   deleteStationMedia,
 } from "~/services/supabaseFunctions";
@@ -27,33 +28,50 @@ const useDeleteDrillStation = () => {
       const previousStations: Station[] =
         queryClient.getQueryData(["stations"]) ?? [];
 
+      const index = previousStations.findIndex(
+        (station) =>
+          station.id === station_id && station.type === "drillStation",
+      );
+
       const newStations = previousStations.filter((station) => {
         return station.id !== station_id || station.type !== "drillStation";
       });
 
-      queryClient.setQueryData(["stations"], newStations);
+      const stationsToUpdate = newStations.slice(index);
 
-      return () => {
-        queryClient.setQueryData(["stations"], previousStations);
+      const newStationsWithUpdatedOrder = newStations.map((station) => {
+        if (station.order > index) {
+          return { ...station, order: station.order - 1 };
+        }
+        return station;
+      });
+
+      queryClient.setQueryData(["stations"], newStationsWithUpdatedOrder);
+
+      return {
+        rollback: () =>
+          queryClient.setQueryData(["stations"], previousStations),
+        stationsToUpdate: stationsToUpdate,
       };
     },
 
-    onSuccess: (_, { station_id }) => {
-      const previousStations: Station[] =
-        queryClient.getQueryData(["stations"]) ?? [];
-
-      const newStations = previousStations.filter((station) => {
-        return station.id !== station_id || station.type !== "drillStation";
-      });
-
-      queryClient.setQueryData(["stations"], newStations);
-    },
-
-    onError: (error, _, rollback) => {
-      if (rollback) {
+    onSuccess: async (_, __, { rollback, stationsToUpdate }) => {
+      try {
+        for (const station of stationsToUpdate) {
+          await decrementStationOrder(station);
+        }
+      } catch (error) {
+        console.error(error);
         rollback();
       }
-      return error;
+      return;
+    },
+
+    onError: (error, _, context) => {
+      console.error(error);
+      if (context) {
+        context.rollback();
+      }
     },
   });
 };

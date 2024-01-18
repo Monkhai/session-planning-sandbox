@@ -29,8 +29,6 @@ const useDeleteMedia = () => {
 
       const newMedia = previousMedia?.filter((media) => media.name !== name);
 
-      // console.log(newMedia, "delete media mutate");
-
       queryClient.setQueryData(["drillStationMedia", station_id], newMedia);
 
       return {
@@ -49,7 +47,7 @@ const useDeleteMedia = () => {
       ]) as SignedUrls[] | undefined;
 
       const updatedMedia = oldMedia?.filter((media) => media.name !== name);
-      // console.log(updatedMedia, "delete media");
+
       queryClient.setQueryData(["drillStationMedia", station_id], updatedMedia);
     },
 
