@@ -30,12 +30,12 @@ const SkillStationDescriptionModal = ({
   }, [description]);
   return (
     <div
-      className="absolute left-10 w-80"
+      className="absolute left-10 top-5 w-80"
       style={{
         transition: "all 0.150s ease-in-out",
         scale: showInfo ? 1 : 0,
         opacity: showInfo ? 1 : 0,
-        transformOrigin: "left",
+        transformOrigin: "0px 10px",
       }}
     >
       <div className="z-10 flex w-80 flex-col gap-4 rounded-[10px] bg-white p-4 shadow-xl">
@@ -45,6 +45,7 @@ const SkillStationDescriptionModal = ({
             <IoCloseCircleSharp size={24} color={"var(--color-blue)"} />
           </button>
         </div>
+
         <textarea
           ref={descriptionRef}
           value={description ? description : ""}
@@ -72,4 +73,4 @@ const SkillStationDescriptionModal = ({
   );
 };
 
-export default SkillStationDescriptionModal;
+export default React.memo(SkillStationDescriptionModal);

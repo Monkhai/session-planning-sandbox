@@ -152,7 +152,12 @@ const SkillRow = ({ isLast, skill, editSkills, index }: Props) => {
       <div className="relative left-4 flex items-center justify-center print:hidden">
         <button
           onClick={() => setShowInfo(!showInfo)}
-          className="transition-all duration-150 active:scale-95 "
+          style={{
+            // scale: showInfo ? 1.1 : 1,
+            rotate: showInfo ? "22.5deg" : "0deg",
+            transition: "all 0.300s cubic-bezier(0, 0, 0.58, 1.0)",
+          }}
+          className="rounded-full  active:scale-95"
         >
           <IoInformationCircleOutline color={"var(--color-blue)"} size={28} />
         </button>
