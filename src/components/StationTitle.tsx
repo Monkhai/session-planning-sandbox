@@ -1,7 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import { set } from "zod";
-import { FetchContext } from "~/context/FetchContext";
-
 interface Props {
   stationName: string;
   setStationName: React.Dispatch<React.SetStateAction<string>>;
@@ -13,8 +11,6 @@ const StationTitle = ({
   setStationName,
   stationNameRef,
 }: Props) => {
-  const { fetchStatus } = useContext(FetchContext);
-
   useEffect(() => {
     if (stationNameRef.current) {
       stationNameRef.current.style.height = "0"; // Reset height to shrink if text is deleted
@@ -25,7 +21,6 @@ const StationTitle = ({
 
   return (
     <textarea
-      disabled={fetchStatus === "fetching"}
       inputMode="text"
       value={stationName}
       onChange={(event) => setStationName(event.target.value)}

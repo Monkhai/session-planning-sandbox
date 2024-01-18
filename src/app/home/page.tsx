@@ -3,11 +3,11 @@ import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 import CreateNewStationButton from "~/components/CreateNewStationButton";
 import HelpButton from "~/components/HelpButton";
+import LogoutButton from "~/components/LogoutButton";
 import NavBar from "~/components/NavBar";
 import OnboardingDialog from "~/components/OnboardingDialog";
 import StationResponseHandler from "~/components/StationResponseHandler";
 import Spacer from "~/components/utility/Spacer";
-import { FetchContext } from "~/context/FetchContext";
 import { useAuth } from "~/hooks/useAuth";
 import useCreateDrillStation from "~/hooks/useCreateDrillStation";
 import useCreateSkillStation from "~/hooks/useCreateSkillStation";
@@ -20,12 +20,10 @@ export default function HomePage() {
 
   const [showContact, setShowContact] = useState(false);
 
-  const { data: allStations, error, isLoading, fetchStatus } = useStations();
+  const { data: allStations, error, isLoading } = useStations();
 
-  const { mutate: createSkillStation, isPending: isPendingCreateSkillStation } =
-    useCreateSkillStation();
-  const { mutate: createDrillStation, isPending: isPendingCreateDrillStation } =
-    useCreateDrillStation();
+  const { mutate: createSkillStation } = useCreateSkillStation();
+  const { mutate: createDrillStation } = useCreateDrillStation();
 
   const handleCreateSkillStation = useCallback(() => {
     createSkillStation(allStations?.length ?? 0);
@@ -44,25 +42,17 @@ export default function HomePage() {
     <main className="flex min-h-screen flex-col items-center justify-start bg-background  pb-4">
       <NavBar />
 
-      <FetchContext.Provider
-        value={{
-          fetchStatus,
-          isPendingCreateSkillStation,
-          isPendingCreateDrillStation,
-        }}
-      >
-        <StationResponseHandler
-          error={error}
-          stations={allStations}
-          isLoading={isLoading}
-        />
-      </FetchContext.Provider>
+      <StationResponseHandler
+        error={error}
+        stations={allStations}
+        isLoading={isLoading}
+      />
 
       <Spacer />
 
       <div className="sticky bottom-10 mt-10 flex w-full flex-row items-center justify-center gap-4 px-10 print:hidden">
-        {/* <LogoutButton handleLogout={handleLogout} /> */}
-        <Spacer />
+        <LogoutButton handleLogout={handleLogout} />
+
         <CreateNewStationButton
           onCreateSkillStation={handleCreateSkillStation}
           onCreateDrillStation={handleCreateDrillStation}

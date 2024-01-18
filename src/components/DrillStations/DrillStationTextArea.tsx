@@ -1,5 +1,4 @@
 import React, { useContext, useEffect } from "react";
-import { FetchContext } from "~/context/FetchContext";
 
 interface Props {
   value: string;
@@ -20,8 +19,6 @@ const DrillStationTextArea = ({
   placeholder,
   showComments = true,
 }: Props) => {
-  const { isPendingCreateDrillStation } = useContext(FetchContext);
-
   if (!showComments) return null;
 
   useEffect(() => {
@@ -37,7 +34,6 @@ const DrillStationTextArea = ({
       <p className="text-md ml-4 text-gray print:text-xs">{title}</p>
       <div className="flex h-auto w-full rounded-[10px] bg-white p-4">
         <textarea
-          disabled={isPendingCreateDrillStation || isPendingDeleteStation}
           ref={textAreaRef}
           value={value ? value : ""}
           onChange={(e) => setValue(e.target.value)}

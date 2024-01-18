@@ -1,10 +1,8 @@
-import React, { useContext, useEffect } from "react";
+import React from "react";
 import { PiDotsThreeCircleFill } from "react-icons/pi";
-import StationDuration from "./StationDuration";
 import StationSettings from "./DrillStations/StationSettings";
+import StationDuration from "./StationDuration";
 import StationTitle from "./StationTitle";
-import { FetchStatus } from "@tanstack/react-query";
-import { FetchContext } from "~/context/FetchContext";
 
 interface Props {
   setShowSettingsModal: React.Dispatch<React.SetStateAction<boolean>>;
@@ -39,16 +37,10 @@ const StationHeader = ({
   stationNameRef,
   showDuration,
 }: Props) => {
-  const { fetchStatus } = useContext(FetchContext);
-
   return (
     <div className="flex min-h-20 w-full flex-row items-start justify-around gap-2 py-2">
       <div className="relative bottom-1 flex flex-row print:hidden">
         <button
-          style={{
-            opacity: fetchStatus === "fetching" ? 0.5 : 1,
-          }}
-          disabled={fetchStatus === "fetching"}
           className="transition-all duration-150 active:scale-95"
           onClick={() => setShowSettingsModal(!showSettingsModal)}
         >

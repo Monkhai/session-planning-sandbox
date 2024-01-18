@@ -1,16 +1,11 @@
-import { queryClient } from "Providers/ReactQueryProvider";
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { IoMdRemoveCircle } from "react-icons/io";
-import {
-  IoCloseCircleSharp,
-  IoInformationCircleOutline,
-} from "react-icons/io5";
-import { FetchContext } from "~/context/FetchContext";
+import { IoInformationCircleOutline } from "react-icons/io5";
 import useDeleteSkill from "~/hooks/useDeleteSkill";
+import useSkillRowStates from "~/hooks/useSkillRowStates";
 import useUpdateSkill from "~/hooks/useUpdateSkill";
 import { SkillType } from "~/utils/types";
 import SkillStationDescriptionModal from "./SkillStationDescriptionModal";
-import useSkillRowStates from "~/hooks/useSkillRowStates";
 
 interface Props {
   isLast?: boolean;
@@ -20,10 +15,6 @@ interface Props {
 }
 
 const SkillRow = ({ isLast, skill, editSkills, index }: Props) => {
-  // const [skillName, setSkillName] = useState<string>("");
-  // const [reps, setReps] = useState<number>(0);
-  // const [description, setDescription] = useState<string>("");
-  // const [showReps, setShowReps] = useState<boolean>(false);
   const [showInfo, setShowInfo] = useState<boolean>(false);
 
   const nameRef = React.useRef<HTMLInputElement>(null);
@@ -49,8 +40,6 @@ const SkillRow = ({ isLast, skill, editSkills, index }: Props) => {
     repsRef: repsRef,
     updateSkill: updateSkill,
   });
-
-  const { fetchStatus } = useContext(FetchContext);
 
   const handleDeleteSkill = useCallback(() => {
     deleteSkill({ id: skill.id, station_id: skill.station_id });
@@ -87,16 +76,14 @@ const SkillRow = ({ isLast, skill, editSkills, index }: Props) => {
         }
       >
         <input
-          disabled={fetchStatus === "fetching"}
           ref={nameRef}
           value={skillName}
           onChange={(e) => setSkillName(e.target.value)}
           className="h-[24px] flex-1 text-xl outline-none active:outline-none print:text-xs"
-          placeholder={"Skill Name"}
+          placeholder={"Skill name"}
         />
         {showReps && (
           <input
-            disabled={fetchStatus === "fetching"}
             ref={repsRef}
             value={reps ? reps : ""}
             onChange={(e) => setReps(Number(e.target.value))}
