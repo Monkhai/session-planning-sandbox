@@ -59,3 +59,11 @@ h4 {
 .modal {
   @apply: z-10 flex w-80 flex-col gap-4 rounded-[10px] bg-white p-4 shadow-xl;
 }
+
+textarea {
+  scrollbar-width: none; /* For Firefox */
+  -ms-overflow-style: none; /* For Internet Explorer and Edge */
+}
+textarea::-webkit-scrollbar {
+  display: none; /* For Chrome, Safari, and Opera */
+}

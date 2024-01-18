@@ -17,7 +17,7 @@ interface Props {
 const SkillStation = ({ station, isLast }: Props) => {
   const [hideDurationPicker, setHideDurationPicker] = useState(true);
 
-  const stationNameRef = React.useRef<HTMLInputElement>(null);
+  const stationNameRef = React.useRef<HTMLTextAreaElement>(null);
 
   const {
     updateStation,

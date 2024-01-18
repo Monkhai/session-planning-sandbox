@@ -23,7 +23,7 @@ const DrillStation = ({ station, isLast }: Props) => {
   const [showSettingsModal, setShowSettingsModal] =
     React.useState<boolean>(false);
 
-  const stationNameRef = React.useRef<HTMLInputElement>(null);
+  const stationNameRef = React.useRef<HTMLTextAreaElement>(null);
   const inputRef = React.useRef<HTMLInputElement>(null);
   const descriptionRef = React.useRef<HTMLTextAreaElement>(null);
   const commentsRef = React.useRef<HTMLTextAreaElement>(null);

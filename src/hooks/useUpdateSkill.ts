@@ -11,8 +11,9 @@ const useUpdateSkill = () => {
       name,
       repetitions,
       description,
+      show_reps,
     }: updateSkillArgs) => {
-      await updateSkill(skill_id, name, repetitions, description);
+      await updateSkill(skill_id, name, repetitions, description, show_reps);
       // return await getAllStations();
     },
 
@@ -22,6 +23,7 @@ const useUpdateSkill = () => {
       repetitions,
       description,
       station_id,
+      show_reps,
     }: updateSkillArgs) => {
       queryClient.cancelQueries({ queryKey: ["stations"] });
 
@@ -50,6 +52,7 @@ const useUpdateSkill = () => {
         name,
         repetitions,
         description,
+        show_reps,
       };
 
       const newStation = {

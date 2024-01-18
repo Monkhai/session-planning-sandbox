@@ -66,7 +66,8 @@ export const getSkillStations = async (): Promise<SkillStationType[]> => {
                     repetitions,
                     order,
                     description,
-                    user_id
+                    user_id,
+                    show_reps
                 )
             `,
       )
@@ -151,7 +152,13 @@ export const createSkill = async (station_id: number) => {
   try {
     const { data, error } = await client
       .from("skills")
-      .insert([{ name: "", station_id: station_id, user_id: user_id }])
+      .insert([
+        {
+          name: "",
+          station_id: station_id,
+          user_id: user_id,
+        },
+      ])
       .select();
 
     if (error) {
@@ -183,6 +190,7 @@ export const updateSkill = async (
   name: string,
   repetitions: number,
   description: string,
+  show_reps: boolean,
 ) => {
   try {
     const { data, error } = await client
@@ -191,6 +199,7 @@ export const updateSkill = async (
         name: name,
         repetitions: repetitions,
         description: description,
+        show_reps: show_reps,
       })
       .eq("id", skill_id);
 

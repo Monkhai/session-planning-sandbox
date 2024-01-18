@@ -1,10 +1,11 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { set } from "zod";
 import { FetchContext } from "~/context/FetchContext";
 
 interface Props {
   stationName: string;
   setStationName: React.Dispatch<React.SetStateAction<string>>;
-  stationNameRef: React.RefObject<HTMLInputElement>;
+  stationNameRef: React.RefObject<HTMLTextAreaElement>;
 }
 
 const StationTitle = ({
@@ -14,14 +15,22 @@ const StationTitle = ({
 }: Props) => {
   const { fetchStatus } = useContext(FetchContext);
 
+  useEffect(() => {
+    if (stationNameRef.current) {
+      stationNameRef.current.style.height = "0"; // Reset height to shrink if text is deleted
+      stationNameRef.current.style.height =
+        stationNameRef.current.scrollHeight + "px";
+    }
+  }, [stationName]);
+
   return (
-    <input
+    <textarea
       disabled={fetchStatus === "fetching"}
       inputMode="text"
       value={stationName}
       onChange={(event) => setStationName(event.target.value)}
       ref={stationNameRef}
-      className="w-full min-w-16 bg-transparent pr-2 text-xl font-semibold outline-none active:outline-none print:text-base print:font-medium"
+      className="box-border w-full resize-none bg-transparent text-xl font-semibold outline-none active:outline-none  print:w-full print:text-base print:font-medium"
       placeholder="Station Name"
     />
   );

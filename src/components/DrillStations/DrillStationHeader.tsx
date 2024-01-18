@@ -13,7 +13,7 @@ interface Props {
   onToggleDuration: (show: boolean) => void;
   stationName: string;
   setStationName: React.Dispatch<React.SetStateAction<string>>;
-  stationNameRef: React.RefObject<HTMLInputElement>;
+  stationNameRef: React.RefObject<HTMLTextAreaElement>;
   hideDurationPicker: boolean;
   setHideDurationPicker: React.Dispatch<React.SetStateAction<boolean>>;
   duration: string;
@@ -79,7 +79,7 @@ const DrillStationHeader = ({
         />
       </div>
 
-      <div className="flex-1">
+      <div className="flex-1 pr-6">
         <StationTitle
           stationName={stationName}
           setStationName={setStationName}

@@ -40,7 +40,7 @@ const StationDuration = ({
 `;
   if (showDuration) {
     return (
-      <>
+      <div>
         <button
           disabled={fetchStatus === "fetching"}
           onClick={() => setHideDurationPicker(!hideDurationPicker)}
@@ -65,7 +65,7 @@ const StationDuration = ({
             onDurationSubmit={handledurationChange}
           />
         </div>
-      </>
+      </div>
     );
   }
 };

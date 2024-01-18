@@ -5,7 +5,7 @@ import useUpdateSkillStation from "./useUpdateSkillStation";
 
 type useSkillStationStatesArgs = {
   station: SkillStationType;
-  stationNameRef: React.RefObject<HTMLInputElement>;
+  stationNameRef: React.RefObject<HTMLTextAreaElement>;
 };
 
 const useSkillStationStates = ({

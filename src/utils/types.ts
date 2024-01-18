@@ -6,6 +6,7 @@ export type SkillType = {
   order: number;
   description: string;
   user_id: string;
+  show_reps: boolean;
 };
 
 export type StationType = "skillStation" | "drillStation";
@@ -74,6 +75,7 @@ export type updateSkillArgs = {
   repetitions: number;
   description: string;
   station_id: number;
+  show_reps: boolean;
 };
 
 export type UpdateDrillStationArgs = {

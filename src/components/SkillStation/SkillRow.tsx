@@ -1,5 +1,5 @@
 import { queryClient } from "Providers/ReactQueryProvider";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { IoMdRemoveCircle } from "react-icons/io";
 import {
   IoCloseCircleSharp,
@@ -9,6 +9,7 @@ import { FetchContext } from "~/context/FetchContext";
 import useDeleteSkill from "~/hooks/useDeleteSkill";
 import useUpdateSkill from "~/hooks/useUpdateSkill";
 import { SkillType } from "~/utils/types";
+import SkillStationDescriptionModal from "./SkillStationDescriptionModal";
 
 interface Props {
   isLast?: boolean;
@@ -37,6 +38,7 @@ const SkillRow = ({ isLast, skill, editSkills, index }: Props) => {
     setSkillName(skill.name);
     setReps(skill.repetitions);
     setDescription(skill.description);
+    setShowReps(skill.show_reps);
   }, [skill]);
 
   useEffect(() => {
@@ -44,7 +46,8 @@ const SkillRow = ({ isLast, skill, editSkills, index }: Props) => {
       if (
         skillName !== skill.name ||
         reps !== skill.repetitions ||
-        description !== skill.description
+        description !== skill.description ||
+        showReps !== skill.show_reps
       ) {
         updateSkill({
           skill_id: skill.id,
@@ -52,6 +55,7 @@ const SkillRow = ({ isLast, skill, editSkills, index }: Props) => {
           repetitions: reps,
           description: description,
           station_id: skill.station_id,
+          show_reps: showReps,
         });
       }
     };
@@ -82,11 +86,26 @@ const SkillRow = ({ isLast, skill, editSkills, index }: Props) => {
         descriptionElement.removeEventListener("blur", handleBlur);
       }
     };
-  }, [skill, skillName, reps, description]);
+  }, [skill, skillName, reps, description, showReps]);
 
   const handleDeleteSkill = () => {
     deleteSkill({ id: skill.id, station_id: skill.station_id });
   };
+
+  const handleToggleReps = useCallback(
+    (show: boolean) => {
+      setShowReps(show);
+      updateSkill({
+        skill_id: skill.id,
+        name: skillName,
+        repetitions: reps,
+        description: description,
+        station_id: skill.station_id,
+        show_reps: show,
+      });
+    },
+    [skill, skillName, reps, description, showReps],
+  );
 
   return (
     <div className="flex flex-row">
@@ -138,45 +157,16 @@ const SkillRow = ({ isLast, skill, editSkills, index }: Props) => {
           <IoInformationCircleOutline color={"var(--color-blue)"} size={28} />
         </button>
         {/* description modal */}
-        <div
-          className="absolute left-10 w-80"
-          style={{
-            transition: "all 0.150s ease-in-out",
-            scale: showInfo ? 1 : 0,
-            opacity: showInfo ? 1 : 0,
-            transformOrigin: "left",
-          }}
-        >
-          <div className="z-10 flex w-80 flex-col gap-4 rounded-[10px] bg-white p-4 shadow-xl">
-            <div className="flex flex-row ">
-              <h3 className="flex-1 font-semibold">Description</h3>
-              <button onClick={() => setShowInfo(false)}>
-                <IoCloseCircleSharp size={24} color={"var(--color-blue)"} />
-              </button>
-            </div>
-            <textarea
-              ref={descriptionRef}
-              value={description ? description : ""}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Enter skill description"
-              style={{ resize: "none" }}
-              className="h-24 w-full outline-none active:outline-none"
-              name="description"
-              id="description"
-            />
-
-            <div className="flex flex-row pr-1">
-              <p className="flex-1 ">Show reps</p>
-              <input
-                onChange={(e) => setShowReps(e.target.checked)}
-                type="checkbox"
-                name="showReps"
-                id="showReps"
-                className="h-4 w-4"
-              />
-            </div>
-          </div>
-        </div>
+        <SkillStationDescriptionModal
+          handleToggleReps={handleToggleReps}
+          showReps={showReps}
+          description={description}
+          descriptionRef={descriptionRef}
+          setDescription={setDescription}
+          setShowInfo={setShowInfo}
+          showInfo={showInfo}
+          setShowReps={setShowReps}
+        />
       </div>
     </div>
   );

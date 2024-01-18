@@ -5,7 +5,7 @@ import { convertDurationToString } from "~/services/DurationFunctions";
 
 type useDrillStationStatesArgs = {
   station: DrillStationType;
-  stationNameRef: React.RefObject<HTMLInputElement>;
+  stationNameRef: React.RefObject<HTMLTextAreaElement>;
   descriptionRef: React.RefObject<HTMLTextAreaElement>;
   commentsRef: React.RefObject<HTMLTextAreaElement>;
 };
