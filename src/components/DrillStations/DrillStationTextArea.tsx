@@ -30,12 +30,12 @@ const DrillStationTextArea = ({
   return (
     <div className="flex flex-col gap-1">
       <p className="text-md ml-4 text-gray print:text-xs">{title}</p>
-      <div className="flex h-auto w-full rounded-[10px] bg-white p-4">
+      <div className="flex h-auto w-full rounded-[10px] bg-white p-4 print:p-1 print:pt-0">
         <textarea
           ref={textAreaRef}
           value={value ? value : ""}
           onChange={(e) => setValue(e.target.value)}
-          className="w-full resize-none text-wrap text-xl outline-none active:outline-none print:h-[80px]  print:text-sm"
+          className="w-full resize-none text-wrap text-xl outline-none active:outline-none print:text-sm"
           placeholder={placeholder}
           rows={5}
         />

@@ -83,7 +83,14 @@ const SkillStation = ({ station, isLast }: Props) => {
   );
 
   return (
-    <div className="relative flex w-full flex-row px-10 py-2 print:px-2 print:py-1">
+    <div
+      className={
+        "relative flex w-full flex-row px-10 py-2 print:px-2 print:py-1" +
+        (isLast
+          ? ""
+          : " print:border-b-[1px] print:border-b-seperatorSecondary")
+      }
+    >
       <div className="flex flex-1">
         <StationHeader
           duration={duration}
@@ -102,13 +109,13 @@ const SkillStation = ({ station, isLast }: Props) => {
           setEditSkills={setEditSkills}
         />
       </div>
-      {/*  */}
+
       <StationSkills
         editSkills={editSkills}
         onCreateSkill={handleCreateSkill}
         station={station}
       />
-      {/*  */}
+
       <StationBottomBorder isLast={isLast} />
       <Spacer />
     </div>

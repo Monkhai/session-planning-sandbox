@@ -12,4 +12,4 @@ const StationBottomBorder = ({ isLast }: Props) => {
   );
 };
 
-export default React.memo(StationBottomBorder);
+export default StationBottomBorder;

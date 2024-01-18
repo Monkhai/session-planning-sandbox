@@ -1,6 +1,10 @@
 import React from "react";
+interface Props {
+  showOnPrint?: boolean;
+}
+const Spacer = ({ showOnPrint = true }: Props) => {
+  if (!showOnPrint) return <div className="flex flex-1 print:hidden" />;
 
-const Spacer = () => {
   return <div className="flex flex-1" />;
 };
 

@@ -11,7 +11,7 @@ interface Props {
 
 const StationSkills = ({ editSkills, onCreateSkill, station }: Props) => {
   return (
-    <div className="flex w-1/2 flex-col">
+    <div className="flex w-1/2 flex-col ">
       {station.skills &&
         station.skills.map((skill, index) => (
           <SkillRow

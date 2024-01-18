@@ -22,6 +22,7 @@ const StationResponseHandler = ({ error, isLoading, stations }: Props) => {
       </div>
     );
   }
+
   if (error) {
     if (error.message === "No user id found") {
       console.log("redirecting");
@@ -30,6 +31,7 @@ const StationResponseHandler = ({ error, isLoading, stations }: Props) => {
     }
     return <div>Error: {error.message}</div>;
   }
+
   if (stations && stations.length > 0) {
     return (
       <div className="flex w-full flex-col gap-4 pt-4">
@@ -56,6 +58,7 @@ const StationResponseHandler = ({ error, isLoading, stations }: Props) => {
       </div>
     );
   }
+
   return null;
 };
 
