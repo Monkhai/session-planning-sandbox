@@ -39,7 +39,7 @@ export default function HomePage() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-start bg-background  pb-4">
+    <main className="flex min-h-screen flex-col items-center justify-start bg-background pb-4  dark:bg-darkBackground">
       <NavBar />
 
       <StationResponseHandler

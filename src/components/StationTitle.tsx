@@ -24,7 +24,7 @@ const StationTitle = ({
       value={stationName}
       onChange={(event) => setStationName(event.target.value)}
       ref={stationNameRef}
-      className="box-border w-full resize-none bg-transparent text-xl font-semibold outline-none active:outline-none  print:w-full print:text-base print:font-medium"
+      className="box-border w-full resize-none bg-transparent text-xl font-semibold outline-none placeholder:text-textInput active:outline-none  print:w-full print:text-base print:font-medium"
       placeholder="Station Name"
     />
   );

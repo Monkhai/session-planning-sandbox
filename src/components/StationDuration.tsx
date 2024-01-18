@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import DurationPicker from "./DurationPicker";
 
 interface Props {
@@ -19,6 +19,12 @@ const StationDuration = ({
   showDuration,
 }: Props) => {
   if (!showDuration) return null;
+
+  const isDarkTheme = useMemo(
+    () => window.matchMedia("(prefers-color-scheme: dark)").matches,
+    [],
+  );
+
   const durationStyleClasses = `
   pl-2 
   text-sm 
@@ -35,11 +41,31 @@ const StationDuration = ({
       : "text-[var(--color-blue)] font-bold"
   }
 `;
+  const darkDurationStyleClasses = `
+  pl-2 
+  text-sm 
+  font-semibold
+  print:font-normal
+  print:text-black
+  print:text-xs
+
+  ${
+    hideDurationPicker
+      ? durationString
+        ? "text-[var(--color-text)]"
+        : "text-[var(--color-dark-text-input)]"
+      : "text-[var(--color-blue)] font-bold"
+  }
+`;
   if (showDuration) {
     return (
       <div>
         <button onClick={() => setHideDurationPicker(!hideDurationPicker)}>
-          <p className={durationStyleClasses}>
+          <p
+            className={
+              !isDarkTheme ? durationStyleClasses : darkDurationStyleClasses
+            }
+          >
             {durationString ? durationString : "Duration"}
           </p>
         </button>

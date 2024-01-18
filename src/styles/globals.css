@@ -19,7 +19,7 @@ input[type="number"] {
 
 :root {
   --color-background: #f2f2f7;
-  --color-dark-background: #282829;
+  --color-navbar-background: #282829;
   --color-white: #ffffff;
   --color-blue: #007aff;
   --color-gray: rgba(60, 60, 67, 0.6);
@@ -27,18 +27,34 @@ input[type="number"] {
   --color-seperator-secondary: rgba(60, 60, 67, 0.16);
   --color-text-primary: #000000;
   --color-text-input: rgba(118, 118, 128, 0.12);
+
+  --color-dark-background: #000000;
+  --color-dark-secondary-background: #1c1c1e;
+  --color-dark-seperator: rgba(84, 84, 88, 0.65);
+  --color-dark-seperator-secondary: rgba(84, 84, 88, 0.36);
+  --color-dark-text-input: rgba(235, 235, 245, 0.6);
+  --color-dark-text-input-field: rgba(118, 118, 128, 0.24);
 }
 
-/* h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p,
-div {
-  color: var(--color-text-primary);
-} */
+@media (prefers-color-scheme: dark) {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  div,
+  input {
+    color: white;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  input::placeholder {
+    color: var(--color-dark-text-input);
+  }
+}
 
 h1 {
   @apply text-4xl;

@@ -28,7 +28,7 @@ const SkillStationDescriptionModal = ({
   }, [description]);
   return (
     <div
-      className="absolute left-10 top-5 w-80"
+      className="absolute left-10 top-5 z-10 w-80"
       style={{
         transition: "all 0.150s ease-in-out",
         scale: showInfo ? 1 : 0,
@@ -36,7 +36,7 @@ const SkillStationDescriptionModal = ({
         transformOrigin: "0px 10px",
       }}
     >
-      <div className="z-10 flex w-80 flex-col gap-4 rounded-[10px] bg-white p-4 shadow-xl">
+      <div className="dark:bg-darkSecondaryBackground z-10 flex w-80 flex-col gap-4 rounded-[10px] bg-white p-4 shadow-xl">
         <div className="flex flex-row ">
           <h3 className="flex-1 font-semibold">Description</h3>
           <button onClick={() => setShowInfo(false)}>
@@ -50,7 +50,7 @@ const SkillStationDescriptionModal = ({
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Enter skill description"
           style={{ resize: "none" }}
-          className="h-24 w-full outline-none active:outline-none"
+          className="dark:bg-darkSecondaryBackground h-24 w-full outline-none active:outline-none"
           name="description"
           id="description"
         />
@@ -71,4 +71,4 @@ const SkillStationDescriptionModal = ({
   );
 };
 
-export default React.memo(SkillStationDescriptionModal);
+export default SkillStationDescriptionModal;

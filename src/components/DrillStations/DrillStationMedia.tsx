@@ -31,7 +31,7 @@ const DrillStationMedia = ({
         <div className=" flex flex-1 flex-row items-center gap-2">
           <p className="text-md ml-4 text-gray">Media</p>
         </div>
-        <div className="flex h-[200px] w-full items-center justify-center gap-10 rounded-[10px] bg-white px-4 py-4">
+        <div className="dark:bg-darkSecondaryBackground flex h-[200px] w-full items-center justify-center gap-10 rounded-[10px] bg-white px-4 py-4">
           <Loader />
         </div>
       </div>
@@ -43,7 +43,7 @@ const DrillStationMedia = ({
   return (
     <div className="flex flex-col gap-1 print:hidden">
       <div className=" flex flex-1 flex-row items-center gap-2">
-        <p className="text-md ml-4 text-gray">Media</p>
+        <p className="text-md dark:text-darkTextInput ml-4 text-gray">Media</p>
         {!isMediaLoading && (
           <>
             <button
@@ -74,7 +74,7 @@ const DrillStationMedia = ({
           </>
         )}
       </div>
-      <div className="flex h-[200px] w-full items-center justify-start gap-10 rounded-[10px] bg-white px-4 py-4">
+      <div className="dark:bg-darkSecondaryBackground flex h-[200px] w-full items-center justify-start gap-10 rounded-[10px] bg-white px-4 py-4">
         {isMediaLoading ? (
           <Loader />
         ) : (

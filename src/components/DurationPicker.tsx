@@ -41,7 +41,7 @@ const DurationPicker = ({
   };
 
   return (
-    <div className="z-50 flex w-80 flex-col gap-4 rounded-[10px] bg-white p-4 shadow-xl print:hidden">
+    <div className="dark:bg-darkSecondaryBackground z-50 flex w-80 flex-col gap-4 rounded-[10px] bg-white p-4 shadow-xl print:hidden">
       <div className="flex flex-row justify-between">
         <p className="font-semibold">Set Duration (in minutes)</p>
         <button onClick={hideDurationPicker}>
@@ -53,7 +53,7 @@ const DurationPicker = ({
         value={numberOfMinutes ? numberOfMinutes : ""}
         placeholder={numberOfMinutes.toString()}
         onChange={handleMinutesChange}
-        className="mt-2 w-full rounded-[8px] bg-textInput p-2"
+        className="bg-textInputBackground dark:bg-darkTextInputBackground mt-2 w-full rounded-[8px] p-2 focus:outline-none active:outline-none"
       />
       <button
         onClick={handleSubmit}
@@ -65,4 +65,4 @@ const DurationPicker = ({
   );
 };
 
-export default React.memo(DurationPicker);
+export default DurationPicker;

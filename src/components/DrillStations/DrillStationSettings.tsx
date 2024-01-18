@@ -39,7 +39,7 @@ const DrillStationSettings = ({
           transformOrigin: "top left",
         }}
       >
-        <div className="flex w-full flex-col items-start gap-2 rounded-[10px] bg-white p-4 shadow-xl">
+        <div className="dark:bg-darkSecondaryBackground flex w-full flex-col items-start gap-2 rounded-[10px] bg-white p-4 shadow-xl">
           <div className="flex w-full flex-1 flex-row justify-between pb-2">
             <h3 className="font-lg flex-1 font-semibold">Station Settings</h3>
             <button

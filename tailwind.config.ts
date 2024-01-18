@@ -11,8 +11,15 @@ export default {
         gray: "var(--color-gray)",
         seperator: "var(--color-seperator)",
         seperatorSecondary: "var(--color-seperator-secondary)",
-        textInput: "var(--color-text-input)",
+        textInputBackground: "var(--color-text-input)",
+        navbarBackground: "var(--color-navbar-background)",
+
         darkBackground: "var(--color-dark-background)",
+        darkSecondaryBackground: "var(--color-dark-secondary-background)",
+        darkSeperator: "var(--color-dark-seperator)",
+        darkSeperatorSecondary: "var(--color-dark-seperator-secondary)",
+        darkTextInput: "var(--color-dark-text-input)",
+        darkTextInputBackground: "var(--color-dark-text-input-field)",
       },
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],
