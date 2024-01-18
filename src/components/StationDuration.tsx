@@ -69,4 +69,4 @@ const StationDuration = ({
     );
   }
 };
-export default React.memo(StationDuration);
+export default StationDuration;

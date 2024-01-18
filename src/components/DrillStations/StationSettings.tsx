@@ -74,4 +74,4 @@ const StationSettings = ({
   );
 };
 
-export default React.memo(StationSettings);
+export default StationSettings;

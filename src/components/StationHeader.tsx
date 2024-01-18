@@ -83,4 +83,4 @@ const StationHeader = ({
   );
 };
 
-export default React.memo(StationHeader);
+export default StationHeader;

@@ -37,6 +37,7 @@ const useCreateSkill = () => {
         repetitions: 0,
         order: tempOrder,
         user_id,
+        show_reps: true,
       } as SkillType;
 
       let newSkills = [];

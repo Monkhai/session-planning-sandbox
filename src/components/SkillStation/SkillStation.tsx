@@ -115,4 +115,4 @@ const SkillStation = ({ station, isLast }: Props) => {
   );
 };
 
-export default React.memo(SkillStation);
+export default SkillStation;

@@ -98,4 +98,4 @@ const DrillStationHeader = ({
   );
 };
 
-export default React.memo(DrillStationHeader);
+export default DrillStationHeader;

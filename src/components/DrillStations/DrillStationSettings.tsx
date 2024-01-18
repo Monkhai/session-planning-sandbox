@@ -112,4 +112,4 @@ const DrillStationSettings = ({
   );
 };
 
-export default React.memo(DrillStationSettings);
+export default DrillStationSettings;

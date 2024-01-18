@@ -296,4 +296,4 @@ const DrillStation = ({ station, isLast }: Props) => {
   );
 };
 
-export default React.memo(DrillStation);
+export default DrillStation;

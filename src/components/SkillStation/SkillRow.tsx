@@ -10,6 +10,7 @@ import useDeleteSkill from "~/hooks/useDeleteSkill";
 import useUpdateSkill from "~/hooks/useUpdateSkill";
 import { SkillType } from "~/utils/types";
 import SkillStationDescriptionModal from "./SkillStationDescriptionModal";
+import useSkillRowStates from "~/hooks/useSkillRowStates";
 
 interface Props {
   isLast?: boolean;
@@ -19,11 +20,11 @@ interface Props {
 }
 
 const SkillRow = ({ isLast, skill, editSkills, index }: Props) => {
-  const [skillName, setSkillName] = useState<string>("");
-  const [reps, setReps] = useState<number>(0);
-  const [description, setDescription] = useState<string>("");
+  // const [skillName, setSkillName] = useState<string>("");
+  // const [reps, setReps] = useState<number>(0);
+  // const [description, setDescription] = useState<string>("");
+  // const [showReps, setShowReps] = useState<boolean>(false);
   const [showInfo, setShowInfo] = useState<boolean>(false);
-  const [showReps, setShowReps] = useState<boolean>(false);
 
   const nameRef = React.useRef<HTMLInputElement>(null);
   const repsRef = React.useRef<HTMLInputElement>(null);
@@ -32,65 +33,28 @@ const SkillRow = ({ isLast, skill, editSkills, index }: Props) => {
   const { mutate: deleteSkill } = useDeleteSkill();
   const { mutate: updateSkill } = useUpdateSkill();
 
+  const {
+    description,
+    reps,
+    skillName,
+    showReps,
+    setSkillName,
+    setReps,
+    setDescription,
+    setShowReps,
+  } = useSkillRowStates({
+    skill: skill,
+    descriptionRef: descriptionRef,
+    nameRef: nameRef,
+    repsRef: repsRef,
+    updateSkill: updateSkill,
+  });
+
   const { fetchStatus } = useContext(FetchContext);
 
-  useEffect(() => {
-    setSkillName(skill.name);
-    setReps(skill.repetitions);
-    setDescription(skill.description);
-    setShowReps(skill.show_reps);
-  }, [skill]);
-
-  useEffect(() => {
-    const handleBlur = () => {
-      if (
-        skillName !== skill.name ||
-        reps !== skill.repetitions ||
-        description !== skill.description ||
-        showReps !== skill.show_reps
-      ) {
-        updateSkill({
-          skill_id: skill.id,
-          name: skillName,
-          repetitions: reps,
-          description: description,
-          station_id: skill.station_id,
-          show_reps: showReps,
-        });
-      }
-    };
-
-    const nameElement = nameRef.current;
-    if (nameElement) {
-      nameElement.addEventListener("blur", handleBlur);
-    }
-
-    const repsElement = repsRef.current;
-    if (repsElement) {
-      repsElement.addEventListener("blur", handleBlur);
-    }
-
-    const descriptionElement = descriptionRef.current;
-    if (descriptionElement) {
-      descriptionElement.addEventListener("blur", handleBlur);
-    }
-
-    return () => {
-      if (nameElement) {
-        nameElement.removeEventListener("blur", handleBlur);
-      }
-      if (repsElement) {
-        repsElement.removeEventListener("blur", handleBlur);
-      }
-      if (descriptionElement) {
-        descriptionElement.removeEventListener("blur", handleBlur);
-      }
-    };
-  }, [skill, skillName, reps, description, showReps]);
-
-  const handleDeleteSkill = () => {
+  const handleDeleteSkill = useCallback(() => {
     deleteSkill({ id: skill.id, station_id: skill.station_id });
-  };
+  }, [skill.id, skill.station_id]);
 
   const handleToggleReps = useCallback(
     (show: boolean) => {
@@ -149,11 +113,11 @@ const SkillRow = ({ isLast, skill, editSkills, index }: Props) => {
           </button>
         )}
       </div>
+
       <div className="relative left-4 flex items-center justify-center print:hidden">
         <button
           onClick={() => setShowInfo(!showInfo)}
           style={{
-            // scale: showInfo ? 1.1 : 1,
             rotate: showInfo ? "22.5deg" : "0deg",
             transition: "all 0.300s cubic-bezier(0, 0, 0.58, 1.0)",
           }}
@@ -161,7 +125,7 @@ const SkillRow = ({ isLast, skill, editSkills, index }: Props) => {
         >
           <IoInformationCircleOutline color={"var(--color-blue)"} size={28} />
         </button>
-        {/* description modal */}
+
         <SkillStationDescriptionModal
           handleToggleReps={handleToggleReps}
           showReps={showReps}
@@ -176,5 +140,4 @@ const SkillRow = ({ isLast, skill, editSkills, index }: Props) => {
     </div>
   );
 };
-
-export default React.memo(SkillRow);
+export default SkillRow;
