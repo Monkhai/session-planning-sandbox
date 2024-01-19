@@ -29,11 +29,11 @@ input[type="number"] {
   --color-text-input: rgba(118, 118, 128, 0.12);
 
   --color-dark-background: #000000;
-  --color-dark-secondary-background: rgba(118, 118, 128, 0.24);
+  --color-dark-secondary-background: #2c2c2e;
   --color-dark-seperator: rgba(84, 84, 88, 0.65);
   --color-dark-seperator-secondary: rgba(84, 84, 88, 0.36);
   --color-dark-text-input: rgba(235, 235, 245, 0.6);
-  --color-dark-text-input-field: rgba(118, 118, 128, 0.24);
+  --color-dark-text-input-field: #2c2c2e;
 }
 
 @media (prefers-color-scheme: dark) {

@@ -31,21 +31,21 @@ const CreateNewStationButton = ({
           scale: showModal ? 1 : 0,
           transition: "all 0.150s ease-in-out",
         }}
-        className="absolute -left-6 bottom-20 z-0 flex-col items-center justify-center overflow-hidden rounded-[10px] bg-white shadow-xl"
+        className="dark:bg-darkTextInputBackground absolute -left-6 bottom-20 z-0 flex-col items-center justify-center overflow-hidden rounded-[10px] bg-white shadow-xl"
       >
         <div className="z-10 flex flex-col items-center justify-center">
           <button
             onClick={handleCreateSkillStation}
-            className="h-16 w-60 bg-white transition-all duration-150 hover:bg-seperatorSecondary"
+            className="dark:bg-darkTextInputBackground h-16  w-60 bg-white transition-all duration-150 hover:bg-seperatorSecondary"
           >
             <p className="text-center text-lg text-primary transition-all duration-150 active:scale-95">
               Skill Based Station
             </p>
           </button>
-          <div className="absolute h-[1px] w-full bg-seperatorSecondary" />
+          <div className="dark:bg-darkSeperatorSecondary absolute h-[1px] w-full bg-seperatorSecondary" />
           <button
             onClick={handleCreateDrillStation}
-            className="h-16 w-60 bg-white transition-all duration-150 hover:bg-seperatorSecondary"
+            className="dark:bg-darkTextInputBackground h-16 w-60 bg-white transition-all duration-150 hover:bg-seperatorSecondary"
           >
             <p className="text-center text-lg text-primary transition-all duration-150 active:scale-95">
               Drill Based Station

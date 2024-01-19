@@ -32,6 +32,16 @@ const StationResponseHandler = ({ error, isLoading, stations }: Props) => {
     return <div>Error: {error.message}</div>;
   }
 
+  if (stations && stations.length === 0) {
+    return (
+      <div className="flex h-full w-full flex-1 items-center justify-center">
+        <h3 className="text-xl font-semibold">
+          Create a New Station to Start!
+        </h3>
+      </div>
+    );
+  }
+
   if (stations && stations.length > 0) {
     return (
       <div className="flex w-full flex-col gap-4 pt-4">

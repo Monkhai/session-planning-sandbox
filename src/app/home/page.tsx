@@ -1,6 +1,8 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
+import { IoAddCircle } from "react-icons/io5";
+import CircuitDemo from "~/components/CircuitDemo";
 import CreateNewStationButton from "~/components/CreateNewStationButton";
 import HelpButton from "~/components/HelpButton";
 import LogoutButton from "~/components/LogoutButton";
@@ -48,6 +50,8 @@ export default function HomePage() {
         isLoading={isLoading}
       />
 
+      <CircuitDemo />
+
       <Spacer />
 
       <div className="sticky bottom-10 mt-10 flex w-full flex-row items-center justify-center gap-4 px-10 print:hidden">
@@ -57,6 +61,7 @@ export default function HomePage() {
           onCreateSkillStation={handleCreateSkillStation}
           onCreateDrillStation={handleCreateDrillStation}
         />
+
         <HelpButton setShowContact={setShowContact} showContact={showContact} />
       </div>
 
