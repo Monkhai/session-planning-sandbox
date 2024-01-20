@@ -22,7 +22,7 @@ const Login = () => {
   }, []);
 
   return (
-    <section className="flex h-screen flex-col items-center justify-start ">
+    <section className="flex h-screen flex-col items-center justify-start dark:bg-darkBackground">
       <NavBar />
 
       <section className="flex h-full w-full flex-col items-center justify-center gap-4 pt-4">
@@ -48,10 +48,8 @@ const Login = () => {
             </a>
           </div>
         </div>
-        {/* <Spacer /> */}
         <div className="w-1/4">
           <Auth
-            // onlyThirdPartyProviders
             appearance={{
               theme: ThemeSupa,
               variables: {
@@ -68,7 +66,6 @@ const Login = () => {
             redirectTo="/home"
           />
         </div>
-        {/* <Spacer /> */}
       </section>
     </section>
   );

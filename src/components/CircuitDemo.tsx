@@ -10,7 +10,7 @@ const CircuitDemo = () => {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
 
   return (
-    <div className="relative flex w-full flex-row items-start px-10 py-2">
+    <div className="relative flex w-full flex-row items-start border-t-2 px-10 py-2">
       <div className="flex flex-1 items-center justify-center">
         <button
           className="transition-all duration-150 active:scale-95"
@@ -96,7 +96,7 @@ const Test = () => {
             </div>
             <div className="flex flex-1 flex-col rounded-[10px]">
               <div className="bg-darkSecondaryBackground flex items-start justify-start rounded-[10px]">
-                <p className="p-4">Description</p>
+                <p className="p-4">Comments</p>
               </div>
               <Spacer />
             </div>

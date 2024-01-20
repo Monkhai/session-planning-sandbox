@@ -7,7 +7,6 @@ import {
   SkillStationType,
   SkillType,
   Station,
-  StationType,
   UpdateDrillStationArgs,
 } from "~/utils/types";
 import { getImageDimensions, getVideoDimensions } from "./getImageDimension";
