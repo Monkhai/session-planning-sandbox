@@ -53,7 +53,7 @@ const DurationPicker = ({
         value={numberOfMinutes ? numberOfMinutes : ""}
         placeholder={numberOfMinutes.toString()}
         onChange={handleMinutesChange}
-        className="bg-textInputBackground dark:bg-darkTextInputBackground mt-2 w-full rounded-[8px] p-2 focus:outline-none active:outline-none"
+        className="bg-textInputBackground mt-2 w-full rounded-[8px] p-2 focus:outline-none active:outline-none dark:bg-[#3A3A3C]"
       />
       <button
         onClick={handleSubmit}
