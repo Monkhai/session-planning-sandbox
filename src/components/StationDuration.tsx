@@ -20,10 +20,12 @@ const StationDuration = ({
 }: Props) => {
   if (!showDuration) return null;
 
-  const isDarkTheme = useMemo(
-    () => window.matchMedia("(prefers-color-scheme: dark)").matches,
-    [],
-  );
+  const isDarkTheme = useMemo(() => {
+    if (typeof window !== "undefined") {
+      return window.matchMedia("(prefers-color-scheme: dark)").matches;
+    }
+    return false; // Default value or logic for server-side
+  }, []);
 
   const durationStyleClasses = `
   pl-2 

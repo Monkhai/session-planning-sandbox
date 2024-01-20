@@ -22,10 +22,12 @@ const Login = () => {
     });
   }, []);
 
-  const isDarkTheme = useMemo(
-    () => window.matchMedia("(prefers-color-scheme: dark)").matches,
-    [],
-  );
+  const isDarkTheme = useMemo(() => {
+    if (typeof window !== "undefined") {
+      return window.matchMedia("(prefers-color-scheme: dark)").matches;
+    }
+    return false; // Default value or logic for server-side
+  }, []);
 
   return (
     <section className="flex h-screen flex-col items-center justify-start dark:bg-darkBackground">
