@@ -3,7 +3,7 @@ import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { IoIosMail } from "react-icons/io";
 import NavBar from "~/components/NavBar";
 import introductionText from "~/utils/introductionText";
@@ -14,6 +14,26 @@ import * as DarkIGLogo from "../../../public/instagram-dark.png";
 const Login = () => {
   const router = useRouter();
 
+  const [isDarkTheme, setIsDarkTheme] = useState(false);
+
+  useEffect(() => {
+    const handleThemeChange = (e: MediaQueryListEvent) => {
+      setIsDarkTheme(e.matches);
+    };
+
+    const darkThemeMediaQuery = window.matchMedia(
+      "(prefers-color-scheme: dark)",
+    );
+    darkThemeMediaQuery.addEventListener("change", handleThemeChange);
+
+    // Set initial theme
+    setIsDarkTheme(darkThemeMediaQuery.matches);
+
+    return () => {
+      darkThemeMediaQuery.removeEventListener("change", handleThemeChange);
+    };
+  }, []);
+
   useEffect(() => {
     client.auth.getSession().then(({ data }) => {
       if (data.session) {
@@ -21,13 +41,6 @@ const Login = () => {
       }
     });
   }, []);
-
-  const isDarkTheme = useMemo(() => {
-    if (typeof window !== "undefined") {
-      return window.matchMedia("(prefers-color-scheme: dark)").matches;
-    }
-    return false; // Default value or logic for server-side
-  }, [window]);
 
   return (
     <section className="flex h-screen flex-col items-center justify-start dark:bg-darkBackground">
