@@ -4,7 +4,7 @@ import { useAuth } from "~/hooks/useAuth";
 const Page = () => {
   useAuth();
 
-  return null;
+  return <div className="h-screen w-screen dark:bg-darkBackground" />;
 };
 
 export default Page;

@@ -3,7 +3,7 @@ import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { IoIosMail } from "react-icons/io";
 import NavBar from "~/components/NavBar";
 import introductionText from "~/utils/introductionText";
@@ -22,9 +22,10 @@ const Login = () => {
     });
   }, []);
 
-  const userTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
-    ? "dark"
-    : "light";
+  const isDarkTheme = useMemo(
+    () => window.matchMedia("(prefers-color-scheme: dark)").matches,
+    [],
+  );
 
   return (
     <section className="flex h-screen flex-col items-center justify-start dark:bg-darkBackground">
@@ -42,10 +43,7 @@ const Login = () => {
           </p>
           <div className="flex w-1/2 flex-row items-center justify-between">
             <a type="email" href="mailto:yohaiwiener@gmail.com">
-              <IoIosMail
-                size={70}
-                color={userTheme === "light" ? "black" : "white"}
-              />
+              <IoIosMail size={70} color={isDarkTheme ? "white" : "black"} />
             </a>
             <a
               href="https://www.instagram.com/yohai_wiener"
@@ -54,7 +52,7 @@ const Login = () => {
             >
               <Image
                 alt="Instagram logo"
-                src={userTheme === "light" ? IGLogo : DarkIGLogo}
+                src={!isDarkTheme ? IGLogo : DarkIGLogo}
                 width={50}
                 height={50}
               />
