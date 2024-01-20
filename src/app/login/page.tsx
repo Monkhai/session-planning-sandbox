@@ -9,6 +9,7 @@ import NavBar from "~/components/NavBar";
 import introductionText from "~/utils/introductionText";
 import client from "~/utils/supabaseClient";
 import * as IGLogo from "../../../public/instagram.png";
+import * as DarkIGLogo from "../../../public/instagram-dark.png";
 
 const Login = () => {
   const router = useRouter();
@@ -21,8 +22,12 @@ const Login = () => {
     });
   }, []);
 
+  const userTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
+    ? "dark"
+    : "light";
+
   return (
-    <section className="flex h-screen flex-col items-center justify-start ">
+    <section className="flex h-screen flex-col items-center justify-start dark:bg-darkBackground">
       <NavBar />
 
       <section className="flex h-full w-full flex-col items-center justify-center gap-4 pt-4">
@@ -37,14 +42,22 @@ const Login = () => {
           </p>
           <div className="flex w-1/2 flex-row items-center justify-between">
             <a type="email" href="mailto:yohaiwiener@gmail.com">
-              <IoIosMail size={70} color={"black"} />
+              <IoIosMail
+                size={70}
+                color={userTheme === "light" ? "black" : "white"}
+              />
             </a>
             <a
               href="https://www.instagram.com/yohai_wiener"
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Image alt="Instagram logo" src={IGLogo} width={50} height={50} />
+              <Image
+                alt="Instagram logo"
+                src={userTheme === "light" ? IGLogo : DarkIGLogo}
+                width={50}
+                height={50}
+              />
             </a>
           </div>
         </div>
