@@ -27,7 +27,7 @@ const Login = () => {
       return window.matchMedia("(prefers-color-scheme: dark)").matches;
     }
     return false; // Default value or logic for server-side
-  }, []);
+  }, [window]);
 
   return (
     <section className="flex h-screen flex-col items-center justify-start dark:bg-darkBackground">

@@ -25,7 +25,7 @@ const StationDuration = ({
       return window.matchMedia("(prefers-color-scheme: dark)").matches;
     }
     return false; // Default value or logic for server-side
-  }, []);
+  }, [window]);
 
   const durationStyleClasses = `
   pl-2 
