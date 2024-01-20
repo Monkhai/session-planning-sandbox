@@ -16,6 +16,7 @@ export default {
 
         darkBackground: "var(--color-dark-background)",
         darkSecondaryBackground: "var(--color-dark-secondary-background)",
+        darkTeritaryBackground: "var(--color-dark-tertiary-background)",
         darkSeperator: "var(--color-dark-seperator)",
         darkSeperatorSecondary: "var(--color-dark-seperator-secondary)",
         darkTextInput: "var(--color-dark-text-input)",
