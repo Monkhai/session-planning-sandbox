@@ -7,9 +7,9 @@ import {
   onBoardTextList,
 } from "~/utils/onBoardText";
 import Spacer from "./utility/Spacer";
-import { getUserId } from "~/services/supabaseFunctions";
 import client from "~/utils/supabaseClient";
 import { useUserSeenOnboard } from "~/hooks/useUserSeenOnboard";
+import getUserId from "~/services/backend/userManagement/getUserId";
 
 const OnboardingDialog = () => {
   const dialogRef = useRef<HTMLDialogElement>(null);

@@ -1,12 +1,18 @@
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "Providers/ReactQueryProvider";
-import { createSkill, getUserId } from "~/services/supabaseFunctions";
+import createSkill from "~/services/backend/skills/createSkill";
+import getUserId from "~/services/backend/userManagement/getUserId";
 import client from "~/utils/supabaseClient";
-import { CreateSkillArgs, SkillStationType, SkillType } from "~/utils/types";
+import {
+  CreateSkillArgs,
+  SkillStationType,
+  SkillStationWithSkillsType,
+  SkillType,
+} from "~/utils/types";
 const useCreateSkill = () => {
   return useMutation({
-    mutationFn: async ({ station_id }: CreateSkillArgs) => {
-      return await createSkill(station_id);
+    mutationFn: async ({ station_id, lastOrder }: CreateSkillArgs) => {
+      return await createSkill(station_id, lastOrder);
     },
 
     onMutate: async ({ station_id }: CreateSkillArgs) => {
@@ -17,7 +23,7 @@ const useCreateSkill = () => {
         return;
       }
 
-      const previousStations: SkillStationType[] =
+      const previousStations: SkillStationWithSkillsType[] =
         queryClient.getQueryData(["stations"]) ?? [];
 
       const parentStation = previousStations.find(
@@ -32,6 +38,8 @@ const useCreateSkill = () => {
 
       const newSkill = {
         id: tempId,
+        skillOfStationId: tempId,
+        description: "",
         station_id,
         name: "",
         repetitions: 0,
@@ -74,13 +82,17 @@ const useCreateSkill = () => {
         return;
       }
 
-      const skillFromDB = data[0];
+      if (!data) {
+        return;
+      }
+
+      const skillFromDB = data;
 
       if (!skillFromDB) {
         return;
       }
 
-      const previousStations: SkillStationType[] =
+      const previousStations: SkillStationWithSkillsType[] =
         queryClient.getQueryData(["stations"]) ?? [];
 
       const parentStation = previousStations.find(

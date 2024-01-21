@@ -1,17 +1,25 @@
+export type SkillFromDBType = {
+  id: number;
+  name: string;
+  repetitions: number;
+  description: string;
+  show_reps: boolean;
+};
+
 export type SkillType = {
   id: number;
+  skillOfStationId: number;
   station_id: number;
   name: string;
   repetitions: number;
   order: number;
   description: string;
-  user_id: string;
   show_reps: boolean;
 };
 
 export type StationType = "skillStation" | "drillStation";
 
-export type SkillStationType = {
+export type SkillStationWithSkillsType = {
   id: number;
   name: string;
   duration: string;
@@ -22,8 +30,31 @@ export type SkillStationType = {
   type: StationType;
 };
 
-export type DrillStationType = {
+export type SkillStationType = {
   id: number;
+  name: string;
+  duration: string;
+  order: number;
+  user_id: string;
+  show_duration: boolean;
+  type: StationType;
+};
+
+export type DrillFromDBType = {
+  id: number;
+  name: string;
+  duration: string;
+  show_duration: boolean;
+  description: string;
+  comments: string;
+  show_comments: boolean;
+  show_media: boolean;
+  show_edit_media: boolean;
+};
+
+export type DrillType = {
+  id: number;
+  drillOfStationId: number;
   user_id: string;
   name: string;
   duration: string;
@@ -37,7 +68,28 @@ export type DrillStationType = {
   type: StationType;
 };
 
-export type Station = SkillStationType | DrillStationType;
+export type DrillStationWithDrillsType = {
+  id: number;
+  name: string;
+  duration: string;
+  order: number;
+  drills: DrillType[];
+  user_id: string;
+  show_duration: boolean;
+  type: StationType;
+};
+
+export type DrillStationType = {
+  id: number;
+  user_id: string;
+  name: string;
+  duration: string;
+  show_duration: boolean;
+  order: number;
+  type: StationType;
+};
+
+export type Station = SkillStationWithSkillsType | DrillStationType;
 
 export type SignedUrls = {
   url: string;
@@ -53,11 +105,6 @@ export type SignedUrlList = {
 
 export type CreateStationArgs = {};
 
-export type UpdateStationNameArgs = {
-  station_id: number;
-  stationName: string;
-};
-
 export type updateStationArgs = {
   station_id: number;
   name: string;
@@ -67,6 +114,7 @@ export type updateStationArgs = {
 
 export type CreateSkillArgs = {
   station_id: number;
+  lastOrder: number;
 };
 
 export type updateSkillArgs = {
@@ -78,8 +126,8 @@ export type updateSkillArgs = {
   show_reps: boolean;
 };
 
-export type UpdateDrillStationArgs = {
-  station_id: number;
+export type UpdateDrillArgs = {
+  drill_id: number;
   duration: string | null;
   name: string;
   show_duration: boolean;
@@ -105,4 +153,29 @@ export type FolderWithSignedUrls = {
     dimensions: ImageDimensions;
     name: string;
   }[];
+};
+
+export type SkillList = {
+  station_id: number;
+  skillList: {
+    id: number;
+    skill_id: number;
+    order: number;
+  }[];
+};
+
+export type DrillList = {
+  station_id: number;
+  drillList: {
+    id: number;
+    drill_id: number;
+    order: number;
+  }[];
+};
+
+export type UpdateDrillStationArgs = {
+  station_id: number;
+  name: string;
+  duration: string | null;
+  show_duration: boolean;
 };

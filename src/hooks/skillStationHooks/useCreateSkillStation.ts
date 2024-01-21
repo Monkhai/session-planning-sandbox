@@ -1,20 +1,17 @@
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "Providers/ReactQueryProvider";
-import { createDrillStation } from "~/services/supabaseFunctions";
-import { SignedUrls, Station, DrillStationType } from "~/utils/types";
+import createSkillStation from "~/services/backend/stations/skillStations/createSkillStation";
+import { SkillStationWithSkillsType } from "~/utils/types";
 
-const useCreateDrillStation = () => {
+const useCreateSkillStation = () => {
   return useMutation({
     mutationFn: async (lastOrder: number) => {
-      return await createDrillStation(lastOrder);
+      return await createSkillStation(lastOrder);
     },
 
     onMutate: (lastOrder: number) => {
       queryClient.cancelQueries({ queryKey: ["stations"] });
-
-      const previousStations: Station[] =
-        queryClient.getQueryData(["stations"]) ?? [];
-
+      const previousStations = queryClient.getQueryData(["stations"]) ?? [];
       const tempId = Math.floor(Math.random() * 1000000000);
 
       const newStation = {
@@ -22,18 +19,20 @@ const useCreateDrillStation = () => {
         name: "",
         duration: "00:00:00",
         order: lastOrder,
+        skills: [],
         show_duration: false,
-        show_comments: false,
-        show_edit_media: false,
-        type: "drillStation",
-        show_media: false,
-        comments: "",
-        description: "",
-      } as DrillStationType;
+        type: "skillStation",
+      };
 
-      const newStations = [...previousStations, newStation];
-
-      queryClient.setQueryData(["stations"], newStations);
+      queryClient.setQueryData(
+        ["stations"],
+        (old: SkillStationWithSkillsType[] | undefined) => {
+          if (old === undefined) {
+            return [newStation];
+          }
+          return [...old, newStation];
+        },
+      );
 
       return {
         rollback: () =>
@@ -42,23 +41,16 @@ const useCreateDrillStation = () => {
       };
     },
 
-    onSuccess: (stationFromDB, _, { optimisticStation }) => {
-      const previousStations: Station[] =
+    onSuccess: (newStation, _, { optimisticStation }) => {
+      const previousStations: SkillStationWithSkillsType[] =
         queryClient.getQueryData(["stations"]) ?? [];
-
-      const newStation = stationFromDB[0];
-
-      const newStationWithMedia = {
-        ...newStation,
-        mediaUrls: [] as SignedUrls[],
-      } as DrillStationType;
 
       const newStations = previousStations.map((station) => {
         if (
           station.id === optimisticStation.id &&
-          station.type === "drillStation"
+          station.type === "skillStation"
         ) {
-          return newStationWithMedia;
+          return newStation[0];
         }
         return station;
       });
@@ -75,4 +67,4 @@ const useCreateDrillStation = () => {
   });
 };
 
-export default useCreateDrillStation;
+export default useCreateSkillStation;

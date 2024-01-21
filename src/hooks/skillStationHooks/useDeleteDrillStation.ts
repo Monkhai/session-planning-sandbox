@@ -1,18 +1,28 @@
-import { useMutation } from "@tanstack/react-query";
+import { queryOptions, useMutation } from "@tanstack/react-query";
 import { queryClient } from "Providers/ReactQueryProvider";
-import {
-  decrementStationOrder,
-  deleteSkillStation,
-} from "~/services/supabaseFunctions";
+import DeleteAllDrillMedia from "~/services/backend/drills/media/DeleteAllDrillMedia";
+import decrementStationOrder from "~/services/backend/stations/decrementStationOrder";
+import deleteDrillStation from "~/services/backend/stations/drillStations/deleteDrillStation";
 import { Station } from "~/utils/types";
 
-const useDeleteSkillStation = () => {
+const useDeleteDrillStation = () => {
   return useMutation({
-    mutationFn: async (station_id: number) => {
-      await deleteSkillStation(station_id);
+    mutationFn: async ({
+      deleteMedia,
+      station_id,
+      drillsId,
+    }: {
+      station_id: number;
+      deleteMedia: boolean;
+      drillsId: number[];
+    }) => {
+      if (deleteMedia) {
+        await DeleteAllDrillMedia(station_id);
+      }
+      return await deleteDrillStation(station_id, drillsId);
     },
 
-    onMutate: (station_id: number) => {
+    onMutate: async ({ station_id }) => {
       queryClient.cancelQueries({ queryKey: ["stations"] });
 
       const previousStations: Station[] =
@@ -20,11 +30,11 @@ const useDeleteSkillStation = () => {
 
       const index = previousStations.findIndex(
         (station) =>
-          station.id === station_id && station.type === "skillStation",
+          station.id === station_id && station.type === "drillStation",
       );
 
       const newStations = previousStations.filter((station) => {
-        return station.type !== "skillStation" || station.id !== station_id;
+        return station.id !== station_id || station.type !== "drillStation";
       });
 
       const stationsToUpdate = newStations.slice(index);
@@ -58,13 +68,12 @@ const useDeleteSkillStation = () => {
     },
 
     onError: (error, _, context) => {
-      console.error(error.message);
+      console.error(error);
       if (context) {
         context.rollback();
-        return error;
       }
     },
   });
 };
 
-export default useDeleteSkillStation;
+export default useDeleteDrillStation;

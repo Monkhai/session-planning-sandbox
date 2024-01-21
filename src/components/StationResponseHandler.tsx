@@ -1,7 +1,11 @@
 import { useRouter } from "next/navigation";
 import React from "react";
 import client from "~/utils/supabaseClient";
-import { DrillStationType, SkillStationType, Station } from "~/utils/types";
+import {
+  DrillStationType,
+  SkillStationWithSkillsType,
+  Station,
+} from "~/utils/types";
 import DrillStation from "./DrillStations/DrillStation";
 import Loader from "./Loader";
 import SkillStation from "./SkillStation/SkillStation";
@@ -52,7 +56,7 @@ const StationResponseHandler = ({ error, isLoading, stations }: Props) => {
               <SkillStation
                 key={station.id + station.type}
                 isLast={isLast}
-                station={station as SkillStationType}
+                station={station as SkillStationWithSkillsType}
               />
             );
           } else if (station.type === "drillStation") {

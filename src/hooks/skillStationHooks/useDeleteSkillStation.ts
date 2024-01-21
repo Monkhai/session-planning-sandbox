@@ -1,28 +1,16 @@
-import { queryOptions, useMutation } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "Providers/ReactQueryProvider";
-import {
-  decrementStationOrder,
-  deleteDrillStation,
-  deleteStationMedia,
-} from "~/services/supabaseFunctions";
+import decrementStationOrder from "~/services/backend/stations/decrementStationOrder";
+import deleteSkillStation from "~/services/backend/stations/skillStations/deleteSkillStation";
 import { Station } from "~/utils/types";
 
-const useDeleteDrillStation = () => {
+const useDeleteSkillStation = () => {
   return useMutation({
-    mutationFn: async ({
-      deleteMedia,
-      station_id,
-    }: {
-      station_id: number;
-      deleteMedia: boolean;
-    }) => {
-      if (deleteMedia) {
-        await deleteStationMedia(station_id);
-      }
-      return await deleteDrillStation(station_id);
+    mutationFn: async (station_id: number) => {
+      await deleteSkillStation(station_id);
     },
 
-    onMutate: async ({ station_id }) => {
+    onMutate: (station_id: number) => {
       queryClient.cancelQueries({ queryKey: ["stations"] });
 
       const previousStations: Station[] =
@@ -30,11 +18,11 @@ const useDeleteDrillStation = () => {
 
       const index = previousStations.findIndex(
         (station) =>
-          station.id === station_id && station.type === "drillStation",
+          station.id === station_id && station.type === "skillStation",
       );
 
       const newStations = previousStations.filter((station) => {
-        return station.id !== station_id || station.type !== "drillStation";
+        return station.type !== "skillStation" || station.id !== station_id;
       });
 
       const stationsToUpdate = newStations.slice(index);
@@ -68,12 +56,13 @@ const useDeleteDrillStation = () => {
     },
 
     onError: (error, _, context) => {
-      console.error(error);
+      console.error(error.message);
       if (context) {
         context.rollback();
+        return error;
       }
     },
   });
 };
 
-export default useDeleteDrillStation;
+export default useDeleteSkillStation;

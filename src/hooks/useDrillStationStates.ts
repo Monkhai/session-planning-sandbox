@@ -1,82 +1,83 @@
 import { useEffect, useState } from "react";
-import { Station, DrillStationType } from "~/utils/types";
-import useUpdateDrillStation from "./useUpdateDrillStation";
+import { Station, DrillStationType, DrillType } from "~/utils/types";
 import { convertDurationToString } from "~/services/DurationFunctions";
+import updateDrillStation from "~/services/backend/stations/drillStations/updateDrillStation";
+import updateDrill from "~/services/backend/drills/updateDrill";
 
 type useDrillStationStatesArgs = {
-  station: DrillStationType;
+  drill: DrillType;
   stationNameRef: React.RefObject<HTMLTextAreaElement>;
   descriptionRef: React.RefObject<HTMLTextAreaElement>;
   commentsRef: React.RefObject<HTMLTextAreaElement>;
 };
 
 const useDrillStationStates = ({
-  station,
+  drill,
   commentsRef,
   descriptionRef,
   stationNameRef,
 }: useDrillStationStatesArgs) => {
-  const [stationName, setStationName] = useState(station.name);
-  const [duration, setDuration] = useState(station.duration);
-  const [comments, setComments] = useState(station.comments);
-  const [description, setDescription] = useState(station.description);
-  const [showDuration, setShowDuration] = useState(station.show_duration);
-  const [showComments, setShowComments] = useState(station.show_comments);
-  const [showMedia, setShowMedia] = useState(station.show_media);
-  const [editMedia, setEditMedia] = useState(station.show_edit_media);
+  const [stationName, setStationName] = useState(drill.name);
+  const [duration, setDuration] = useState(drill.duration);
+  const [comments, setComments] = useState(drill.comments);
+  const [description, setDescription] = useState(drill.description);
+  const [showDuration, setShowDuration] = useState(drill.show_duration);
+  const [showComments, setShowComments] = useState(drill.show_comments);
+  const [showMedia, setShowMedia] = useState(drill.show_media);
+  const [editMedia, setEditMedia] = useState(drill.show_edit_media);
   const [durationString, setDurationString] = useState<string | undefined>();
 
-  const { mutate: updateDrillStation } = useUpdateDrillStation();
+  // const { mutate: updateDrillStation } = useUpdateDrillStation();
 
   useEffect(() => {
-    setDuration(station.duration);
-  }, [station.duration]);
+    setDuration(drill.duration);
+  }, [drill.duration]);
 
   useEffect(() => {
-    setShowDuration(station.show_duration);
-  }, [station.show_duration]);
+    setShowDuration(drill.show_duration);
+  }, [drill.show_duration]);
 
   useEffect(() => {
-    setStationName(station.name);
-  }, [station.name]);
+    setStationName(drill.name);
+  }, [drill.name]);
 
   useEffect(() => {
-    setComments(station.comments);
-  }, [station.comments]);
+    setComments(drill.comments);
+  }, [drill.comments]);
 
   useEffect(() => {
-    setDescription(station.description);
-  }, [station.description]);
+    setDescription(drill.description);
+  }, [drill.description]);
 
   useEffect(() => {
-    setShowMedia(station.show_media);
-  }, [station.show_media]);
+    setShowMedia(drill.show_media);
+  }, [drill.show_media]);
 
   useEffect(() => {
-    setShowComments(station.show_comments);
-  }, [station.show_comments]);
+    setShowComments(drill.show_comments);
+  }, [drill.show_comments]);
 
   useEffect(() => {
-    setEditMedia(station.show_edit_media);
-  }, [station.show_edit_media]);
+    setEditMedia(drill.show_edit_media);
+  }, [drill.show_edit_media]);
 
   useEffect(() => {
     const handleBlur = () => {
       if (
-        stationName !== station.name ||
-        duration !== station.duration ||
-        comments !== station.comments ||
-        description !== station.description ||
-        showDuration !== station.show_duration ||
-        showComments !== station.show_comments ||
-        showMedia !== station.show_media
+        stationName !== drill.name ||
+        duration !== drill.duration ||
+        comments !== drill.comments ||
+        description !== drill.description ||
+        showDuration !== drill.show_duration ||
+        showComments !== drill.show_comments ||
+        showMedia !== drill.show_media
       ) {
-        updateDrillStation({
+        updateDrill({
           duration: duration,
+          name: stationName,
           comments: comments,
           despcription: description,
-          name: stationName,
-          station_id: station.id,
+          drill_id: drill.id,
           show_duration: showDuration,
           show_comments: showComments,
           show_media: showMedia,
@@ -113,7 +114,7 @@ const useDrillStationStates = ({
     };
   }, [
     stationName,
-    station,
+    drill,
     duration,
     comments,
     description,

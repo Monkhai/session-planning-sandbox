@@ -1,7 +1,11 @@
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "Providers/ReactQueryProvider";
-import { getAllStations, updateSkill } from "~/services/supabaseFunctions";
-import { SkillStationType, updateSkillArgs } from "~/utils/types";
+import updateSkill from "~/services/backend/skills/updateSkill";
+import {
+  SkillStationType,
+  SkillStationWithSkillsType,
+  updateSkillArgs,
+} from "~/utils/types";
 
 const useUpdateSkill = () => {
   return useMutation({
@@ -27,7 +31,7 @@ const useUpdateSkill = () => {
     }: updateSkillArgs) => {
       queryClient.cancelQueries({ queryKey: ["stations"] });
 
-      const previousStations: SkillStationType[] =
+      const previousStations: SkillStationWithSkillsType[] =
         queryClient.getQueryData(["stations"]) ?? [];
 
       const targetStation = previousStations.find(

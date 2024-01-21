@@ -1,5 +1,5 @@
 import { RefObject, useEffect } from "react";
-import { getUserId } from "~/services/supabaseFunctions";
+import getUserId from "~/services/backend/userManagement/getUserId";
 import client from "~/utils/supabaseClient";
 
 export const useUserSeenOnboard = (dialogRef: RefObject<HTMLDialogElement>) => {

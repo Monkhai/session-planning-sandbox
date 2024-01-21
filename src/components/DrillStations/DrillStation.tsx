@@ -1,15 +1,12 @@
 import React, { useCallback } from "react";
-import useDeleteDrillStation from "~/hooks/useDeleteDrillStation";
-import useDeleteMedia from "~/hooks/useDeleteMedia";
-import useDrillStationStates from "~/hooks/useDrillStationStates";
-import useGetDrillStationMedia from "~/hooks/useGetDrillStationMedia";
-import useUploadMedia from "~/hooks/useUploadMedia";
+import useDeleteDrillStation from "~/hooks/skillStationHooks/useDeleteDrillStation";
 import { DrillStationType } from "~/utils/types";
 import StationBottomBorder from "../SkillStation/StationBottomBorder";
 import Spacer from "../utility/Spacer";
 import DrillStationHeader from "./DrillStationHeader";
 import DrillStationMedia from "./DrillStationMedia";
 import DrillStationTextArea from "./DrillStationTextArea";
+import SingleDrill from "./Drill";
 
 interface Props {
   station: DrillStationType;
@@ -46,7 +43,7 @@ const DrillStation = ({ station, isLast }: Props) => {
     setShowMedia,
     durationString,
   } = useDrillStationStates({
-    station,
+    drill,
     stationNameRef,
     descriptionRef,
     commentsRef,
@@ -54,11 +51,11 @@ const DrillStation = ({ station, isLast }: Props) => {
 
   // const { mutate: updateDrillStation } = useUpdateDrillStation();
   const { mutate: deleteDrillStation } = useDeleteDrillStation();
-  const { mutate: uploadMedia } = useUploadMedia();
-  const { mutate: deleteMedia } = useDeleteMedia();
+  // const { mutate: uploadMedia } = useUploadMedia();
+  // const { mutate: deleteMedia } = useDeleteMedia();
 
-  const { data: stationMedia, isLoading: isMediaLoading } =
-    useGetDrillStationMedia(station.id);
+  // const { data: stationMedia, isLoading: isMediaLoading } =
+  //   useGetDrillStationMedia(station.id);
 
   const handleToggleDuration = useCallback(
     (show: boolean) => {
@@ -89,7 +86,6 @@ const DrillStation = ({ station, isLast }: Props) => {
   );
 
   const handleDeleteStation = useCallback(() => {
-    // const deleteMedia = station.mediaUrls.length > 0;
     const deleteMedia = true;
     deleteDrillStation({ station_id: station.id, deleteMedia });
   }, [deleteDrillStation, station]);
@@ -264,34 +260,23 @@ const DrillStation = ({ station, isLast }: Props) => {
           setHideDurationPicker={setHideDurationPicker}
         />
       </div>
-      <div className="flex w-1/2 flex-col gap-4 print:w-3/5">
-        <DrillStationTextArea
-          value={description}
-          setValue={setDescription}
-          textAreaRef={descriptionRef}
-          title="Description"
-          placeholder="Enter station description"
-        />
-
-        <DrillStationTextArea
-          value={comments}
-          setValue={setComments}
-          textAreaRef={commentsRef}
-          title="Comments"
-          placeholder="Enter station comments"
-          showComments={showComments}
-        />
-
-        <DrillStationMedia
-          mediaInputRef={inputRef}
-          mediaUrls={stationMedia}
-          isMediaLoading={isMediaLoading}
-          editMedia={editMedia}
-          onDeleteMedia={handleDeleteMedia}
-          onFileUpload={handleFileUpload}
-          showMedia={showMedia}
-        />
-      </div>
+      <SingleDrill
+        comments={comments}
+        commentsRef={commentsRef}
+        description={description}
+        descriptionRef={descriptionRef}
+        editMedia={editMedia}
+        handleDeleteMedia={handleDeleteMedia}
+        handleFileUpload={handleFileUpload}
+        inputRef={inputRef}
+        isMediaLoading={isMediaLoading}
+        setComments={setComments}
+        setDescription={setDescription}
+        showComments={showComments}
+        showMedia={showMedia}
+        stationMedia={stationMedia}
+        setShowComments={setShowComments}
+      />
       <StationBottomBorder isLast={isLast} />
       <Spacer showOnPrint={false} />
     </div>

@@ -1,7 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { useCallback, useState } from "react";
-import { IoAddCircle } from "react-icons/io5";
+import { useState } from "react";
 import CircuitDemo from "~/components/CircuitDemo";
 import CreateNewStationButton from "~/components/CreateNewStationButton";
 import HelpButton from "~/components/HelpButton";
@@ -11,9 +10,8 @@ import OnboardingDialog from "~/components/OnboardingDialog";
 import StationResponseHandler from "~/components/StationResponseHandler";
 import Spacer from "~/components/utility/Spacer";
 import { useAuth } from "~/hooks/useAuth";
-import useCreateDrillStation from "~/hooks/useCreateDrillStation";
-import useCreateSkillStation from "~/hooks/useCreateSkillStation";
-import useStations from "~/hooks/useStations";
+import useCreateSkillStation from "~/hooks/skillStationHooks/useCreateSkillStation";
+import useStations from "~/hooks/skillStationHooks/useStations";
 import client from "~/utils/supabaseClient";
 
 export default function HomePage() {
@@ -25,15 +23,15 @@ export default function HomePage() {
   const { data: allStations, error, isLoading } = useStations();
 
   const { mutate: createSkillStation } = useCreateSkillStation();
-  const { mutate: createDrillStation } = useCreateDrillStation();
+  // const { mutate: createDrillStation } = useCreateDrillStation();
 
-  const handleCreateSkillStation = useCallback(() => {
-    createSkillStation(allStations?.length ?? 0);
-  }, [allStations]);
+  // const handleCreateSkillStation = useCallback(() => {
+  //   createSkillStation(allStations?.length ?? 0);
+  // }, [allStations]);
 
-  const handleCreateDrillStation = useCallback(() => {
-    createDrillStation(allStations?.length ?? 0);
-  }, [allStations]);
+  // const handleCreateDrillStation = useCallback(() => {
+  //   createDrillStation(allStations?.length ?? 0);
+  // }, [allStations]);
 
   const handleLogout = () => {
     void client.auth.signOut();
@@ -50,7 +48,7 @@ export default function HomePage() {
         isLoading={isLoading}
       />
 
-      <CircuitDemo />
+      <CircuitDemo isLast={true} />
 
       <Spacer />
 
@@ -58,8 +56,8 @@ export default function HomePage() {
         <LogoutButton handleLogout={handleLogout} />
 
         <CreateNewStationButton
-          onCreateSkillStation={handleCreateSkillStation}
-          onCreateDrillStation={handleCreateDrillStation}
+          onCreateSkillStation={() => createSkillStation(2)}
+          onCreateDrillStation={() => {}}
         />
 
         <HelpButton setShowContact={setShowContact} showContact={showContact} />

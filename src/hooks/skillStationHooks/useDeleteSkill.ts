@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "Providers/ReactQueryProvider";
-import { deleteSkill } from "~/services/supabaseFunctions";
-import { SkillStationType } from "~/utils/types";
+import deleteSkill from "~/services/backend/skills/deleteSkill";
+import { SkillStationType, SkillStationWithSkillsType } from "~/utils/types";
 
 const useDeleteSkill = () => {
   return useMutation({
@@ -12,7 +12,7 @@ const useDeleteSkill = () => {
     onMutate: ({ id, station_id }: { id: number; station_id: number }) => {
       queryClient.cancelQueries({ queryKey: ["stations"] });
 
-      const previousStations: SkillStationType[] =
+      const previousStations: SkillStationWithSkillsType[] =
         queryClient.getQueryData(["stations"]) ?? [];
 
       const targetStation = previousStations.find(
@@ -52,7 +52,7 @@ const useDeleteSkill = () => {
     },
 
     onSuccess: (_, { id, station_id }) => {
-      const previousStations: SkillStationType[] =
+      const previousStations: SkillStationWithSkillsType[] =
         queryClient.getQueryData(["stations"]) ?? [];
 
       const parentStation = previousStations.find(

@@ -1,9 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "Providers/ReactQueryProvider";
-import {
-  getAllStations,
-  updateSkillStation,
-} from "~/services/supabaseFunctions";
+import updateSkillStation from "~/services/backend/stations/skillStations/updateSkillStation";
+
 import { SkillStationType, updateStationArgs } from "~/utils/types";
 
 const useUpdateSkillStation = () => {
