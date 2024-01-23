@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import CircuitDemo from "~/components/CircuitDemo";
 import CreateNewStationButton from "~/components/CreateNewStationButton";
 import HelpButton from "~/components/HelpButton";
@@ -25,9 +25,9 @@ export default function HomePage() {
   const { mutate: createSkillStation } = useCreateSkillStation();
   // const { mutate: createDrillStation } = useCreateDrillStation();
 
-  // const handleCreateSkillStation = useCallback(() => {
-  //   createSkillStation(allStations?.length ?? 0);
-  // }, [allStations]);
+  const handleCreateSkillStation = useCallback(() => {
+    createSkillStation(allStations?.length ?? 0);
+  }, [allStations]);
 
   // const handleCreateDrillStation = useCallback(() => {
   //   createDrillStation(allStations?.length ?? 0);
@@ -56,7 +56,7 @@ export default function HomePage() {
         <LogoutButton handleLogout={handleLogout} />
 
         <CreateNewStationButton
-          onCreateSkillStation={() => createSkillStation(2)}
+          onCreateSkillStation={handleCreateSkillStation}
           onCreateDrillStation={() => {}}
         />
 

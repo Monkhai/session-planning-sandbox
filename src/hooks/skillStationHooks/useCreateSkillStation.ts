@@ -20,7 +20,7 @@ const useCreateSkillStation = () => {
         duration: "00:00:00",
         order: lastOrder,
         skills: [],
-        show_duration: false,
+        show_duration: true,
         type: "skillStation",
       };
 

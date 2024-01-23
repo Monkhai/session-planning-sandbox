@@ -24,6 +24,7 @@ const SkillStation = ({ station, isLast }: Props) => {
     setShowDuration,
     setDuration,
     durationString,
+
     duration,
     setStationName,
     showDuration,
@@ -62,13 +63,13 @@ const SkillStation = ({ station, isLast }: Props) => {
   const handleCreateSkill = useCallback(async () => {
     createSkill({
       station_id: station.id,
-      lastOrder: station.skills.length,
+      lastOrder: station.skills ? station.skills.length : 0,
     });
   }, [station.id, createSkill]);
 
   const handleDeleteStation = useCallback(() => {
-    deleteStation(station.id);
-  }, [station.id, deleteStation]);
+    deleteStation({ station_id: station.id, skills: station.skills });
+  }, [station.id, deleteStation, station.skills]);
 
   const handleToggleDuration = useCallback(
     (show: boolean) => {

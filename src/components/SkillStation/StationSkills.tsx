@@ -1,10 +1,10 @@
 import { FaCirclePlus } from "react-icons/fa6";
-import { SkillStationType } from "~/utils/types";
+import { SkillStationType, SkillStationWithSkillsType } from "~/utils/types";
 import SkillRow from "./SkillRow";
 import React from "react";
 
 interface Props {
-  station: SkillStationType;
+  station: SkillStationWithSkillsType;
   onCreateSkill: () => void;
   editSkills: boolean;
 }

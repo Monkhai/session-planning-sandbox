@@ -145,7 +145,7 @@ const getStationsWithSkills = async (
   );
 };
 
-export default async (): Promise<SkillStationType[]> => {
+export default async (): Promise<SkillStationWithSkillsType[]> => {
   const user_id = getUserId();
   if (!user_id) {
     console.error("User not found");
