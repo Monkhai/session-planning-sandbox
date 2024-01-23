@@ -1,6 +1,6 @@
 import { PostgrestSingleResponse } from "@supabase/supabase-js";
 import client from "~/utils/supabaseClient";
-import { DrillFromDBType } from "~/utils/types";
+import { DrillFromDBType, DrillOfDrillStation, DrillType } from "~/utils/types";
 import getUserId from "../userManagement/getUserId";
 
 const createDrill = async (user_id: string) => {
@@ -35,7 +35,10 @@ const createDrillOfDrillStation = async (
   lastOrder: number,
   station_id: number,
 ) => {
-  const { data: drills, error } = await client
+  const {
+    data: drills,
+    error,
+  }: PostgrestSingleResponse<DrillOfDrillStation[]> = await client
     .from("drills_of_drill_stations")
     .insert([
       {
@@ -74,17 +77,29 @@ export default async (station_id: number, lastOrder: number) => {
       station_id,
     );
 
-    if (!drillOfDrillStation || drillOfDrillStation.length < 1) {
+    if (drillOfDrillStation === undefined || drillOfDrillStation.length < 1) {
       throw new Error("No drill of drill station");
     }
 
     const drillWithOrder = {
       ...drill,
-      order: drillOfDrillStation[0].order,
+      order: drillOfDrillStation[0]!.order,
       station_id: station_id,
-    };
+      description: drill.description,
+      drillOfStationId: drillOfDrillStation[0]!.id,
+      id: drill.id,
+      name: drill.name,
+      show_duration: drill.show_duration,
+      type: "drillStation",
+      user_id: user_id,
+      comments: drill.comments,
+      duration: drill.duration,
+      show_comments: drill.show_comments,
+      show_media: drill.show_media,
+      show_edit_media: drill.show_edit_media,
+    } as DrillType;
 
-    return drillWithOrder as DrillFromDBType;
+    return drillWithOrder as DrillType;
   } catch (error) {
     throw error;
   }

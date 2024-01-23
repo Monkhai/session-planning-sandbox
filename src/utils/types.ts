@@ -65,18 +65,6 @@ export type DrillType = {
   order: number;
   show_media: boolean;
   show_edit_media: boolean;
-  type: StationType;
-};
-
-export type DrillStationWithDrillsType = {
-  id: number;
-  name: string;
-  duration: string;
-  order: number;
-  drills: DrillType[];
-  user_id: string;
-  show_duration: boolean;
-  type: StationType;
 };
 
 export type DrillStationType = {
@@ -89,7 +77,11 @@ export type DrillStationType = {
   type: StationType;
 };
 
-export type Station = SkillStationWithSkillsType | DrillStationType;
+export type DrillStationWithDrillsType = DrillStationType & {
+  drills: DrillType[];
+};
+
+export type Station = SkillStationWithSkillsType | DrillStationWithDrillsType;
 
 export type SignedUrls = {
   url: string;
@@ -178,4 +170,18 @@ export type UpdateDrillStationArgs = {
   name: string;
   duration: string | null;
   show_duration: boolean;
+};
+
+export type SkillofSKillStation = {
+  id: number;
+  skill_id: number;
+  skill_station_id: number;
+  order: number;
+};
+
+export type DrillOfDrillStation = {
+  id: number;
+  drill_id: number;
+  drill_station_id: number;
+  order: number;
 };

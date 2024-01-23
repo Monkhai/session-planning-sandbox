@@ -1,5 +1,6 @@
-import { queryOptions, useMutation } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "Providers/ReactQueryProvider";
+import deleteMultipleDrills from "~/services/backend/drills/deleteMultipleDrills";
 import DeleteAllDrillMedia from "~/services/backend/drills/media/DeleteAllDrillMedia";
 import decrementStationOrder from "~/services/backend/stations/decrementStationOrder";
 import deleteDrillStation from "~/services/backend/stations/drillStations/deleteDrillStation";
@@ -19,7 +20,10 @@ const useDeleteDrillStation = () => {
       if (deleteMedia) {
         await DeleteAllDrillMedia(station_id);
       }
-      return await deleteDrillStation(station_id, drillsId);
+      if (drillsId) {
+        await deleteMultipleDrills(drillsId);
+      }
+      return await deleteDrillStation(station_id);
     },
 
     onMutate: async ({ station_id }) => {

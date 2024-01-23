@@ -1,6 +1,6 @@
 import client from "~/utils/supabaseClient";
 
-export default async (station_id: number, drillIds: number[]) => {
+export default async (station_id: number) => {
   try {
     const { error } = await client
       .from("drill_stations")
@@ -9,15 +9,6 @@ export default async (station_id: number, drillIds: number[]) => {
 
     if (error) {
       throw error;
-    }
-
-    const { error: drillsError } = await client
-      .from("drills")
-      .delete()
-      .in("id", drillIds);
-
-    if (drillsError) {
-      throw drillsError;
     }
   } catch (error) {
     throw error;

@@ -3,10 +3,11 @@ import React from "react";
 import client from "~/utils/supabaseClient";
 import {
   DrillStationType,
+  DrillStationWithDrillsType,
   SkillStationWithSkillsType,
   Station,
 } from "~/utils/types";
-import DrillStation from "./DrillStations/DrillStation";
+import CircuitStation from "./DrillStations/CircuitStation";
 import Loader from "./Loader";
 import SkillStation from "./SkillStation/SkillStation";
 
@@ -61,10 +62,10 @@ const StationResponseHandler = ({ error, isLoading, stations }: Props) => {
             );
           } else if (station.type === "drillStation") {
             return (
-              <DrillStation
+              <CircuitStation
                 key={station.id + station.type}
                 isLast={isLast}
-                station={station as DrillStationType}
+                station={station as DrillStationWithDrillsType}
               />
             );
           }

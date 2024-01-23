@@ -13,6 +13,10 @@ import { useAuth } from "~/hooks/useAuth";
 import useCreateSkillStation from "~/hooks/skillStationHooks/useCreateSkillStation";
 import useStations from "~/hooks/skillStationHooks/useStations";
 import client from "~/utils/supabaseClient";
+import useCreateStation from "~/hooks/useCreateStation";
+import createDrillStation from "~/services/backend/stations/drillStations/createDrillStation";
+import createSkillStation from "~/services/backend/stations/skillStations/createSkillStation";
+import useCreateDrillStation from "~/hooks/drillStationHooks/useCreateDrillStation";
 
 export default function HomePage() {
   useAuth();
@@ -22,16 +26,19 @@ export default function HomePage() {
 
   const { data: allStations, error, isLoading } = useStations();
 
-  const { mutate: createSkillStation } = useCreateSkillStation();
-  // const { mutate: createDrillStation } = useCreateDrillStation();
+  const { mutate: createNewSkillStation } = useCreateStation(
+    createSkillStation,
+    "skillStation",
+  );
 
+  const { mutate: createNewDrillStation } = useCreateDrillStation();
   const handleCreateSkillStation = useCallback(() => {
-    createSkillStation(allStations?.length ?? 0);
+    createNewSkillStation(allStations?.length ?? 0);
   }, [allStations]);
 
-  // const handleCreateDrillStation = useCallback(() => {
-  //   createDrillStation(allStations?.length ?? 0);
-  // }, [allStations]);
+  const handleCreateDrillStation = useCallback(() => {
+    createNewDrillStation(allStations?.length ?? 0);
+  }, [allStations]);
 
   const handleLogout = () => {
     void client.auth.signOut();
@@ -57,7 +64,7 @@ export default function HomePage() {
 
         <CreateNewStationButton
           onCreateSkillStation={handleCreateSkillStation}
-          onCreateDrillStation={() => {}}
+          onCreateDrillStation={handleCreateDrillStation}
         />
 
         <HelpButton setShowContact={setShowContact} showContact={showContact} />

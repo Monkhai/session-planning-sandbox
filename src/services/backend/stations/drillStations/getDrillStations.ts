@@ -1,4 +1,10 @@
-import { DrillFromDBType, DrillList, DrillStationType } from "~/utils/types";
+import {
+  DrillFromDBType,
+  DrillList,
+  DrillStationType,
+  DrillStationWithDrillsType,
+  DrillType,
+} from "~/utils/types";
 import getUserId from "../../userManagement/getUserId";
 import { PostgrestSingleResponse } from "@supabase/supabase-js";
 import client from "~/utils/supabaseClient";
@@ -132,6 +138,7 @@ const insertOrderToDrills = (
       order: order,
       station_id: station.id,
       drillOfStationId: drillOfDrillStationId,
+      user_id: station.user_id,
     };
   });
 };
@@ -139,7 +146,7 @@ const insertOrderToDrills = (
 //------------------------------------------------------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------------------------------------------------------
 
-export default async (): Promise<DrillStationType[]> => {
+export default async (): Promise<DrillStationWithDrillsType[]> => {
   const user_id = getUserId();
   if (!user_id) {
     console.error("User not found");
@@ -155,7 +162,7 @@ export default async (): Promise<DrillStationType[]> => {
 
     const drillList = await getDrillList(stations);
 
-    const stationsWithDrills = await Promise.all(
+    const stationsWithDrills: DrillStationWithDrillsType[] = await Promise.all(
       stations.map(async (station) => {
         const drillIds: number[] = await getDrillidIds(station, drillList);
 
@@ -168,7 +175,11 @@ export default async (): Promise<DrillStationType[]> => {
 
         const drills = await getDrills(drillIds);
 
-        const drillsWithOrder = insertOrderToDrills(drills, station, drillList);
+        const drillsWithOrder: DrillType[] = insertOrderToDrills(
+          drills,
+          station,
+          drillList,
+        );
 
         const sortedDrills = drillsWithOrder.sort((a, b) => a.order - b.order);
 
@@ -176,11 +187,11 @@ export default async (): Promise<DrillStationType[]> => {
           ...station,
           drills: sortedDrills,
         };
-        return stationWithDrills as DrillStationType;
+        return stationWithDrills as DrillStationWithDrillsType;
       }),
     );
 
-    return stationsWithDrills;
+    return stationsWithDrills as DrillStationWithDrillsType[];
   } catch (error) {
     console.error(error);
     return [];
