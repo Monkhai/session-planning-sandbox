@@ -10,6 +10,7 @@ import {
 import CircuitStation from "./DrillStations/CircuitStation";
 import Loader from "./Loader";
 import SkillStation from "./SkillStation/SkillStation";
+import DrillStationHandler from "./DrillStations/DrillStationHandler";
 
 interface Props {
   stations: Station[] | undefined;
@@ -62,7 +63,7 @@ const StationResponseHandler = ({ error, isLoading, stations }: Props) => {
             );
           } else if (station.type === "drillStation") {
             return (
-              <CircuitStation
+              <DrillStationHandler
                 key={station.id + station.type}
                 isLast={isLast}
                 station={station as DrillStationWithDrillsType}

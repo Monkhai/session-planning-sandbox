@@ -20,6 +20,8 @@ export default {
         darkSeperatorSecondary: "var(--color-dark-seperator-secondary)",
         darkTextInput: "var(--color-dark-text-input)",
         darkTextInputBackground: "var(--color-dark-text-input-field)",
+        darkSecondaryTextInputBackground:
+          "var(--color-dark-secondary-text-input-field)",
       },
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],

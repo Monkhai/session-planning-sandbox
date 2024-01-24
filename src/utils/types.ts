@@ -65,6 +65,7 @@ export type DrillType = {
   order: number;
   show_media: boolean;
   show_edit_media: boolean;
+  station_id: number;
 };
 
 export type DrillStationType = {
@@ -123,11 +124,12 @@ export type UpdateDrillArgs = {
   duration: string | null;
   name: string;
   show_duration: boolean;
-  despcription: string;
+  description: string;
   comments: string;
   show_comments: boolean;
   show_media: boolean;
   show_edit_media: boolean;
+  station_id: number;
 };
 
 export type ImageDimensions = { height: number; width: number };

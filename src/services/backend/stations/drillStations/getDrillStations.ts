@@ -58,6 +58,7 @@ const getDrillList = async (stations: DrillStationType[]) => {
         throw drillsError;
       }
 
+      console.log(drills);
       return { station_id: station.id, drillList: drills };
     }),
   );
@@ -97,8 +98,7 @@ const getDrills = async (drillIds: number[]) => {
             comments,
             show_comments,
             show_media,
-            show_edit_media,
-            order
+            show_edit_media
             `,
     )
     .in("id", drillIds);
@@ -117,7 +117,7 @@ const insertOrderToDrills = (
   drills: DrillFromDBType[],
   station: DrillStationType,
   drillList: DrillList[],
-) => {
+): DrillType[] => {
   return drills.map((drill) => {
     const order: number =
       drillList
@@ -139,7 +139,7 @@ const insertOrderToDrills = (
       station_id: station.id,
       drillOfStationId: drillOfDrillStationId,
       user_id: station.user_id,
-    };
+    } as DrillType;
   });
 };
 

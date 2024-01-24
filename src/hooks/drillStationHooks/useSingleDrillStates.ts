@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Station, DrillStationType, DrillType } from "~/utils/types";
+import useUpdateDrillStation from "./useUpdateDrillStation";
 import { convertDurationToString } from "~/services/DurationFunctions";
-import updateDrillStation from "~/services/backend/stations/drillStations/updateDrillStation";
-import updateDrill from "~/services/backend/drills/updateDrill";
+import useUpdateDrill from "./useUpdateDrill";
 
 type useDrillStationStatesArgs = {
   drill: DrillType;
@@ -11,13 +11,13 @@ type useDrillStationStatesArgs = {
   commentsRef: React.RefObject<HTMLTextAreaElement>;
 };
 
-const useDrillStationStates = ({
+const useSingleDrillState = ({
   drill,
   commentsRef,
   descriptionRef,
   stationNameRef,
 }: useDrillStationStatesArgs) => {
-  const [stationName, setStationName] = useState(drill.name);
+  const [drillName, setDrillName] = useState(drill.name);
   const [duration, setDuration] = useState(drill.duration);
   const [comments, setComments] = useState(drill.comments);
   const [description, setDescription] = useState(drill.description);
@@ -27,7 +27,7 @@ const useDrillStationStates = ({
   const [editMedia, setEditMedia] = useState(drill.show_edit_media);
   const [durationString, setDurationString] = useState<string | undefined>();
 
-  // const { mutate: updateDrillStation } = useUpdateDrillStation();
+  const { mutate: updateDrillStation } = useUpdateDrill();
 
   useEffect(() => {
     setDuration(drill.duration);
@@ -38,7 +38,7 @@ const useDrillStationStates = ({
   }, [drill.show_duration]);
 
   useEffect(() => {
-    setStationName(drill.name);
+    setDrillName(drill.name);
   }, [drill.name]);
 
   useEffect(() => {
@@ -64,7 +64,7 @@ const useDrillStationStates = ({
   useEffect(() => {
     const handleBlur = () => {
       if (
-        stationName !== drill.name ||
+        drillName !== drill.name ||
         duration !== drill.duration ||
         comments !== drill.comments ||
         description !== drill.description ||
@@ -72,16 +72,17 @@ const useDrillStationStates = ({
         showComments !== drill.show_comments ||
         showMedia !== drill.show_media
       ) {
-        updateDrill({
-          duration: duration,
-          name: stationName,
-          comments: comments,
-          despcription: description,
+        updateDrillStation({
+          comments,
+          description,
           drill_id: drill.id,
-          show_duration: showDuration,
+          duration,
+          name: drillName,
           show_comments: showComments,
-          show_media: showMedia,
+          show_duration: showDuration,
           show_edit_media: editMedia,
+          show_media: showMedia,
+          station_id: drill.station_id,
         });
       }
     };
@@ -113,7 +114,7 @@ const useDrillStationStates = ({
       }
     };
   }, [
-    stationName,
+    drillName,
     drill,
     duration,
     comments,
@@ -138,8 +139,8 @@ const useDrillStationStates = ({
   }, [duration]);
 
   return {
-    stationName,
-    setStationName,
+    drillName,
+    setDrillName,
     duration,
     setDuration,
     comments,
@@ -159,4 +160,4 @@ const useDrillStationStates = ({
     updateDrillStation,
   };
 };
-export default useDrillStationStates;
+export default useSingleDrillState;
