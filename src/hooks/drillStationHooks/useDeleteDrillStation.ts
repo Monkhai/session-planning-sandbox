@@ -18,7 +18,9 @@ const useDeleteDrillStation = () => {
       drillsId: number[];
     }) => {
       if (deleteMedia) {
-        await DeleteAllDrillMedia(station_id);
+        for (const id of drillsId) {
+          await DeleteAllDrillMedia(id);
+        }
       }
       if (drillsId) {
         await deleteMultipleDrills(drillsId);

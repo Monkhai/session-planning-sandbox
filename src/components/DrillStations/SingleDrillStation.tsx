@@ -8,6 +8,9 @@ import DrillStationTextArea from "./DrillStationTextArea";
 import useDeleteDrillStation from "~/hooks/drillStationHooks/useDeleteDrillStation";
 import useSingleDrillState from "~/hooks/drillStationHooks/useSingleDrillStates";
 import useUpdateDrill from "~/hooks/drillStationHooks/useUpdateDrill";
+import useUploadMedia from "~/hooks/drillStationHooks/useUploadMedia";
+import useDeleteMedia from "~/hooks/drillStationHooks/useDeleteMedia";
+import useGetDrillStationMedia from "~/hooks/drillStationHooks/useGetDrillStationMedia";
 
 interface Props {
   drill: DrillType;
@@ -51,11 +54,11 @@ const SingleDrillStation = ({ drill, isLast }: Props) => {
 
   const { mutate: updateDrill } = useUpdateDrill();
   const { mutate: deleteDrillStation } = useDeleteDrillStation();
-  //   const { mutate: uploadMedia } = useUploadMedia();
-  //   const { mutate: deleteMedia } = useDeleteMedia();
+  const { mutate: uploadMedia } = useUploadMedia();
+  const { mutate: deleteMedia } = useDeleteMedia();
 
-  //   const { data: stationMedia, isLoading: isMediaLoading } =
-  //     useGetDrillStationMedia(station.id);
+  const { data: drillMedia, isLoading: isMediaLoading } =
+    useGetDrillStationMedia(drill.id);
 
   const handleToggleDuration = useCallback(
     (show: boolean) => {
@@ -86,18 +89,22 @@ const SingleDrillStation = ({ drill, isLast }: Props) => {
     ],
   );
 
-  //   const handleDeleteStation = useCallback(() => {
-  //     const deleteMedia = true;
-  //     const drillIds = station.drills.map((drill) => drill.id);
-  //     deleteDrillStation({ station_id: station.id, deleteMedia });
-  //   }, [deleteDrillStation, station]);
+  const handleDeleteStation = useCallback(() => {
+    const deleteMedia = drillMedia ? drillMedia.length > 0 : false;
 
-  //   const handleDeleteMedia = useCallback(
-  //     (name: string) => {
-  //       deleteMedia({ name, station_id: station.id });
-  //     },
-  //     [deleteMedia, station.id],
-  //   );
+    deleteDrillStation({
+      station_id: drill.station_id,
+      deleteMedia,
+      drillsId: [drill.id],
+    });
+  }, [deleteDrillStation, drill.id, drillMedia]);
+
+  const handleDeleteMedia = useCallback(
+    (name: string) => {
+      deleteMedia({ name, station_id: drill.id });
+    },
+    [deleteMedia, drill.id],
+  );
 
   const handleDurationChange = useCallback(
     (newDuration: string) => {
@@ -128,20 +135,20 @@ const SingleDrillStation = ({ drill, isLast }: Props) => {
     ],
   );
 
-  //   const handleFileUpload = useCallback(
-  //     async (e: React.ChangeEvent<HTMLInputElement>) => {
-  //       if (e.target.files) {
-  //         const file = e.target.files[0];
-  //         if (file) {
-  //           uploadMedia({ station_id: station.id, file: file });
-  //         } else {
-  //           alert("no file found");
-  //         }
-  //       }
-  //       e.target.value = "";
-  //     },
-  //     [uploadMedia, station],
-  //   );
+  const handleFileUpload = useCallback(
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (e.target.files) {
+        const file = e.target.files[0];
+        if (file) {
+          uploadMedia({ station_id: drill.id, file: file });
+        } else {
+          alert("no file found");
+        }
+      }
+      e.target.value = "";
+    },
+    [uploadMedia, drill.id],
+  );
 
   const handleToggleComments = useCallback(
     (show: boolean) => {
@@ -261,7 +268,7 @@ const SingleDrillStation = ({ drill, isLast }: Props) => {
           showDuration={showDuration}
           onToggleDuration={handleToggleDuration}
           hideDurationPicker={hideDurationPicker}
-          handleDeleteStation={() => {}}
+          handleDeleteStation={handleDeleteStation}
           handleDurationChange={handleDurationChange}
           setHideDurationPicker={setHideDurationPicker}
         />
@@ -286,11 +293,11 @@ const SingleDrillStation = ({ drill, isLast }: Props) => {
 
         <DrillStationMedia
           mediaInputRef={inputRef}
-          mediaUrls={/*stationMedia*/ [] as SignedUrls[]}
-          isMediaLoading={false}
+          mediaUrls={drillMedia}
+          isMediaLoading={isMediaLoading}
           editMedia={editMedia}
-          onDeleteMedia={() => {}}
-          onFileUpload={() => {}}
+          onDeleteMedia={handleDeleteMedia}
+          onFileUpload={handleFileUpload}
           showMedia={showMedia}
         />
       </div>

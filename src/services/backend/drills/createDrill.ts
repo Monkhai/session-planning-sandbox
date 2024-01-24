@@ -49,7 +49,6 @@ const createDrillOfDrillStation = async (
       },
     ])
     .select();
-  console.log("creating drillOfDrillStation");
   if (error) {
     throw error;
   }
