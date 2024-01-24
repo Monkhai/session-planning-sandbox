@@ -58,7 +58,6 @@ const getDrillList = async (stations: DrillStationType[]) => {
         throw drillsError;
       }
 
-      console.log(drills);
       return { station_id: station.id, drillList: drills };
     }),
   );

@@ -7,10 +7,9 @@ interface Props {
   handleDeleteStation: () => void;
   onToggleDuration: (show: boolean) => void;
   showDuration: boolean;
-  editMedia: boolean;
 }
 
-const CircuitStationSettings = ({
+const DrillStationSettings = ({
   handleDeleteStation,
   showDuration,
   setShowSettingsModal,
@@ -64,4 +63,4 @@ const CircuitStationSettings = ({
   );
 };
 
-export default CircuitStationSettings;
+export default DrillStationSettings;

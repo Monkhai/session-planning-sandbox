@@ -19,7 +19,6 @@ interface Props {
   durationString: string | undefined;
   showDuration: boolean;
   handleDurationChange: (duration: string) => void;
-  editMedia: boolean;
 }
 
 const CircuitStationHeader = ({
@@ -36,10 +35,9 @@ const CircuitStationHeader = ({
   stationName,
   stationNameRef,
   showDuration,
-  editMedia,
 }: Props) => {
   return (
-    <div className="flex  min-h-20 w-full flex-1 flex-row items-start justify-around gap-2 py-2">
+    <div className="flex min-h-20 w-full flex-row items-start justify-around gap-2 py-2">
       <div className="relative bottom-1 flex flex-row print:hidden">
         <button
           className="transition-all duration-150 active:scale-95"
@@ -47,15 +45,14 @@ const CircuitStationHeader = ({
         >
           <PiDotsThreeCircleFill size={36} color={"gray"} />
         </button>
+        <CircuitStationSettings
+          showDuration={showDuration}
+          onToggleDuration={onToggleDuration}
+          showSettingsModal={showSettingsModal}
+          setShowSettingsModal={setShowSettingsModal}
+          handleDeleteStation={handleDeleteStation}
+        />
       </div>
-      <CircuitStationSettings
-        editMedia={editMedia}
-        showDuration={showDuration}
-        showSettingsModal={showSettingsModal}
-        setShowSettingsModal={setShowSettingsModal}
-        onToggleDuration={onToggleDuration}
-        handleDeleteStation={handleDeleteStation}
-      />
 
       <div className="flex-1 pr-6">
         <StationTitle

@@ -24,7 +24,6 @@ const SkillStation = ({ station, isLast }: Props) => {
     setShowDuration,
     setDuration,
     durationString,
-
     duration,
     setStationName,
     showDuration,

@@ -1,10 +1,12 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import useDeleteDrillStation from "~/hooks/drillStationHooks/useDeleteDrillStation";
 import useUpdateDrillStation from "~/hooks/drillStationHooks/useUpdateDrillStation";
+import { convertDurationToString } from "~/services/DurationFunctions";
 import { DrillStationWithDrillsType } from "~/utils/types";
 import StationBottomBorder from "../SkillStation/StationBottomBorder";
 import Spacer from "../utility/Spacer";
-import DrillStationHeader from "./DrillStationHeader";
+import CircuitStationHeader from "./CircuitStationHeader";
+import { CircuitDrill } from "./CircuitDrill";
 
 interface Props {
   station: DrillStationWithDrillsType;
@@ -21,6 +23,20 @@ const CircuitStation = ({ station, isLast }: Props) => {
 
   const [duration, setDuration] = useState<string>(station.duration);
   const [stationName, setStationName] = useState<string>(station.name);
+
+  const durationString = useMemo(() => {
+    const newDurationString = convertDurationToString(duration);
+    if (newDurationString) {
+      if (newDurationString[0] == "0") {
+        setDuration("00:00:00");
+        return "";
+      } else {
+        return newDurationString;
+      }
+    } else {
+      return "";
+    }
+  }, [duration]);
 
   const stationNameRef = useRef<HTMLTextAreaElement>(null);
 
@@ -39,6 +55,25 @@ const CircuitStation = ({ station, isLast }: Props) => {
     },
     [duration, stationName, station.id, updateDrillStation],
   );
+
+  useEffect(() => {
+    const handleBlur = () => {
+      if (stationName !== station.name) {
+        updateDrillStation({
+          duration: duration,
+          name: stationName,
+          station_id: station.id,
+          show_duration: showDuration,
+        });
+      }
+    };
+
+    stationNameRef.current?.addEventListener("blur", handleBlur);
+
+    return () => {
+      stationNameRef.current?.removeEventListener("blur", handleBlur);
+    };
+  }, [stationName, station.id, duration, showDuration, updateDrillStation]);
 
   const handleDeleteStation = useCallback(() => {
     const deleteMedia = true;
@@ -73,24 +108,29 @@ const CircuitStation = ({ station, isLast }: Props) => {
       }
     >
       <div className="flex flex-1">
-        <DrillStationHeader
-          stationNameRef={stationNameRef}
+        <CircuitStationHeader
           duration={duration}
-          stationName={stationName}
+          handleDurationChange={handleDurationChange}
+          handleDeleteStation={handleDeleteStation}
+          hideDurationPicker={hideDurationPicker}
+          onToggleDuration={handleToggleDuration}
+          setHideDurationPicker={setHideDurationPicker}
           setStationName={setStationName}
-          showSettingsModal={showSettingsModal}
           setShowSettingsModal={setShowSettingsModal}
           showDuration={showDuration}
-          onToggleDuration={handleToggleDuration}
-          hideDurationPicker={hideDurationPicker}
-          handleDeleteStation={handleDeleteStation}
-          handleDurationChange={handleDurationChange}
-          setHideDurationPicker={setHideDurationPicker}
+          showSettingsModal={showSettingsModal}
+          stationName={stationName}
+          stationNameRef={stationNameRef}
+          durationString={durationString}
         />
       </div>
-
+      <div className="flex flex-[3] flex-col gap-6">
+        {station.drills.map((drill) => (
+          <CircuitDrill drill={drill} />
+        ))}
+      </div>
       <StationBottomBorder isLast={isLast} />
-      <Spacer showOnPrint={false} />
+      {/* <Spacer showOnPrint={false} /> */}
     </div>
   );
 };

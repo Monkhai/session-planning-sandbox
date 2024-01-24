@@ -71,7 +71,6 @@ const CircuitDemo = ({ isLast }: Props) => {
           showSettingsModal={showSettingsModal}
           stationName={stationName}
           stationNameRef={stationNameRef}
-          editMedia={editMedia}
         />
       </div>
 

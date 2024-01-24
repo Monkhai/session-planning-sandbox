@@ -9,7 +9,7 @@ export default async ({
 }: UpdateDrillStationArgs) => {
   try {
     const { data, error } = await client
-      .from("drills")
+      .from("drill_stations")
       .update({
         name: name,
         duration: duration,

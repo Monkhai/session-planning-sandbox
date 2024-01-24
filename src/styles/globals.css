@@ -73,6 +73,14 @@ h4 {
   @apply text-xl;
 }
 
+h5 {
+  @apply text-base;
+}
+
+h6 {
+  @apply text-sm;
+}
+
 @media (max-width: 468px) {
   h1 {
     @apply text-xl;
