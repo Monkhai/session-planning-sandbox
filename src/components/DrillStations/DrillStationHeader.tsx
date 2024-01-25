@@ -24,9 +24,11 @@ interface Props {
   showComments: boolean;
   showMedia: boolean;
   onToggleEditMedia: (show: boolean) => void;
+  onAddDrill: () => void;
 }
 
 const DrillStationHeader = ({
+  onAddDrill,
   handleDeleteStation,
   onToggleDuration,
   setShowSettingsModal,
@@ -57,6 +59,7 @@ const DrillStationHeader = ({
           <PiDotsThreeCircleFill size={36} color={"gray"} />
         </button>
         <DrillStationSettings
+          onAddDrill={onAddDrill}
           editMedia={editMedia}
           onToggleShowComments={onToggleShowComments}
           onToggleShowMedia={onToggleShowMedia}

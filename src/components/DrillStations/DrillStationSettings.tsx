@@ -14,6 +14,7 @@ interface Props {
   onToggleShowMedia: (show: boolean) => void;
   onToggleEditMedia: (show: boolean) => void;
   title?: string;
+  onAddDrill: () => void;
 }
 
 const DrillStationSettings = ({
@@ -28,6 +29,7 @@ const DrillStationSettings = ({
   onToggleShowMedia,
   onToggleEditMedia,
   showMedia,
+  onAddDrill,
   title = "Station Settings",
 }: Props) => {
   return (
@@ -100,6 +102,14 @@ const DrillStationSettings = ({
             />
           </div>
           {/*  */}
+          <div className=" w-full pt-2">
+            <button
+              onClick={onAddDrill}
+              className="w-full rounded-[12px] bg-primary px-4 py-2 text-white transition-all duration-150 active:scale-95"
+            >
+              Add Drill
+            </button>
+          </div>
           <div className=" w-full pt-2">
             <button
               onClick={handleDeleteStation}

@@ -11,6 +11,7 @@ import useUpdateDrill from "~/hooks/drillStationHooks/useUpdateDrill";
 import useUploadMedia from "~/hooks/drillStationHooks/useUploadMedia";
 import useDeleteMedia from "~/hooks/drillStationHooks/useDeleteMedia";
 import useGetDrillStationMedia from "~/hooks/drillStationHooks/useGetDrillStationMedia";
+import useCreateDrill from "~/hooks/drillStationHooks/useCreateDrill";
 
 interface Props {
   drill: DrillType;
@@ -56,6 +57,7 @@ const SingleDrillStation = ({ drill, isLast }: Props) => {
   const { mutate: deleteDrillStation } = useDeleteDrillStation();
   const { mutate: uploadMedia } = useUploadMedia();
   const { mutate: deleteMedia } = useDeleteMedia();
+  const { mutate: addlDrillToCircuit } = useCreateDrill();
 
   const { data: drillMedia, isLoading: isMediaLoading } =
     useGetDrillStationMedia(drill.id);
@@ -237,6 +239,13 @@ const SingleDrillStation = ({ drill, isLast }: Props) => {
     ],
   );
 
+  const handleAddDrill = useCallback(() => {
+    addlDrillToCircuit({
+      stationId: drill.station_id,
+      lastOrder: drill.order,
+    });
+  }, [drill]);
+
   //---------------------------------------------
   //---------------------------------------------
   //---------------------------------------------
@@ -252,6 +261,7 @@ const SingleDrillStation = ({ drill, isLast }: Props) => {
     >
       <div className="flex flex-1">
         <DrillStationHeader
+          onAddDrill={handleAddDrill}
           editMedia={editMedia}
           onToggleShowComments={handleToggleComments}
           onToggleShowMedia={handleToggleShowMedia}
