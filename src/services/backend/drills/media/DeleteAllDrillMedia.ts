@@ -12,6 +12,7 @@ export default async (station_id: number) => {
 
   try {
     const allMedia = await getAllMediaForDrill(station_id);
+
     if (allMedia.length > 0) {
       allMedia.forEach(async (media) => {
         await deleteMedia(media.name, station_id);

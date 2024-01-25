@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 
 interface Props {
-  value: string;
+  value: string | undefined;
   setValue: React.Dispatch<React.SetStateAction<string>>;
   textAreaRef: React.RefObject<HTMLTextAreaElement>;
   placeholder: string;

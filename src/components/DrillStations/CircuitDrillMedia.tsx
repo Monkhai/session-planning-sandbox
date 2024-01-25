@@ -10,6 +10,7 @@ interface Props {
   showMedia: boolean;
   onDeleteMedia: (name: string) => void;
   isMediaLoading: boolean;
+  onFileUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const CircuitDrillMedia = ({
@@ -18,12 +19,15 @@ const CircuitDrillMedia = ({
   showMedia,
   onDeleteMedia,
   isMediaLoading,
+  onFileUpload,
 }: Props) => {
+  const inputRef = React.useRef<HTMLInputElement>(null);
+
   if (!showMedia) return null;
 
-  if (isMediaLoading) {
+  if (isMediaLoading && mediaUrls && mediaUrls.length > 0) {
     return (
-      <div className="flex flex-1 flex-col gap-1 print:hidden">
+      <div className="relative flex flex-1 flex-col gap-1 print:hidden">
         <div className=" flex flex-1 flex-row items-center gap-2">
           <p className="text-md ml-4 text-gray">Media</p>
         </div>
@@ -37,8 +41,21 @@ const CircuitDrillMedia = ({
   if (!mediaUrls) return null;
 
   return (
-    <div className="flex flex-1 flex-col gap-1 print:hidden">
+    <div className="relative flex flex-1 flex-col gap-1 print:hidden">
       <div className="flex max-h-[200px] min-h-[60px] w-full items-center justify-start gap-10 rounded-[10px] bg-white px-4 py-4 dark:bg-darkSecondaryBackground">
+        <button
+          onClick={() => inputRef.current?.click()}
+          className="absolute -top-6 left-0 text-sm text-primary"
+        >
+          Add media
+        </button>
+        <input
+          onChange={onFileUpload}
+          ref={inputRef}
+          type="file"
+          className="hidden"
+          accept="image/* video/*"
+        />
         {mediaUrls.length > 0 ? (
           <MediaHandler
             editMedia={editMedia}

@@ -35,6 +35,7 @@ input[type="number"] {
   --color-dark-text-input: rgba(235, 235, 245, 0.6);
   --color-dark-text-input-field: #2c2c2e;
   --color-dark-secondary-text-input-field: #3a3a3c;
+  --color-dark-sub-title: rgba(235, 235, 245, 0.6);
 }
 
 @media (prefers-color-scheme: dark) {

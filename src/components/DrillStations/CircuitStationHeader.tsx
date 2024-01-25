@@ -19,9 +19,11 @@ interface Props {
   durationString: string | undefined;
   showDuration: boolean;
   handleDurationChange: (duration: string) => void;
+  onAddDrill: () => void;
 }
 
 const CircuitStationHeader = ({
+  onAddDrill,
   handleDeleteStation,
   onToggleDuration,
   setShowSettingsModal,
@@ -46,6 +48,7 @@ const CircuitStationHeader = ({
           <PiDotsThreeCircleFill size={36} color={"gray"} />
         </button>
         <CircuitStationSettings
+          onAddDrill={onAddDrill}
           showDuration={showDuration}
           onToggleDuration={onToggleDuration}
           showSettingsModal={showSettingsModal}

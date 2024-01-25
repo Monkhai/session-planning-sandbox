@@ -7,6 +7,7 @@ import StationBottomBorder from "../SkillStation/StationBottomBorder";
 import Spacer from "../utility/Spacer";
 import CircuitStationHeader from "./CircuitStationHeader";
 import { CircuitDrill } from "./CircuitDrill";
+import useCreateDrill from "~/hooks/drillStationHooks/useCreateDrill";
 
 interface Props {
   station: DrillStationWithDrillsType;
@@ -42,7 +43,7 @@ const CircuitStation = ({ station, isLast }: Props) => {
 
   const { mutate: deleteDrillStation } = useDeleteDrillStation();
   const { mutate: updateDrillStation } = useUpdateDrillStation();
-
+  const { mutate: addlDrillToCircuit } = useCreateDrill();
   const handleToggleDuration = useCallback(
     (show: boolean) => {
       setShowDuration(show);
@@ -94,6 +95,12 @@ const CircuitStation = ({ station, isLast }: Props) => {
     [stationName, station.id, showDuration, updateDrillStation],
   );
 
+  const handleAddDrill = useCallback(() => {
+    addlDrillToCircuit({
+      stationId: station.id,
+      lastOrder: station.drills.length,
+    });
+  }, [station]);
   //---------------------------------------------
   //---------------------------------------------
   //---------------------------------------------
@@ -109,6 +116,7 @@ const CircuitStation = ({ station, isLast }: Props) => {
     >
       <div className="flex flex-1">
         <CircuitStationHeader
+          onAddDrill={handleAddDrill}
           duration={duration}
           handleDurationChange={handleDurationChange}
           handleDeleteStation={handleDeleteStation}
@@ -126,7 +134,7 @@ const CircuitStation = ({ station, isLast }: Props) => {
       </div>
       <div className="flex flex-[3] flex-col gap-6">
         {station.drills.map((drill) => (
-          <CircuitDrill drill={drill} />
+          <CircuitDrill key={drill.id} drill={drill} />
         ))}
       </div>
       <StationBottomBorder isLast={isLast} />

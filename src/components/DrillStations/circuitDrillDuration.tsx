@@ -20,10 +20,7 @@ const CircuitDrillDuration = ({
 }: Props) => {
   if (!showDuration) return null;
 
-  const isDarkTheme = useMemo(
-    () => window.matchMedia("(prefers-color-scheme: dark)").matches,
-    [],
-  );
+  const isDarkTheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
 
   const durationStyleClasses = `
   pl-2 
@@ -53,7 +50,7 @@ const CircuitDrillDuration = ({
     hideDurationPicker
       ? durationString
         ? "text-[var(--color-text)]"
-        : "text-[var(--color-dark-text-input)]"
+        : "text-[var(--color-dark-sub-title)]"
       : "text-[var(--color-blue)] font-bold"
   }
 `;

@@ -13,6 +13,7 @@ interface Props {
   onToggleShowComments: (show: boolean) => void;
   onToggleShowMedia: (show: boolean) => void;
   onToggleEditMedia: (show: boolean) => void;
+  title?: string;
 }
 
 const DrillStationSettings = ({
@@ -27,6 +28,7 @@ const DrillStationSettings = ({
   onToggleShowMedia,
   onToggleEditMedia,
   showMedia,
+  title = "Station Settings",
 }: Props) => {
   return (
     <div className="z-10">
@@ -39,9 +41,9 @@ const DrillStationSettings = ({
           transformOrigin: "top left",
         }}
       >
-        <div className="dark:bg-darkSecondaryBackground flex w-full flex-col items-start gap-2 rounded-[10px] bg-white p-4 shadow-xl">
+        <div className="flex w-full flex-col items-start gap-2 rounded-[10px] bg-white p-4 shadow-xl dark:bg-darkSecondaryBackground">
           <div className="flex w-full flex-1 flex-row justify-between pb-2">
-            <h3 className="font-lg flex-1 font-semibold">Station Settings</h3>
+            <h3 className="font-lg flex-1 font-semibold">{title}</h3>
             <button
               onClick={() => setShowSettingsModal(false)}
               className="transition-all duration-150 active:scale-95"

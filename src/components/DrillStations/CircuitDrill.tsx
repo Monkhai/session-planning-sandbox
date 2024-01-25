@@ -8,18 +8,28 @@ import DrillStationSettings from "./DrillStationSettings";
 import CircuitDrillDuration from "./circuitDrillDuration";
 import useUpdateDrill from "~/hooks/drillStationHooks/useUpdateDrill";
 import useGetDrillMedia from "~/hooks/drillStationHooks/useGetDrillStationMedia";
+import useDeleteDrillStation from "~/hooks/drillStationHooks/useDeleteDrillStation";
+import useDeleteDrill from "~/hooks/drillStationHooks/useDeleteDrill";
+import useDeleteMedia from "~/hooks/drillStationHooks/useDeleteMedia";
+import useUploadMedia from "~/hooks/drillStationHooks/useUploadMedia";
 
 interface Props {
   drill: DrillType;
 }
 
 export const CircuitDrill = ({ drill }: Props) => {
-  const [description, setDescription] = useState<string>(drill.description);
-  const [comments, setComments] = useState<string>(drill.comments);
+  const [description, setDescription] = useState<string>(
+    drill.description ? drill.description : "",
+  );
+  const [comments, setComments] = useState<string>(
+    drill.comments ? drill.comments : "",
+  );
   const [showComments, setShowComments] = useState<boolean>(
     drill.show_comments,
   );
-  const [drillName, setDrillname] = useState<string>(drill.name);
+  const [drillName, setDrillname] = useState<string>(
+    drill.name ? drill.name : "",
+  );
   const [duration, setDuration] = useState<string>(drill.duration);
   const [showDuration, setShowDuration] = useState<boolean>(
     drill.show_duration,
@@ -36,7 +46,12 @@ export const CircuitDrill = ({ drill }: Props) => {
   const commentsRef = useRef<HTMLTextAreaElement>(null);
 
   const { mutate: updateDrill } = useUpdateDrill();
-  const { data: drillMedia } = useGetDrillMedia(drill.id);
+  const { data: drillMedia, isLoading: isMediaLoading } = useGetDrillMedia(
+    drill.id,
+  );
+  const { mutate: deleteDrillStation } = useDeleteDrill();
+  const { mutate: deleteMedia } = useDeleteMedia();
+  const { mutate: uploadMedia } = useUploadMedia();
 
   const durationString = useMemo(() => {
     const newDurationString = convertDurationToString(duration);
@@ -59,6 +74,52 @@ export const CircuitDrill = ({ drill }: Props) => {
         stationNameRef.current.scrollHeight + "px";
     }
   }, [drillName]);
+
+  useEffect(() => {
+    const handleBlur = () => {
+      if (
+        drillName !== drill.name ||
+        description !== drill.description ||
+        comments !== drill.comments
+      ) {
+        updateDrill({
+          //
+          name: drillName,
+          //
+          comments: comments,
+          description: description,
+          drill_id: drill.id,
+          duration: duration,
+          show_comments: showComments,
+          show_duration: showDuration,
+          show_edit_media: editMedia,
+          show_media: showMedia,
+          station_id: drill.station_id,
+        });
+      }
+    };
+
+    stationNameRef.current?.addEventListener("blur", handleBlur);
+    descriptionRef.current?.addEventListener("blur", handleBlur);
+    commentsRef.current?.addEventListener("blur", handleBlur);
+
+    return () => {
+      stationNameRef.current?.removeEventListener("blur", handleBlur);
+      descriptionRef.current?.removeEventListener("blur", handleBlur);
+      commentsRef.current?.removeEventListener("blur", handleBlur);
+    };
+  }, [
+    drillName,
+    drill.id,
+    description,
+    comments,
+    showComments,
+    showDuration,
+    editMedia,
+    showMedia,
+    drill.station_id,
+    updateDrill,
+  ]);
 
   const handleToggleComments = useCallback(
     (show: boolean) => {
@@ -125,6 +186,99 @@ export const CircuitDrill = ({ drill }: Props) => {
     ],
   );
 
+  const handleToggleEditMedia = useCallback(
+    (show: boolean) => {
+      setEditMedia(show);
+      updateDrill({
+        //
+        show_edit_media: show,
+        //
+        comments: comments,
+        description: description,
+        drill_id: drill.id,
+        name: drillName,
+        duration: duration,
+        show_comments: showComments,
+        show_duration: showDuration,
+        show_media: showMedia,
+        station_id: drill.station_id,
+      });
+    },
+    [
+      comments,
+      description,
+      drill.id,
+      drillName,
+      duration,
+      showComments,
+      showDuration,
+      showMedia,
+      drill.station_id,
+      updateDrill,
+    ],
+  );
+
+  const handleToggleShowMedia = useCallback(
+    (show: boolean) => {
+      setShowMedia(show);
+      updateDrill({
+        //
+        show_media: show,
+        //
+        comments: comments,
+        description: description,
+        drill_id: drill.id,
+        name: drillName,
+        duration: duration,
+        show_comments: showComments,
+        show_duration: showDuration,
+        show_edit_media: editMedia,
+        station_id: drill.station_id,
+      });
+    },
+    [
+      comments,
+      description,
+      drill.id,
+      drillName,
+      duration,
+      showComments,
+      showDuration,
+      editMedia,
+      drill.station_id,
+      updateDrill,
+    ],
+  );
+
+  const handleDeleteDrill = useCallback(() => {
+    const deleteMedia =
+      drillMedia?.length && drillMedia.length > 0 ? true : false;
+    deleteDrillStation({
+      drillId: drill.id,
+      stationId: drill.station_id,
+      deleteMedia,
+    });
+  }, [deleteDrillStation, drill.id, drillMedia, drill.station_id]);
+
+  const handleDeleteMedia = (name: string) => {
+    deleteMedia({ name, station_id: drill.id });
+  };
+
+  const handleFileUpload = useCallback(
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (e.target.files) {
+        const file = e.target.files[0];
+        if (file) {
+          uploadMedia({ station_id: drill.id, file: file });
+        } else {
+          alert("no file found");
+        }
+      }
+      e.target.value = "";
+    },
+    [uploadMedia, drill.id],
+  );
+
   return (
     <div className="relative flex flex-col gap-2">
       <div className="flex flex-row items-center gap-2">
@@ -135,15 +289,16 @@ export const CircuitDrill = ({ drill }: Props) => {
           <PiDotsThreeCircleFill color={"gray"} size={22} />
         </button>
         <DrillStationSettings
-          editMedia={false}
-          onToggleEditMedia={() => {}}
-          onToggleShowComments={handleToggleComments}
-          onToggleShowMedia={() => {}}
-          showComments={showComments}
-          showMedia={true}
-          showSettingsModal={showSettingsModal}
+          title="Drill Settings"
           setShowSettingsModal={() => setShowSettingsModal(!showSettingsModal)}
-          handleDeleteStation={() => {}}
+          editMedia={editMedia}
+          onToggleEditMedia={handleToggleEditMedia}
+          onToggleShowComments={handleToggleComments}
+          onToggleShowMedia={handleToggleShowMedia}
+          showComments={showComments}
+          showMedia={showMedia}
+          showSettingsModal={showSettingsModal}
+          handleDeleteStation={handleDeleteDrill}
           onToggleDuration={handleToggleDuration}
           showDuration={showDuration}
         />
@@ -173,21 +328,22 @@ export const CircuitDrill = ({ drill }: Props) => {
             textAreaRef={descriptionRef}
           />
 
-          {showComments && (
+          {showComments ? (
             <CircuitDrillTextArea
               placeholder="Comments"
               setValue={setComments}
               value={comments}
               textAreaRef={commentsRef}
             />
-          )}
+          ) : null}
         </div>
         <CircuitDrillMedia
-          editMedia={false}
-          isMediaLoading={false}
+          onFileUpload={handleFileUpload}
+          editMedia={editMedia}
+          isMediaLoading={isMediaLoading}
           mediaUrls={drillMedia}
-          showMedia={true}
-          onDeleteMedia={() => {}}
+          showMedia={showMedia}
+          onDeleteMedia={handleDeleteMedia}
         />
       </div>
     </div>

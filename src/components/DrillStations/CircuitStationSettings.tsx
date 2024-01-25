@@ -6,10 +6,12 @@ interface Props {
   setShowSettingsModal: React.Dispatch<React.SetStateAction<boolean>>;
   handleDeleteStation: () => void;
   onToggleDuration: (show: boolean) => void;
+  onAddDrill: () => void;
   showDuration: boolean;
 }
 
 const DrillStationSettings = ({
+  onAddDrill,
   handleDeleteStation,
   showDuration,
   setShowSettingsModal,
@@ -29,7 +31,7 @@ const DrillStationSettings = ({
       >
         <div className="flex w-full flex-col items-start gap-2 rounded-[10px] bg-white p-4 shadow-xl dark:bg-darkSecondaryBackground">
           <div className="flex w-full flex-1 flex-row justify-between pb-2">
-            <h3 className="font-lg flex-1 font-semibold">Station Settings</h3>
+            <h3 className="font-lg flex-1 font-semibold">Circuit Settings</h3>
             <button
               onClick={() => setShowSettingsModal(false)}
               className="transition-all duration-150 active:scale-95"
@@ -48,6 +50,14 @@ const DrillStationSettings = ({
               name="showDuration"
               id="showDuration"
             />
+          </div>
+          <div className=" w-full pt-2">
+            <button
+              onClick={onAddDrill}
+              className="w-full rounded-[12px] bg-primary px-4 py-2 text-white transition-all duration-150 active:scale-95"
+            >
+              Add Drill
+            </button>
           </div>
           <div className=" w-full pt-2">
             <button
