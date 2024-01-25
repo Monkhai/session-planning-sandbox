@@ -1,10 +1,16 @@
 import { useRouter } from "next/navigation";
 import React from "react";
 import client from "~/utils/supabaseClient";
-import { DrillStationType, SkillStationType, Station } from "~/utils/types";
-import DrillStation from "./DrillStations/DrillStation";
+import {
+  DrillStationType,
+  DrillStationWithDrillsType,
+  SkillStationWithSkillsType,
+  Station,
+} from "~/utils/types";
+import CircuitStation from "./DrillStations/CircuitStation";
 import Loader from "./Loader";
 import SkillStation from "./SkillStation/SkillStation";
+import DrillStationHandler from "./DrillStations/DrillStationHandler";
 
 interface Props {
   stations: Station[] | undefined;
@@ -32,6 +38,16 @@ const StationResponseHandler = ({ error, isLoading, stations }: Props) => {
     return <div>Error: {error.message}</div>;
   }
 
+  if (stations && stations.length === 0) {
+    return (
+      <div className="flex h-full w-full flex-1 items-center justify-center">
+        <h3 className="text-xl font-semibold">
+          Create a New Station to Start!
+        </h3>
+      </div>
+    );
+  }
+
   if (stations && stations.length > 0) {
     return (
       <div className="flex w-full flex-col gap-4 pt-4">
@@ -42,15 +58,15 @@ const StationResponseHandler = ({ error, isLoading, stations }: Props) => {
               <SkillStation
                 key={station.id + station.type}
                 isLast={isLast}
-                station={station as SkillStationType}
+                station={station as SkillStationWithSkillsType}
               />
             );
           } else if (station.type === "drillStation") {
             return (
-              <DrillStation
+              <DrillStationHandler
                 key={station.id + station.type}
                 isLast={isLast}
-                station={station as DrillStationType}
+                station={station as DrillStationWithDrillsType}
               />
             );
           }

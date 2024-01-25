@@ -74,10 +74,8 @@ const Login = () => {
             </a>
           </div>
         </div>
-        {/* <Spacer /> */}
         <div className="w-1/4">
           <Auth
-            // onlyThirdPartyProviders
             appearance={{
               theme: ThemeSupa,
               variables: {
@@ -94,7 +92,6 @@ const Login = () => {
             redirectTo="/home"
           />
         </div>
-        {/* <Spacer /> */}
       </section>
     </section>
   );

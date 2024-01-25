@@ -1,16 +1,16 @@
 "use client";
 import React, { useCallback, useState } from "react";
-import useCreateSkill from "~/hooks/useCreateSkill";
-import useDeleteSkillStation from "~/hooks/useDeleteSkillStation";
-import useSkillStationStates from "~/hooks/useSkillStationStates";
-import { SkillStationType } from "~/utils/types";
+import useCreateSkill from "~/hooks/skillStationHooks/useCreateSkill";
+import useDeleteSkillStation from "~/hooks/skillStationHooks/useDeleteSkillStation";
+import useSkillStationStates from "~/hooks/skillStationHooks/useSkillStationStates";
+import { SkillStationWithSkillsType } from "~/utils/types";
 import StationHeader from "../StationHeader";
 import Spacer from "../utility/Spacer";
 import StationBottomBorder from "./StationBottomBorder";
 import StationSkills from "./StationSkills";
 
 interface Props {
-  station: SkillStationType;
+  station: SkillStationWithSkillsType;
   isLast: boolean;
 }
 
@@ -62,12 +62,13 @@ const SkillStation = ({ station, isLast }: Props) => {
   const handleCreateSkill = useCallback(async () => {
     createSkill({
       station_id: station.id,
+      lastOrder: station.skills ? station.skills.length : 0,
     });
   }, [station.id, createSkill]);
 
   const handleDeleteStation = useCallback(() => {
-    deleteStation(station.id);
-  }, [station.id, deleteStation]);
+    deleteStation({ station_id: station.id, skills: station.skills });
+  }, [station.id, deleteStation, station.skills]);
 
   const handleToggleDuration = useCallback(
     (show: boolean) => {

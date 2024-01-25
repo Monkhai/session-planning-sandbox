@@ -1,6 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
+import CircuitDemo from "~/components/CircuitDemo";
 import CreateNewStationButton from "~/components/CreateNewStationButton";
 import HelpButton from "~/components/HelpButton";
 import LogoutButton from "~/components/LogoutButton";
@@ -9,10 +10,13 @@ import OnboardingDialog from "~/components/OnboardingDialog";
 import StationResponseHandler from "~/components/StationResponseHandler";
 import Spacer from "~/components/utility/Spacer";
 import { useAuth } from "~/hooks/useAuth";
-import useCreateDrillStation from "~/hooks/useCreateDrillStation";
-import useCreateSkillStation from "~/hooks/useCreateSkillStation";
-import useStations from "~/hooks/useStations";
+import useCreateSkillStation from "~/hooks/skillStationHooks/useCreateSkillStation";
+import useStations from "~/hooks/skillStationHooks/useStations";
 import client from "~/utils/supabaseClient";
+import useCreateStation from "~/hooks/useCreateStation";
+import createDrillStation from "~/services/backend/stations/drillStations/createDrillStation";
+import createSkillStation from "~/services/backend/stations/skillStations/createSkillStation";
+import useCreateDrillStation from "~/hooks/drillStationHooks/useCreateDrillStation";
 
 export default function HomePage() {
   useAuth();
@@ -22,15 +26,18 @@ export default function HomePage() {
 
   const { data: allStations, error, isLoading } = useStations();
 
-  const { mutate: createSkillStation } = useCreateSkillStation();
-  const { mutate: createDrillStation } = useCreateDrillStation();
+  const { mutate: createNewSkillStation } = useCreateStation(
+    createSkillStation,
+    "skillStation",
+  );
 
+  const { mutate: createNewDrillStation } = useCreateDrillStation();
   const handleCreateSkillStation = useCallback(() => {
-    createSkillStation(allStations?.length ?? 0);
+    createNewSkillStation(allStations?.length ?? 0);
   }, [allStations]);
 
   const handleCreateDrillStation = useCallback(() => {
-    createDrillStation(allStations?.length ?? 0);
+    createNewDrillStation(allStations?.length ?? 0);
   }, [allStations]);
 
   const handleLogout = () => {
@@ -57,6 +64,7 @@ export default function HomePage() {
           onCreateSkillStation={handleCreateSkillStation}
           onCreateDrillStation={handleCreateDrillStation}
         />
+
         <HelpButton setShowContact={setShowContact} showContact={showContact} />
       </div>
 

@@ -1,9 +1,9 @@
 import React, { useCallback, useState } from "react";
 import { IoMdRemoveCircle } from "react-icons/io";
 import { IoInformationCircleOutline } from "react-icons/io5";
-import useDeleteSkill from "~/hooks/useDeleteSkill";
-import useSkillRowStates from "~/hooks/useSkillRowStates";
-import useUpdateSkill from "~/hooks/useUpdateSkill";
+import useDeleteSkill from "~/hooks/skillStationHooks/useDeleteSkill";
+import useSkillRowStates from "~/hooks/skillStationHooks/useSkillRowStates";
+import useUpdateSkill from "~/hooks/skillStationHooks/useUpdateSkill";
 import { SkillType } from "~/utils/types";
 import SkillStationDescriptionModal from "./SkillStationDescriptionModal";
 
@@ -71,8 +71,8 @@ const SkillRow = ({ isLast, skill, editSkills, index }: Props) => {
         }}
         className={
           !isLast
-            ? "dark:bg-darkSecondaryBackground flex h-[50px] w-full flex-row items-center border-b-[1px] border-b-seperator bg-white p-4 print:h-[35px] print:border-none  print:p-2 print:py-0"
-            : "dark:bg-darkSecondaryBackground flex h-[50px] w-full  flex-row items-center bg-white p-4 print:h-[35px]  print:p-2 print:py-0"
+            ? "flex h-[50px] w-full flex-row items-center border-b-[1px] border-b-seperator bg-white p-4 print:h-[35px] print:border-none print:p-2  print:py-0 dark:bg-darkSecondaryBackground"
+            : "flex h-[50px] w-full flex-row  items-center bg-white p-4 print:h-[35px] print:p-2  print:py-0 dark:bg-darkSecondaryBackground"
         }
       >
         <input
