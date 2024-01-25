@@ -68,10 +68,13 @@ const useCreateDrill = () => {
 
       queryClient.setQueryData(["stations"], newStations);
 
-      return () => queryClient.setQueryData(["stations"], oldStations);
+      return {
+        rollback: () => queryClient.setQueryData(["stations"], oldStations),
+        targetId: newDrill.id,
+      };
     },
 
-    onSuccess: (newDrill, _, rollback) => {
+    onSuccess: (newDrill, _, { rollback, targetId }) => {
       if (!newDrill) {
         rollback();
         return;
@@ -86,7 +89,7 @@ const useCreateDrill = () => {
       ) as DrillStationWithDrillsType;
 
       const newDrills = targetStation.drills.map((drill) => {
-        if (drill.id === newDrill.id) {
+        if (drill.id === targetId) {
           return newDrill;
         }
         return drill;
@@ -107,13 +110,13 @@ const useCreateDrill = () => {
       queryClient.setQueryData(["stations"], newStations);
     },
 
-    onError: (error, _, rollback) => {
-      if (!rollback) {
+    onError: (error, _, context) => {
+      if (!context) {
         console.error("rollback did not trigger!!!", error);
         return error;
       }
       console.error(error);
-      rollback();
+      context.rollback();
       return error;
     },
   });

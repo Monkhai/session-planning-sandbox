@@ -16,7 +16,7 @@ export default async (station_id: number, file: File) => {
       .upload(`${user_id}/drills/${station_id}/${fileName}`, file);
 
     if (error) {
-      console.log(error);
+      console.error(error);
       throw error;
     }
   } catch (error) {

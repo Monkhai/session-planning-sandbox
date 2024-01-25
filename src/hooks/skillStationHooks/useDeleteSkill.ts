@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "Providers/ReactQueryProvider";
+import decrementSkillOrder from "~/services/backend/skills/decrementSkillOrder";
 import deleteSkill from "~/services/backend/skills/deleteSkill";
 import { SkillStationType, SkillStationWithSkillsType } from "~/utils/types";
 
@@ -30,9 +31,22 @@ const useDeleteSkill = () => {
         throw new Error("Skill not found");
       }
 
+      const index = targetStation.skills.findIndex((skill) => skill.id === id);
+
+      const skillToUpdate = targetStation.skills.slice(index);
+
+      const newSkills = targetStation.skills.filter((skill) => skill.id !== id);
+
+      const updatedSkills = newSkills.map((skill) => {
+        if (skill.order > index) {
+          return { ...skill, order: skill.order - 1 };
+        }
+        return skill;
+      });
+
       const newStation = {
         ...targetStation,
-        skills: targetStation.skills.filter((skill) => skill.id !== id),
+        skills: updatedSkills,
       };
 
       const newStations = previousStations.map((station) => {
@@ -48,41 +62,26 @@ const useDeleteSkill = () => {
         rollback: () =>
           queryClient.setQueryData(["stations"], previousStations),
         targetSkill: targetSkill,
+        skillToUpdate: skillToUpdate,
       };
     },
 
-    onSuccess: (_, { id, station_id }) => {
-      const previousStations: SkillStationWithSkillsType[] =
-        queryClient.getQueryData(["stations"]) ?? [];
-
-      const parentStation = previousStations.find(
-        (station) =>
-          station.id === station_id && station.type === "skillStation",
-      );
-
-      if (!parentStation) {
-        return;
+    onSuccess: async (_, { id, station_id }, { skillToUpdate }) => {
+      try {
+        for (const skill of skillToUpdate) {
+          if (skill.id !== id) {
+            await decrementSkillOrder(skill);
+          }
+        }
+      } catch (error) {
+        console.error(error);
       }
 
-      const newSkills = parentStation.skills.filter((skill) => skill.id !== id);
-
-      const newStation = {
-        ...parentStation,
-        skills: newSkills,
-      };
-
-      const newStations = previousStations.map((station) => {
-        if (station.id === station_id && station.type === "skillStation") {
-          return newStation;
-        }
-        return station;
-      });
-
-      queryClient.setQueryData(["stations"], newStations);
+      return;
     },
 
     onError: (error, _, context) => {
-      console.log(error);
+      console.error(error);
       if (context) {
         context.rollback();
       }

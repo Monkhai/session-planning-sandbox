@@ -9,6 +9,7 @@ import OnboardingDialog from "~/components/OnboardingDialog";
 import StationResponseHandler from "~/components/StationResponseHandler";
 import Spacer from "~/components/utility/Spacer";
 import useCreateDrillStation from "~/hooks/drillStationHooks/useCreateDrillStation";
+import useCreateSkillStation from "~/hooks/skillStationHooks/useCreateSkillStation";
 import useStations from "~/hooks/skillStationHooks/useStations";
 import { useAuth } from "~/hooks/useAuth";
 import useCreateStation from "~/hooks/useCreateStation";
@@ -23,10 +24,7 @@ export default function HomePage() {
 
   const { data: allStations, error, isLoading } = useStations();
 
-  const { mutate: createNewSkillStation } = useCreateStation(
-    createSkillStation,
-    "skillStation",
-  );
+  const { mutate: createNewSkillStation } = useCreateSkillStation();
 
   const { mutate: createNewDrillStation } = useCreateDrillStation();
   const handleCreateSkillStation = useCallback(() => {

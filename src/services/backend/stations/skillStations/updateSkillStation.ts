@@ -13,7 +13,7 @@ export default async (
       .eq("id", station_id);
 
     if (error) {
-      console.log(error);
+      console.error(error);
       throw error;
     }
     return data;

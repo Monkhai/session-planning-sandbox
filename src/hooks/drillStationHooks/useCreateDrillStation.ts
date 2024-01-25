@@ -14,7 +14,7 @@ const useCreateDrillStation = () => {
       if (stationId === undefined) {
         throw new Error("stationId is undefined");
       }
-      const drill = await createDrill(stationId, 0);
+      const drill = await createDrill(stationId, 1);
       return { newStation, drill };
     },
 

@@ -73,7 +73,14 @@ const useSkillStationStates = ({
         element.removeEventListener("blur", handleBlur);
       }
     };
-  }, [stationName, station]);
+  }, [
+    stationName,
+    station,
+    stationNameRef,
+    duration,
+    showDuration,
+    updateStation,
+  ]);
 
   return {
     stationName,

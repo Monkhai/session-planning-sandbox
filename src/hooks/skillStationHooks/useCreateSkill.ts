@@ -77,18 +77,8 @@ const useCreateSkill = () => {
       };
     },
 
-    onSuccess: (data, _, { newSkill }) => {
-      if (!newSkill) {
-        return;
-      }
-
+    onSuccess: (data) => {
       if (!data) {
-        return;
-      }
-
-      const skillFromDB = data;
-
-      if (!skillFromDB) {
         return;
       }
 
@@ -96,7 +86,7 @@ const useCreateSkill = () => {
         queryClient.getQueryData(["stations"]) ?? [];
 
       const parentStation = previousStations.find(
-        (station) => station.id === newSkill.station_id,
+        (station) => station.id === data.station_id,
       );
 
       if (!parentStation) {
@@ -104,17 +94,14 @@ const useCreateSkill = () => {
       }
 
       const newSkills = parentStation.skills.map((skill) => {
-        if (skill.id === newSkill.id) {
-          return skillFromDB;
+        if (skill.id === data.id) {
+          return data;
         }
         return skill;
       });
 
       const newStations = previousStations.map((station) => {
-        if (
-          station.id === newSkill.station_id &&
-          station.type === "skillStation"
-        ) {
+        if (station.id === data.station_id && station.type === "skillStation") {
           return {
             ...station,
             skills: newSkills,
@@ -127,7 +114,7 @@ const useCreateSkill = () => {
     },
 
     onError: (error, _, context) => {
-      console.log(error);
+      console.error(error);
       if (context) {
         context.rollback();
       }

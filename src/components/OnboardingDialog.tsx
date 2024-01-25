@@ -15,8 +15,10 @@ const OnboardingDialog = () => {
   const dialogRef = useRef<HTMLDialogElement>(null);
 
   useUserSeenOnboard(dialogRef);
+
   const handleSeenOnboard = useCallback(async () => {
     dialogRef.current?.close();
+
     try {
       const user_id = getUserId();
       if (!user_id) {
@@ -33,8 +35,7 @@ const OnboardingDialog = () => {
         return;
       }
     } catch (error) {
-      const e = error as Error;
-      console.log(e.message);
+      console.error(error);
     }
   }, []);
 

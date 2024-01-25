@@ -119,6 +119,9 @@ export const CircuitDrill = ({ drill }: Props) => {
     showMedia,
     drill.station_id,
     updateDrill,
+    stationNameRef,
+    descriptionRef,
+    commentsRef,
   ]);
 
   const handleToggleComments = useCallback(

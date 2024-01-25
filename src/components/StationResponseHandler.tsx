@@ -31,7 +31,6 @@ const StationResponseHandler = ({ error, isLoading, stations }: Props) => {
 
   if (error) {
     if (error.message === "No user id found") {
-      console.log("redirecting");
       client.auth.signOut();
       router.push("/login");
     }

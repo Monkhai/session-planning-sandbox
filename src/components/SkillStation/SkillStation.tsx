@@ -64,7 +64,7 @@ const SkillStation = ({ station, isLast }: Props) => {
       station_id: station.id,
       lastOrder: station.skills ? station.skills.length : 0,
     });
-  }, [station.id, createSkill]);
+  }, [station, createSkill]);
 
   const handleDeleteStation = useCallback(() => {
     deleteStation({ station_id: station.id, skills: station.skills });
