@@ -12,8 +12,6 @@ import useCreateDrillStation from "~/hooks/drillStationHooks/useCreateDrillStati
 import useCreateSkillStation from "~/hooks/skillStationHooks/useCreateSkillStation";
 import useStations from "~/hooks/skillStationHooks/useStations";
 import { useAuth } from "~/hooks/useAuth";
-import useCreateStation from "~/hooks/useCreateStation";
-import createSkillStation from "~/services/backend/stations/skillStations/createSkillStation";
 import client from "~/utils/supabaseClient";
 
 export default function HomePage() {
