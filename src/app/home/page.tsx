@@ -1,7 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
-import CircuitDemo from "~/components/CircuitDemo";
 import CreateNewStationButton from "~/components/CreateNewStationButton";
 import HelpButton from "~/components/HelpButton";
 import LogoutButton from "~/components/LogoutButton";
@@ -9,14 +8,12 @@ import NavBar from "~/components/NavBar";
 import OnboardingDialog from "~/components/OnboardingDialog";
 import StationResponseHandler from "~/components/StationResponseHandler";
 import Spacer from "~/components/utility/Spacer";
-import { useAuth } from "~/hooks/useAuth";
-import useCreateSkillStation from "~/hooks/skillStationHooks/useCreateSkillStation";
-import useStations from "~/hooks/skillStationHooks/useStations";
-import client from "~/utils/supabaseClient";
-import useCreateStation from "~/hooks/useCreateStation";
-import createDrillStation from "~/services/backend/stations/drillStations/createDrillStation";
-import createSkillStation from "~/services/backend/stations/skillStations/createSkillStation";
 import useCreateDrillStation from "~/hooks/drillStationHooks/useCreateDrillStation";
+import useStations from "~/hooks/skillStationHooks/useStations";
+import { useAuth } from "~/hooks/useAuth";
+import useCreateStation from "~/hooks/useCreateStation";
+import createSkillStation from "~/services/backend/stations/skillStations/createSkillStation";
+import client from "~/utils/supabaseClient";
 
 export default function HomePage() {
   useAuth();
