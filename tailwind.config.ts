@@ -5,6 +5,10 @@ export default {
   content: ["./src/**/*.tsx"],
   theme: {
     extend: {
+      transformOrigin: {
+        midSize: "0px 10px",
+        smallSize: "100% 80%",
+      },
       colors: {
         primary: "var(--color-blue)",
         background: "var(--color-background)",
