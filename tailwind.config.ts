@@ -17,6 +17,7 @@ export default {
         seperatorSecondary: "var(--color-seperator-secondary)",
         textInputBackground: "var(--color-text-input)",
         navbarBackground: "var(--color-navbar-background)",
+        opacNavbarBackground: "var(--color-opac-navbar-background)",
 
         darkBackground: "var(--color-dark-background)",
         darkSecondaryBackground: "var(--color-dark-secondary-background)",

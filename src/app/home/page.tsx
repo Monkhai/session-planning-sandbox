@@ -49,7 +49,9 @@ export default function HomePage() {
 
       <Spacer />
 
-      <div className="sticky bottom-0 flex w-full flex-row items-center justify-center gap-4 bg-navbarBackground px-4 py-2 print:hidden md:bottom-0 md:bg-transparent md:px-10 md:pb-8">
+      <div className="bg-opacNavbarBackground sticky bottom-0 flex w-full flex-row items-center justify-center gap-4 px-4 py-2 backdrop-blur-md print:hidden md:bottom-0 md:px-10 md:py-5">
+        {/* a div that fills the entire container and is blurred */}
+        {/* <div className="absolute bottom-0 z-[-1] h-full w-full bg-navbarBackground opacity-50" /> */}
         {/* <LogoutButton handleLogout={handleLogout} /> */}
         <Spacer />
 
