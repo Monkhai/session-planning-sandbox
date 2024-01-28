@@ -44,10 +44,7 @@ const StationHeader = ({
           className="transition-all duration-150 active:scale-95"
           onClick={() => setShowSettingsModal(!showSettingsModal)}
         >
-          <PiDotsThreeCircleFill
-            className="h-6 w-6 md:h-[36px] md:w-[36px]"
-            color={"gray"}
-          />
+          <PiDotsThreeCircleFill className="h-[36px] w-[36px]" color={"gray"} />
         </button>
         <StationSettings
           showDuration={showDuration}

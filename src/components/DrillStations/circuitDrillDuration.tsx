@@ -56,7 +56,7 @@ const CircuitDrillDuration = ({
 `;
   if (showDuration) {
     return (
-      <div>
+      <div className="relative flex justify-center md:justify-start">
         <button onClick={() => setHideDurationPicker(!hideDurationPicker)}>
           <p
             className={
@@ -68,13 +68,12 @@ const CircuitDrillDuration = ({
         </button>
 
         <div
-          className="absolute z-10 mt-2 w-80"
           style={{
             transition: "all 0.150s ease-in-out",
             scale: hideDurationPicker ? 0 : 1,
             opacity: hideDurationPicker ? 0 : 1,
-            transformOrigin: "top left",
           }}
+          className="absolute top-6 z-10 origin-top md:origin-top-left"
         >
           <DurationPicker
             hideDurationPicker={() => setHideDurationPicker(true)}
