@@ -24,28 +24,28 @@ const CreateNewStationButton = ({
   };
 
   return (
-    <div className="relative">
+    <div className="relative flex items-center justify-center">
       <div
         style={{
           transformOrigin: "bottom",
           scale: showModal ? 1 : 0,
           transition: "all 0.150s ease-in-out",
         }}
-        className="dark:bg-darkTextInputBackground absolute -left-6 bottom-20 z-0 flex-col items-center justify-center overflow-hidden rounded-[10px] bg-white shadow-xl"
+        className="absolute -top-36 z-0 flex-col items-center justify-center overflow-hidden rounded-[10px] bg-white shadow-xl dark:bg-darkTextInputBackground"
       >
         <div className="z-10 flex flex-col items-center justify-center">
           <button
             onClick={handleCreateSkillStation}
-            className="dark:bg-darkTextInputBackground h-16  w-60 bg-white transition-all duration-150 hover:bg-seperatorSecondary"
+            className="h-16 w-60  bg-white transition-all duration-150 hover:bg-seperatorSecondary dark:bg-darkTextInputBackground"
           >
             <p className="text-center text-lg text-primary transition-all duration-150 active:scale-95">
               Skill Based Station
             </p>
           </button>
-          <div className="dark:bg-darkSeperatorSecondary absolute h-[1px] w-full bg-seperatorSecondary" />
+          <div className="absolute h-[1px] w-full bg-seperatorSecondary dark:bg-darkSeperatorSecondary" />
           <button
             onClick={handleCreateDrillStation}
-            className="dark:bg-darkTextInputBackground h-16 w-60 bg-white transition-all duration-150 hover:bg-seperatorSecondary"
+            className="h-16 w-60 bg-white transition-all duration-150 hover:bg-seperatorSecondary dark:bg-darkTextInputBackground"
           >
             <p className="text-center text-lg text-primary transition-all duration-150 active:scale-95">
               Drill Based Station
@@ -58,9 +58,11 @@ const CreateNewStationButton = ({
 
       <button
         onClick={toggleModal}
-        className="relative z-10 rounded-[10px] bg-primary p-4 transition-all duration-150 active:scale-95"
+        className="z-10 rounded-[10px] bg-primary p-3 transition-all duration-150 active:scale-95 md:p-4"
       >
-        <p className="text-center text-lg text-white">Create new station</p>
+        <p className="text-center text-base text-white md:text-lg">
+          Create new station
+        </p>
       </button>
     </div>
   );

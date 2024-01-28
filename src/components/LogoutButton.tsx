@@ -9,9 +9,9 @@ const LogoutButton = ({ handleLogout }: Props) => {
     <div className="flex flex-1 items-center justify-start">
       <button
         onClick={handleLogout}
-        className="rounded-[12px] bg-primary p-4 transition-all duration-150 active:scale-95  print:hidden"
+        className="rounded-[10px] bg-primary p-3 transition-all duration-150 active:scale-95 print:hidden  md:p-4"
       >
-        <p className="text-center text-lg text-white">Logout</p>
+        <p className="text-center text-base text-white md:text-lg">Logout</p>
       </button>
     </div>
   );

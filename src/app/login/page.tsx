@@ -10,29 +10,10 @@ import introductionText from "~/utils/introductionText";
 import client from "~/utils/supabaseClient";
 import * as IGLogo from "../../../public/instagram.png";
 import * as DarkIGLogo from "../../../public/instagram-dark.png";
+import Spacer from "~/components/utility/Spacer";
 
 const Login = () => {
   const router = useRouter();
-
-  const [isDarkTheme, setIsDarkTheme] = useState(false);
-
-  useEffect(() => {
-    const handleThemeChange = (e: MediaQueryListEvent) => {
-      setIsDarkTheme(e.matches);
-    };
-
-    const darkThemeMediaQuery = window.matchMedia(
-      "(prefers-color-scheme: dark)",
-    );
-    darkThemeMediaQuery.addEventListener("change", handleThemeChange);
-
-    // Set initial theme
-    setIsDarkTheme(darkThemeMediaQuery.matches);
-
-    return () => {
-      darkThemeMediaQuery.removeEventListener("change", handleThemeChange);
-    };
-  }, []);
 
   useEffect(() => {
     client.auth.getSession().then(({ data }) => {
@@ -47,34 +28,14 @@ const Login = () => {
       <NavBar />
 
       <section className="flex h-full w-full flex-col items-center justify-center gap-4 pt-4">
-        <div className="flex w-1/4">
-          <p className="text-center text-xl font-semibold">
-            {introductionText}
-          </p>
+        <Spacer />
+        <div className="flex w-[90%]  justify-center ">
+          <h1 className="text-center font-semibold">
+            Login to the Session Planner
+          </h1>
         </div>
-        <div className="flex flex-col items-center gap-4">
-          <p className="text-center text-xl font-semibold">
-            If you have any questions, Please contact me!
-          </p>
-          <div className="flex w-1/2 flex-row items-center justify-between">
-            <a type="email" href="mailto:yohaiwiener@gmail.com">
-              <IoIosMail size={70} color={isDarkTheme ? "white" : "black"} />
-            </a>
-            <a
-              href="https://www.instagram.com/yohai_wiener"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Image
-                alt="Instagram logo"
-                src={!isDarkTheme ? IGLogo : DarkIGLogo}
-                width={50}
-                height={50}
-              />
-            </a>
-          </div>
-        </div>
-        <div className="w-1/4">
+        <Spacer />
+        <div className="md:w-1/4">
           <Auth
             appearance={{
               theme: ThemeSupa,
@@ -92,6 +53,8 @@ const Login = () => {
             redirectTo="/home"
           />
         </div>
+        <Spacer />
+        <Spacer />
       </section>
     </section>
   );

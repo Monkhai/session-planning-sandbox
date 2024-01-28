@@ -108,7 +108,7 @@ const CircuitStation = ({ station, isLast }: Props) => {
   return (
     <div
       className={
-        "relative flex w-full flex-row px-10 py-2  print:px-2 print:py-1" +
+        "relative flex w-full flex-col px-2 py-2 print:px-2 print:py-1  md:flex-row md:px-10" +
         (isLast
           ? ""
           : " print:border-b-[1px] print:border-b-seperatorSecondary")
@@ -132,13 +132,12 @@ const CircuitStation = ({ station, isLast }: Props) => {
           durationString={durationString}
         />
       </div>
-      <div className="flex flex-[3] flex-col gap-6">
+      <div className="flex flex-1 flex-col gap-4 md:flex-[3] md:gap-6">
         {station.drills.map((drill) => (
           <CircuitDrill key={drill.id} drill={drill} />
         ))}
       </div>
       <StationBottomBorder isLast={isLast} />
-      {/* <Spacer showOnPrint={false} /> */}
     </div>
   );
 };

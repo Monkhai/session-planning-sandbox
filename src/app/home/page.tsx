@@ -5,7 +5,6 @@ import CreateNewStationButton from "~/components/CreateNewStationButton";
 import HelpButton from "~/components/HelpButton";
 import LogoutButton from "~/components/LogoutButton";
 import NavBar from "~/components/NavBar";
-import OnboardingDialog from "~/components/OnboardingDialog";
 import StationResponseHandler from "~/components/StationResponseHandler";
 import Spacer from "~/components/utility/Spacer";
 import useCreateDrillStation from "~/hooks/drillStationHooks/useCreateDrillStation";
@@ -39,7 +38,7 @@ export default function HomePage() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-start bg-background pb-4  dark:bg-darkBackground">
+    <main className="flex min-h-screen flex-col items-center justify-start bg-background pb-4 dark:bg-darkBackground">
       <NavBar />
 
       <StationResponseHandler
@@ -50,7 +49,7 @@ export default function HomePage() {
 
       <Spacer />
 
-      <div className="sticky bottom-10 mt-10 flex w-full flex-row items-center justify-center gap-4 px-10 print:hidden">
+      <div className="sticky bottom-4 mt-10 flex w-full flex-row items-center justify-center gap-4 px-4 print:hidden md:bottom-10 md:px-10">
         <LogoutButton handleLogout={handleLogout} />
 
         <CreateNewStationButton
@@ -60,8 +59,6 @@ export default function HomePage() {
 
         <HelpButton setShowContact={setShowContact} showContact={showContact} />
       </div>
-
-      <OnboardingDialog />
     </main>
   );
 }

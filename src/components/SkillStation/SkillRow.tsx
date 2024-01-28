@@ -61,7 +61,7 @@ const SkillRow = ({ isLast, skill, editSkills, index }: Props) => {
   );
 
   return (
-    <div className="flex flex-row">
+    <div className="flex flex-row gap-2 md:gap-0">
       <div
         style={{
           borderBottomLeftRadius: isLast ? "10px" : "0px",
@@ -72,14 +72,14 @@ const SkillRow = ({ isLast, skill, editSkills, index }: Props) => {
         className={
           !isLast
             ? "flex h-[50px] w-full flex-row items-center border-b-[1px] border-b-seperator bg-white p-4 print:h-[35px] print:border-none print:p-2  print:py-0 dark:bg-darkSecondaryBackground"
-            : "flex h-[50px] w-full flex-row  items-center bg-white p-4 print:h-[35px] print:p-2  print:py-0 dark:bg-darkSecondaryBackground"
+            : "flex h-[50px] w-full flex-row  items-center  bg-white p-4 print:h-[35px] print:p-2 print:py-0  dark:bg-darkSecondaryBackground"
         }
       >
         <input
           ref={nameRef}
           value={skillName}
           onChange={(e) => setSkillName(e.target.value)}
-          className="h-[24px] flex-1 text-xl outline-none active:outline-none print:text-xs dark:bg-transparent"
+          className="h-[24px] flex-[3] text-xl outline-none active:outline-none print:text-xs dark:bg-transparent"
           placeholder={"Skill name"}
         />
         {showReps && (
@@ -87,7 +87,7 @@ const SkillRow = ({ isLast, skill, editSkills, index }: Props) => {
             ref={repsRef}
             value={reps ? reps : ""}
             onChange={(e) => setReps(Number(e.target.value))}
-            className="h-[24px] text-right text-xl outline-none active:outline-none print:text-sm dark:bg-transparent"
+            className="h-[24px] flex-1 text-right text-xl outline-none active:outline-none print:text-sm dark:bg-transparent"
             placeholder="Reps"
           />
         )}
@@ -101,7 +101,7 @@ const SkillRow = ({ isLast, skill, editSkills, index }: Props) => {
         )}
       </div>
 
-      <div className="relative left-4 flex items-center justify-center print:hidden">
+      <div className="flex items-center justify-center print:hidden md:relative md:left-4">
         <button
           onClick={() => setShowInfo(!showInfo)}
           style={{

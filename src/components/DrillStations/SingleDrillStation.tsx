@@ -253,7 +253,7 @@ const SingleDrillStation = ({ drill, isLast }: Props) => {
   return (
     <div
       className={
-        "relative flex w-full flex-row px-10 py-2  print:px-2 print:py-1" +
+        "relative flex w-full flex-col px-2 py-2 print:px-2 print:py-1  md:flex-row md:px-10" +
         (isLast
           ? ""
           : " print:border-b-[1px] print:border-b-seperatorSecondary")
@@ -283,7 +283,7 @@ const SingleDrillStation = ({ drill, isLast }: Props) => {
           setHideDurationPicker={setHideDurationPicker}
         />
       </div>
-      <div className="flex w-1/2 flex-col gap-4 print:w-3/5">
+      <div className="flex flex-1 flex-col gap-4 print:w-3/5 md:w-1/2">
         <DrillStationTextArea
           value={description}
           setValue={setDescription}

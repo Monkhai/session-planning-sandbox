@@ -18,35 +18,34 @@ const ContactMeModal = ({ showContact }: Props) => {
         transformOrigin: "bottom right",
         transition: "all 0.150s ease",
       }}
-      className="dark:bg-darkTextInputBackground absolute bottom-10 right-5 h-32 flex-col items-center justify-center overflow-hidden rounded-[10px] bg-white shadow-xl"
+      className="absolute bottom-10 right-5 z-10 h-32 flex-col items-center justify-center overflow-hidden rounded-[10px] bg-white shadow-xl dark:bg-darkTextInputBackground"
     >
-      <button className="dark:bg-darkTextInputBackground h-16 w-60 bg-white text-primary transition-all duration-150 hover:bg-seperatorSecondary">
+      <button className="h-16 w-60 bg-white text-primary transition-all duration-150 hover:bg-seperatorSecondary dark:bg-darkTextInputBackground">
         <a target="_blank" rel="noopener noreferrer" href={FormLink}>
           Provide Feedback
         </a>
       </button>
-      <div className="dark:bg-darkSeperatorSecondary absolute h-[1px] w-full bg-seperatorSecondary" />
+      <div className="absolute h-[1px] w-full bg-seperatorSecondary dark:bg-darkSeperatorSecondary" />
       <button
-        className="dark:bg-darkTextInputBackground h-16 w-60 bg-white text-primary transition-all duration-150 hover:bg-seperatorSecondary"
+        className="h-16 w-60 bg-white text-primary transition-all duration-150 hover:bg-seperatorSecondary dark:bg-darkTextInputBackground"
         onClick={() => dialogRef.current?.showModal()}
       >
-        Remind me how to print
+        Teach me how to print
       </button>
 
       <dialog
         ref={dialogRef}
-        className="h-3/5 w-1/4 overflow-hidden rounded-[10px] p-4 shadow-xl transition-all duration-150"
+        className=" h-3/4 w-[90%] overflow-hidden rounded-[10px] p-4 shadow-xl transition-all duration-150 md:h-3/5 md:w-1/4 dark:bg-darkSecondaryBackground"
       >
-        <div className="flex h-full flex-1 flex-col items-center justify-start">
-          <h4 className="w-3/4">
-            After clicking <b>ctrl + P</b> or <b>cmd + P</b> make sure to
-            unselect "Headers and Footers".
+        <div className="flex h-full flex-1 flex-col items-center justify-between">
+          <h4 className="md:w-3/4">
+            After clicking <b>ctrl + P</b> or <b>cmd + P</b> make sure to{" "}
+            <u>unselect</u> "Headers and Footers".
           </h4>
-          <Image src={PrintTip} alt="How to print" />
-          <Spacer />
+          <Image src={PrintTip} className="rounded-[10px]" alt="How to print" />
           <button
             onClick={() => dialogRef.current?.close()}
-            className="mt-4 self-center rounded-[10px] bg-primary p-4 text-white transition-all duration-150 active:scale-95"
+            className="self-center rounded-[10px] bg-primary p-3 text-white transition-all duration-150 active:scale-95 md:p-4"
           >
             Got it!
           </button>

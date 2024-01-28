@@ -86,13 +86,13 @@ const SkillStation = ({ station, isLast }: Props) => {
   return (
     <div
       className={
-        "relative flex w-full flex-row px-10 py-2 print:px-2 print:py-1" +
+        "relative flex w-full flex-col px-2 py-2 print:px-2 print:py-1 md:flex-row md:px-10" +
         (isLast
           ? ""
           : " print:border-b-[1px] print:border-b-seperatorSecondary")
       }
     >
-      <div className="flex flex-1">
+      <div className="flex md:flex-1">
         <StationHeader
           duration={duration}
           durationString={durationString}

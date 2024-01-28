@@ -77,7 +77,7 @@ const useCreateSkill = () => {
       };
     },
 
-    onSuccess: (data) => {
+    onSuccess: (data, _, { newSkill }) => {
       if (!data) {
         return;
       }
@@ -94,7 +94,7 @@ const useCreateSkill = () => {
       }
 
       const newSkills = parentStation.skills.map((skill) => {
-        if (skill.id === data.id) {
+        if (skill.id === newSkill.id) {
           return data;
         }
         return skill;

@@ -284,10 +284,10 @@ export const CircuitDrill = ({ drill }: Props) => {
 
   return (
     <div className="relative flex flex-col gap-2">
-      <div className="flex flex-row items-center gap-2">
+      <div className="flex flex-row items-center gap-0">
         <button
           onClick={() => setShowSettingsModal(!showSettingsModal)}
-          className="transition-all duration-150 active:scale-95"
+          className="mr-1 transition-all duration-150 active:scale-95"
         >
           <PiDotsThreeCircleFill color={"gray"} size={22} />
         </button>
@@ -322,7 +322,7 @@ export const CircuitDrill = ({ drill }: Props) => {
           handledurationChange={() => {}}
         />
       </div>
-      <div className="flex flex-1 flex-row gap-4">
+      <div className="flex flex-1 flex-col gap-8 md:flex-row md:gap-4">
         <div className="flex flex-[2] flex-row gap-4">
           <CircuitDrillTextArea
             placeholder="Description"
