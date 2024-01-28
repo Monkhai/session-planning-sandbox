@@ -4,11 +4,13 @@ import FormLink from "~/utils/FormLink";
 import * as PrintTip from "../../public/howToPrint.png";
 import Spacer from "./utility/Spacer";
 import React from "react";
+
 interface Props {
   showContact: boolean;
+  onLogout: () => void;
 }
 
-const ContactMeModal = ({ showContact }: Props) => {
+const HelpModal = ({ showContact, onLogout }: Props) => {
   const dialogRef = useRef<HTMLDialogElement>(null);
   return (
     <div
@@ -18,7 +20,7 @@ const ContactMeModal = ({ showContact }: Props) => {
         transformOrigin: "bottom right",
         transition: "all 0.150s ease",
       }}
-      className="absolute bottom-10 right-5 z-10 h-32 flex-col items-center justify-center overflow-hidden rounded-[10px] bg-white shadow-xl dark:bg-darkTextInputBackground"
+      className="absolute  bottom-10 right-5 z-10 h-auto flex-col items-center justify-center overflow-hidden rounded-[10px] bg-white text-base shadow-xl md:text-base dark:bg-darkTextInputBackground"
     >
       <button className="h-16 w-60 bg-white text-primary transition-all duration-150 hover:bg-seperatorSecondary dark:bg-darkTextInputBackground">
         <a target="_blank" rel="noopener noreferrer" href={FormLink}>
@@ -31,6 +33,13 @@ const ContactMeModal = ({ showContact }: Props) => {
         onClick={() => dialogRef.current?.showModal()}
       >
         Teach me how to print
+      </button>
+      <div className="absolute h-[1px] w-full bg-seperatorSecondary dark:bg-darkSeperatorSecondary" />
+      <button
+        className="h-16 w-60 bg-white text-red-500 transition-all duration-150 hover:bg-seperatorSecondary dark:bg-darkTextInputBackground"
+        onClick={onLogout}
+      >
+        Logout
       </button>
 
       <dialog
@@ -55,4 +64,4 @@ const ContactMeModal = ({ showContact }: Props) => {
   );
 };
 
-export default React.memo(ContactMeModal);
+export default React.memo(HelpModal);

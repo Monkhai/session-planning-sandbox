@@ -283,7 +283,7 @@ const SingleDrillStation = ({ drill, isLast }: Props) => {
           setHideDurationPicker={setHideDurationPicker}
         />
       </div>
-      <div className="flex flex-1 flex-col gap-4 print:w-3/5 md:w-1/2">
+      <div className="flex flex-1 flex-col gap-4 print:w-3/5 md:w-1/2 md:flex-none">
         <DrillStationTextArea
           value={description}
           setValue={setDescription}

@@ -1,13 +1,14 @@
 import React from "react";
 import { AiOutlineQuestionCircle } from "react-icons/ai";
-import ContactMeModal from "./ContactMeModal";
+import HelpModal from "./HelpModal";
 
 interface Props {
   showContact: boolean;
   setShowContact: React.Dispatch<React.SetStateAction<boolean>>;
+  onLogout: () => void;
 }
 
-const HelpButton = ({ showContact, setShowContact }: Props) => {
+const HelpButton = ({ onLogout, showContact, setShowContact }: Props) => {
   return (
     <div className="relative flex flex-1 items-center justify-end">
       <div className="relative flex items-center justify-center">
@@ -17,7 +18,7 @@ const HelpButton = ({ showContact, setShowContact }: Props) => {
         >
           <AiOutlineQuestionCircle size={30} color={"var(--color-blue)"} />
         </button>
-        <ContactMeModal showContact={showContact} />
+        <HelpModal onLogout={onLogout} showContact={showContact} />
       </div>
     </div>
   );

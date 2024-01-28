@@ -38,7 +38,7 @@ export default function HomePage() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-start bg-background pb-4 dark:bg-darkBackground">
+    <main className="flex min-h-screen flex-col items-center justify-start bg-background dark:bg-darkBackground">
       <NavBar />
 
       <StationResponseHandler
@@ -49,15 +49,20 @@ export default function HomePage() {
 
       <Spacer />
 
-      <div className="sticky bottom-4 mt-10 flex w-full flex-row items-center justify-center gap-4 px-4 print:hidden md:bottom-10 md:px-10">
-        <LogoutButton handleLogout={handleLogout} />
+      <div className="sticky bottom-0 flex w-full flex-row items-center justify-center gap-4 bg-navbarBackground px-4 py-2 print:hidden md:bottom-0 md:bg-transparent md:px-10 md:pb-8">
+        {/* <LogoutButton handleLogout={handleLogout} /> */}
+        <Spacer />
 
         <CreateNewStationButton
           onCreateSkillStation={handleCreateSkillStation}
           onCreateDrillStation={handleCreateDrillStation}
         />
 
-        <HelpButton setShowContact={setShowContact} showContact={showContact} />
+        <HelpButton
+          onLogout={handleLogout}
+          setShowContact={setShowContact}
+          showContact={showContact}
+        />
       </div>
     </main>
   );

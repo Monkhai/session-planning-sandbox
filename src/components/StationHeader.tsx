@@ -39,12 +39,15 @@ const StationHeader = ({
 }: Props) => {
   return (
     <div className="flex w-full flex-row items-start justify-around gap-2 py-2 md:min-h-20">
-      <div className="relative bottom-1 flex flex-row print:hidden">
+      <div className="relative bottom-1 flex print:hidden">
         <button
           className="transition-all duration-150 active:scale-95"
           onClick={() => setShowSettingsModal(!showSettingsModal)}
         >
-          <PiDotsThreeCircleFill size={36} color={"gray"} />
+          <PiDotsThreeCircleFill
+            className="h-6 w-6 md:h-[36px] md:w-[36px]"
+            color={"gray"}
+          />
         </button>
         <StationSettings
           showDuration={showDuration}
