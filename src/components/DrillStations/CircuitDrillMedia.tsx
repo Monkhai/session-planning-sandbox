@@ -54,7 +54,7 @@ const CircuitDrillMedia = ({
           ref={inputRef}
           type="file"
           className="hidden"
-          accept="image/* video/*"
+          accept="image/*"
         />
         {mediaUrls.length > 0 ? (
           <MediaHandler

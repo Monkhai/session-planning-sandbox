@@ -71,7 +71,7 @@ const DrillStationMedia = ({
               type="file"
               className="hidden"
               onChange={onFileUpload}
-              accept="video/*, image/*"
+              accept="image/*"
             />
           </>
         )}
