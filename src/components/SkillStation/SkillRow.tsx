@@ -71,15 +71,15 @@ const SkillRow = ({ isLast, skill, editSkills, index }: Props) => {
         }}
         className={
           !isLast
-            ? "flex h-[50px] w-full flex-row items-center border-b-[1px] border-b-seperator bg-white p-4 print:h-[35px] print:border-none print:p-2  print:py-0 dark:bg-darkSecondaryBackground"
-            : "flex h-[50px] w-full flex-row  items-center  bg-white p-4 print:h-[35px] print:p-2 print:py-0  dark:bg-darkSecondaryBackground"
+            ? "flex h-[36px] w-full flex-row items-center border-b-[1px] border-b-seperator bg-white p-2 print:h-[35px] print:border-none print:p-2 print:py-0 md:h-[50px]  md:p-4 dark:bg-darkSecondaryBackground"
+            : "flex h-[36px] w-full flex-row items-center  bg-white  p-2 print:h-[35px] print:p-2 print:py-0 md:h-[50px] md:p-4  dark:bg-darkSecondaryBackground"
         }
       >
         <input
           ref={nameRef}
           value={skillName}
           onChange={(e) => setSkillName(e.target.value)}
-          className="h-[24px] flex-[3] text-xl outline-none active:outline-none print:text-xs dark:bg-transparent"
+          className="h-[24px] flex-[3] text-base outline-none placeholder:text-base active:outline-none print:text-xs md:text-xl md:placeholder:text-xl dark:bg-transparent"
           placeholder={"Skill name"}
         />
         {showReps && (
@@ -87,16 +87,20 @@ const SkillRow = ({ isLast, skill, editSkills, index }: Props) => {
             ref={repsRef}
             value={reps ? reps : ""}
             onChange={(e) => setReps(Number(e.target.value))}
-            className="h-[24px] flex-1 text-right text-xl outline-none active:outline-none print:text-sm dark:bg-transparent"
+            className="h-[24px] flex-1 text-right text-base outline-none placeholder:text-base active:outline-none print:text-xs md:text-xl md:placeholder:text-xl dark:bg-transparent"
+            // className="h-[24px] flex-1 text-right text-xl outline-none active:outline-none print:text-sm dark:bg-transparent"
             placeholder="Reps"
           />
         )}
         {editSkills && (
           <button
-            className="ml-4 transition-all duration-150 active:scale-95 print:hidden"
+            className="ml-2 transition-all duration-150 active:scale-95 print:hidden md:ml-4"
             onClick={handleDeleteSkill}
           >
-            <IoMdRemoveCircle color={"red"} size={24} />
+            <IoMdRemoveCircle
+              color={"red"}
+              className="h-4 w-4 md:h-[24px] md:w-[24px]"
+            />
           </button>
         )}
       </div>

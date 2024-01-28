@@ -42,10 +42,10 @@ const CircuitDrillMedia = ({
 
   return (
     <div className="relative flex flex-1 flex-col gap-1 print:hidden">
-      <div className="flex max-h-[200px] min-h-[60px] w-full items-center justify-start gap-10 rounded-[10px] bg-white px-4 py-4 dark:bg-darkSecondaryBackground">
+      <div className="flex max-h-[200px] min-h-[36px] w-full items-center justify-start gap-10 rounded-[10px] bg-white p-2 md:min-h-[60px] md:p-4 dark:bg-darkSecondaryBackground">
         <button
           onClick={() => inputRef.current?.click()}
-          className="absolute -top-6 left-0 text-sm text-primary"
+          className="absolute -top-6 left-1 text-sm text-primary md:left-0"
         >
           Add media
         </button>
@@ -63,7 +63,9 @@ const CircuitDrillMedia = ({
             onDeleteMedia={onDeleteMedia}
           />
         ) : (
-          <p className="text-xl text-gray dark:text-darkTextInput">Media</p>
+          <p className="text-base text-gray md:text-xl dark:text-darkTextInput">
+            Media
+          </p>
         )}
       </div>
     </div>
