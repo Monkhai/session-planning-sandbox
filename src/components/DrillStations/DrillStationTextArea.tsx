@@ -32,7 +32,7 @@ const DrillStationTextArea = ({
       <p className="text-md ml-4 text-gray print:text-xs dark:text-darkTextInput">
         {title}
       </p>
-      <div className="flex h-[36px] w-full items-center rounded-[10px] bg-white p-4 print:p-1 print:pt-0 md:h-auto dark:bg-darkTextInputBackground">
+      <div className="flex min-h-[36px] w-full items-center rounded-[10px] bg-white p-4 print:p-1 print:pt-0 md:h-auto dark:bg-darkTextInputBackground">
         <textarea
           ref={textAreaRef}
           value={value ? value : ""}

@@ -282,6 +282,38 @@ export const CircuitDrill = ({ drill }: Props) => {
     [uploadMedia, drill.id],
   );
 
+  const handleDurationChange = useCallback(
+    (duration: string) => {
+      setDuration(duration);
+      updateDrill({
+        //
+        duration: duration,
+        //
+        comments: comments,
+        description: description,
+        drill_id: drill.id,
+        name: drillName,
+        show_comments: showComments,
+        show_duration: showDuration,
+        show_edit_media: editMedia,
+        show_media: showMedia,
+        station_id: drill.station_id,
+      });
+    },
+    [
+      comments,
+      description,
+      drill.id,
+      drillName,
+      showComments,
+      showDuration,
+      editMedia,
+      showMedia,
+      drill.station_id,
+      updateDrill,
+    ],
+  );
+
   return (
     <div className="relative flex flex-col gap-2">
       <div className="flex flex-row items-center gap-0">
@@ -319,7 +351,7 @@ export const CircuitDrill = ({ drill }: Props) => {
           hideDurationPicker={hideDurationPicker}
           setHideDurationPicker={setHideDurationPicker}
           showDuration={showDuration}
-          handledurationChange={() => {}}
+          handledurationChange={handleDurationChange}
         />
       </div>
       <div className="flex flex-1 flex-col gap-8 md:flex-row md:gap-4">

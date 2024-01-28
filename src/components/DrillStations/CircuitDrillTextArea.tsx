@@ -27,12 +27,12 @@ const CircuitDrillTextArea = ({
 
   return (
     <div className="flex flex-1 flex-col">
-      <div className="flex h-[36px] w-full items-center rounded-[10px] bg-white p-2 print:p-1 print:pt-0 md:h-auto md:p-4 dark:bg-darkTextInputBackground">
+      <div className="flex min-h-[36px] w-full items-center rounded-[10px] bg-white p-2 print:p-1 print:pt-0 md:h-auto md:p-4 dark:bg-darkTextInputBackground">
         <textarea
           ref={textAreaRef}
           value={value ? value : ""}
           onChange={(e) => setValue(e.target.value)}
-          className="placeholder:basem min-h-[24px] w-full resize-none text-wrap text-base outline-none active:outline-none print:text-sm md:text-xl md:placeholder:text-xl dark:bg-transparent"
+          className="placeholder:base  w-full resize-none text-wrap text-base outline-none active:outline-none print:text-sm md:text-xl md:placeholder:text-xl dark:bg-transparent"
           placeholder={placeholder}
           rows={5}
         />

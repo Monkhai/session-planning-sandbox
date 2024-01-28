@@ -28,7 +28,7 @@ const SkillStationDescriptionModal = ({
   }, [description]);
   return (
     <div
-      className="md:origin-midSize origin-smallSize absolute left-10 top-5 z-10 w-80"
+      className="absolute left-10 top-5 z-10 w-80 origin-smallSize md:origin-midSize"
       style={{
         transition: "all 0.150s ease-in-out",
         scale: showInfo ? 1 : 0,
@@ -50,7 +50,7 @@ const SkillStationDescriptionModal = ({
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Enter skill description"
           style={{ resize: "none" }}
-          className="h-24 w-full outline-none active:outline-none dark:bg-darkSecondaryBackground"
+          className="min-h-24 w-full outline-none active:outline-none dark:bg-darkSecondaryBackground"
           name="description"
           id="description"
         />
