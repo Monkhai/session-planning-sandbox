@@ -8,6 +8,7 @@ import StationHeader from "../StationHeader";
 import Spacer from "../utility/Spacer";
 import StationBottomBorder from "./StationBottomBorder";
 import StationSkills from "./StationSkills";
+import useAutoResizeTextarea from "~/hooks/useAutoResizeTextArea";
 
 interface Props {
   station: SkillStationWithSkillsType;
