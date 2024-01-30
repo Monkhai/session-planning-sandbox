@@ -16,6 +16,7 @@ const useDeleteDrillStation = () => {
       station_id: number;
       deleteMedia: boolean;
       drillsId: number[];
+      session_id: string;
     }) => {
       if (deleteMedia) {
         for (const id of drillsId) {
@@ -28,11 +29,13 @@ const useDeleteDrillStation = () => {
       return await deleteDrillStation(station_id);
     },
 
-    onMutate: async ({ station_id }) => {
-      queryClient.cancelQueries({ queryKey: ["stations"] });
+    onMutate: async ({ station_id, session_id }) => {
+      queryClient.cancelQueries({
+        queryKey: ["sessions", session_id, "stations"],
+      });
 
       const previousStations: Station[] =
-        queryClient.getQueryData(["stations"]) ?? [];
+        queryClient.getQueryData(["sessions", session_id, "stations"]) ?? [];
 
       const index = previousStations.findIndex(
         (station) =>
@@ -52,11 +55,17 @@ const useDeleteDrillStation = () => {
         return station;
       });
 
-      queryClient.setQueryData(["stations"], newStationsWithUpdatedOrder);
+      queryClient.setQueryData(
+        ["sessions", session_id, "stations"],
+        newStationsWithUpdatedOrder,
+      );
 
       return {
         rollback: () =>
-          queryClient.setQueryData(["stations"], previousStations),
+          queryClient.setQueryData(
+            ["sessions", session_id, "stations"],
+            previousStations,
+          ),
         stationsToUpdate: stationsToUpdate,
       };
     },

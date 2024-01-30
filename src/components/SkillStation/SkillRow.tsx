@@ -33,6 +33,7 @@ const SkillRow = ({ isLast, skill, editSkills, index }: Props) => {
     setReps,
     setDescription,
     setShowReps,
+    session_id,
   } = useSkillRowStates({
     skill: skill,
     descriptionRef: descriptionRef,
@@ -42,7 +43,11 @@ const SkillRow = ({ isLast, skill, editSkills, index }: Props) => {
   });
 
   const handleDeleteSkill = useCallback(() => {
-    deleteSkill({ id: skill.id, station_id: skill.station_id });
+    deleteSkill({
+      id: skill.id,
+      station_id: skill.station_id,
+      session_id: session_id,
+    });
   }, [skill.id, skill.station_id]);
 
   const handleToggleReps = useCallback(
@@ -55,6 +60,7 @@ const SkillRow = ({ isLast, skill, editSkills, index }: Props) => {
         description: description,
         station_id: skill.station_id,
         show_reps: show,
+        session_id: session_id,
       });
     },
     [skill, skillName, reps, description, showReps],

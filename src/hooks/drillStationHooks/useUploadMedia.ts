@@ -1,11 +1,8 @@
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "Providers/ReactQueryProvider";
-import { set } from "zod";
-import uploadDrillMedia from "~/services/backend/drills/media/uploadDrillMedia";
-import getDrillStations from "~/services/backend/stations/drillStations/getDrillStations";
-import { SignedUrls, UploadMediaArgs } from "~/utils/types";
-import useGetDrillMedia from "./useGetDrillStationMedia";
 import getAllMediaForDrill from "~/services/backend/drills/media/getAllMediaForDrill";
+import uploadDrillMedia from "~/services/backend/drills/media/uploadDrillMedia";
+import { SignedUrls, UploadMediaArgs } from "~/utils/types";
 
 const useUploadMedia = () => {
   return useMutation({

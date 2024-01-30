@@ -8,7 +8,7 @@ export default async (
 ) => {
   try {
     const { data, error } = await client
-      .from("skill_stations")
+      .from("stations")
       .update({ duration: duration, name: name, show_duration: show_duration })
       .eq("id", station_id);
 

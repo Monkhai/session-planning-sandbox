@@ -9,21 +9,16 @@ const useCreateDrill = () => {
       lastOrder,
       stationId,
     }: {
+      session_id: string;
       stationId: number;
       lastOrder: number;
     }) => {
       return await createDrill(stationId, lastOrder + 1);
     },
 
-    onMutate: ({
-      lastOrder,
-      stationId,
-    }: {
-      stationId: number;
-      lastOrder: number;
-    }) => {
+    onMutate: ({ lastOrder, stationId, session_id }) => {
       const oldStations: Station[] =
-        queryClient.getQueryData(["stations"]) ?? [];
+        queryClient.getQueryData(["sessions", session_id, "stations"]) ?? [];
 
       const targetStation = oldStations.find(
         (station) =>
@@ -66,22 +61,29 @@ const useCreateDrill = () => {
         return station;
       });
 
-      queryClient.setQueryData(["stations"], newStations);
+      queryClient.setQueryData(
+        ["sessions", session_id, "stations"],
+        newStations,
+      );
 
       return {
-        rollback: () => queryClient.setQueryData(["stations"], oldStations),
+        rollback: () =>
+          queryClient.setQueryData(
+            ["sessions", session_id, "stations"],
+            oldStations,
+          ),
         targetId: newDrill.id,
       };
     },
 
-    onSuccess: (newDrill, _, { rollback, targetId }) => {
+    onSuccess: (newDrill, { session_id }, { rollback, targetId }) => {
       if (!newDrill) {
         rollback();
         return;
       }
 
       const previousStations: Station[] =
-        queryClient.getQueryData(["stations"]) ?? [];
+        queryClient.getQueryData(["sessions", session_id, "stations"]) ?? [];
 
       const targetStation = previousStations.find(
         (station) =>
@@ -107,7 +109,10 @@ const useCreateDrill = () => {
         return station;
       });
 
-      queryClient.setQueryData(["stations"], newStations);
+      queryClient.setQueryData(
+        ["sessions", session_id, "stations"],
+        newStations,
+      );
     },
 
     onError: (error, _, context) => {

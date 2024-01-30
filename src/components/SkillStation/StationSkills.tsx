@@ -1,7 +1,6 @@
 import { FaCirclePlus } from "react-icons/fa6";
-import { SkillStationType, SkillStationWithSkillsType } from "~/utils/types";
+import { SkillStationWithSkillsType } from "~/utils/types";
 import SkillRow from "./SkillRow";
-import React from "react";
 
 interface Props {
   station: SkillStationWithSkillsType;

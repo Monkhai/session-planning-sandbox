@@ -8,6 +8,7 @@ import { DrillType } from "~/utils/types";
 import CircuitDrillHeader from "./CircuitDrillHeader";
 import CircuitDrillMedia from "./CircuitDrillMedia";
 import CircuitDrillTextArea from "./CircuitDrillTextArea";
+import { useParams } from "next/navigation";
 
 interface Props {
   drill: DrillType;
@@ -46,6 +47,8 @@ export const CircuitDrill = ({ drill }: Props) => {
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
   const commentsRef = useRef<HTMLTextAreaElement>(null);
 
+  const { id: session_id } = useParams<{ id: string }>();
+
   useEffect(() => {
     const handleBlur = () => {
       if (description !== drill.description || comments !== drill.comments) {
@@ -62,6 +65,7 @@ export const CircuitDrill = ({ drill }: Props) => {
           show_edit_media: editMedia,
           show_media: showMedia,
           station_id: drill.station_id,
+          session_id: session_id,
         });
       }
     };

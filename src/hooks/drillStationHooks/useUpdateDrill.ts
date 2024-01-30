@@ -21,6 +21,7 @@ const useUpdateDrill = () => {
       show_edit_media,
       show_media,
       station_id,
+      session_id,
     }: UpdateDrillArgs) => {
       return await updateDrill({
         drill_id,
@@ -33,6 +34,7 @@ const useUpdateDrill = () => {
         show_edit_media,
         show_media,
         station_id,
+        session_id,
       });
     },
 
@@ -47,11 +49,14 @@ const useUpdateDrill = () => {
       show_edit_media,
       show_media,
       station_id,
-    }: UpdateDrillArgs) => {
-      queryClient.cancelQueries({ queryKey: ["stations"] });
+      session_id,
+    }) => {
+      queryClient.cancelQueries({
+        queryKey: ["sessions", session_id, "stations"],
+      });
 
       const previousStations: Station[] =
-        queryClient.getQueryData(["stations"]) ?? [];
+        queryClient.getQueryData(["sessions", session_id, "stations"]) ?? [];
 
       const targetStation =
         (previousStations.find(
@@ -102,10 +107,16 @@ const useUpdateDrill = () => {
         return station;
       });
 
-      queryClient.setQueryData(["stations"], newStations);
+      queryClient.setQueryData(
+        ["sessions", session_id, "stations"],
+        newStations,
+      );
 
       return () => {
-        queryClient.setQueryData(["stations"], previousStations);
+        queryClient.setQueryData(
+          ["sessions", session_id, "stations"],
+          previousStations,
+        );
       };
     },
 

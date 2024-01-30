@@ -5,13 +5,22 @@ import { SkillStationWithSkillsType } from "~/utils/types";
 
 const useCreateSkillStation = () => {
   return useMutation({
-    mutationFn: async (lastOrder: number) => {
-      return await createSkillStation(lastOrder);
+    mutationFn: async ({
+      lastOrder,
+      session_id,
+    }: {
+      lastOrder: number;
+      session_id: string;
+    }) => {
+      return await createSkillStation(lastOrder, session_id);
     },
 
-    onMutate: (lastOrder: number) => {
-      queryClient.cancelQueries({ queryKey: ["stations"] });
-      const previousStations = queryClient.getQueryData(["stations"]) ?? [];
+    onMutate: ({ lastOrder, session_id }) => {
+      queryClient.cancelQueries({
+        queryKey: ["sessions", session_id, "stations"],
+      });
+      const previousStations =
+        queryClient.getQueryData(["sessions", session_id, "stations"]) ?? [];
       const tempId = Math.floor(Math.random() * 1000000000);
 
       const newStation = {
@@ -25,7 +34,7 @@ const useCreateSkillStation = () => {
       };
 
       queryClient.setQueryData(
-        ["stations"],
+        ["sessions", session_id, "stations"],
         (old: SkillStationWithSkillsType[] | undefined) => {
           if (old === undefined) {
             return [newStation];
@@ -36,14 +45,17 @@ const useCreateSkillStation = () => {
 
       return {
         rollback: () =>
-          queryClient.setQueryData(["stations"], previousStations),
+          queryClient.setQueryData(
+            ["sessions", session_id, "stations"],
+            previousStations,
+          ),
         optimisticStation: newStation,
       };
     },
 
-    onSuccess: (newStation, _, { optimisticStation }) => {
+    onSuccess: (newStation, { session_id }, { optimisticStation }) => {
       const previousStations: SkillStationWithSkillsType[] =
-        queryClient.getQueryData(["stations"]) ?? [];
+        queryClient.getQueryData(["sessions", session_id, "stations"]) ?? [];
 
       const newStations = previousStations.map((station) => {
         if (
@@ -55,7 +67,10 @@ const useCreateSkillStation = () => {
         return station;
       });
 
-      queryClient.setQueryData(["stations"], newStations);
+      queryClient.setQueryData(
+        ["sessions", session_id, "stations"],
+        newStations,
+      );
     },
 
     onError: (error, _, context) => {

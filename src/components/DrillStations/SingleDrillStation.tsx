@@ -12,6 +12,7 @@ import useUploadMedia from "~/hooks/drillStationHooks/useUploadMedia";
 import useDeleteMedia from "~/hooks/drillStationHooks/useDeleteMedia";
 import useGetDrillStationMedia from "~/hooks/drillStationHooks/useGetDrillStationMedia";
 import useCreateDrill from "~/hooks/drillStationHooks/useCreateDrill";
+import { useParams } from "next/navigation";
 
 interface Props {
   drill: DrillType;
@@ -62,6 +63,8 @@ const SingleDrillStation = ({ drill, isLast }: Props) => {
   const { data: drillMedia, isLoading: isMediaLoading } =
     useGetDrillStationMedia(drill.id);
 
+  const { id: session_id } = useParams<{ id: string }>();
+
   const handleToggleDuration = useCallback(
     (show: boolean) => {
       setShowDuration(show);
@@ -76,6 +79,7 @@ const SingleDrillStation = ({ drill, isLast }: Props) => {
         show_media: showMedia,
         show_edit_media: editMedia,
         station_id: drill.station_id,
+        session_id,
       });
     },
     [
@@ -98,6 +102,7 @@ const SingleDrillStation = ({ drill, isLast }: Props) => {
       station_id: drill.station_id,
       deleteMedia,
       drillsId: [drill.id],
+      session_id,
     });
   }, [deleteDrillStation, drill.id, drillMedia]);
 
@@ -122,6 +127,7 @@ const SingleDrillStation = ({ drill, isLast }: Props) => {
         show_media: showMedia,
         show_edit_media: editMedia,
         drill_id: drill.id,
+        session_id,
       });
     },
     [
@@ -166,6 +172,7 @@ const SingleDrillStation = ({ drill, isLast }: Props) => {
         show_media: showMedia,
         show_edit_media: editMedia,
         drill_id: drill.id,
+        session_id,
       });
     },
     [
@@ -195,6 +202,7 @@ const SingleDrillStation = ({ drill, isLast }: Props) => {
         show_media: show,
         show_edit_media: editMedia,
         drill_id: drill.id,
+        session_id,
       });
     },
     [
@@ -224,6 +232,7 @@ const SingleDrillStation = ({ drill, isLast }: Props) => {
         show_media: showMedia,
         show_edit_media: show,
         drill_id: drill.id,
+        session_id,
       });
     },
     [
@@ -243,6 +252,7 @@ const SingleDrillStation = ({ drill, isLast }: Props) => {
     addlDrillToCircuit({
       stationId: drill.station_id,
       lastOrder: drill.order,
+      session_id,
     });
   }, [drill]);
 

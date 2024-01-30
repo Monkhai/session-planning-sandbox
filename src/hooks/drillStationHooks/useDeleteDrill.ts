@@ -10,11 +10,12 @@ const useDeleteDrill = () => {
     mutationFn: async ({
       deleteMedia,
       drillId,
-      stationId,
+      session_id,
     }: {
       drillId: number;
       deleteMedia: boolean;
       stationId: number;
+      session_id: string;
     }) => {
       if (deleteMedia) {
         await DeleteAllDrillMedia(drillId);
@@ -22,10 +23,12 @@ const useDeleteDrill = () => {
       return await deleteDrill(drillId);
     },
 
-    onMutate: ({ drillId, stationId }) => {
-      queryClient.cancelQueries({ queryKey: ["stations"] });
+    onMutate: ({ drillId, stationId, session_id }) => {
+      queryClient.cancelQueries({
+        queryKey: ["sessions", session_id, "stations"],
+      });
       const previousStations: Station[] =
-        queryClient.getQueryData(["stations"]) ?? [];
+        queryClient.getQueryData(["sessions", session_id, "stations"]) ?? [];
 
       const targetStation = previousStations.find(
         (station: Station) =>
@@ -61,11 +64,17 @@ const useDeleteDrill = () => {
         return station;
       });
 
-      queryClient.setQueryData(["stations"], newStations);
+      queryClient.setQueryData(
+        ["sessions", session_id, "stations"],
+        newStations,
+      );
 
       return {
         rollback: () =>
-          queryClient.setQueryData(["stations"], previousStations),
+          queryClient.setQueryData(
+            ["sessions", session_id, "stations"],
+            previousStations,
+          ),
         drillsToUpdate: drillsToUpdate,
       };
     },

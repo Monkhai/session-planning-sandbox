@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { Station, DrillStationType, DrillType } from "~/utils/types";
-import useUpdateDrillStation from "./useUpdateDrillStation";
 import { convertDurationToString } from "~/services/DurationFunctions";
+import { DrillType } from "~/utils/types";
 import useUpdateDrill from "./useUpdateDrill";
+import { useParams } from "next/navigation";
 
 type useDrillStationStatesArgs = {
   drill: DrillType;
@@ -28,6 +28,8 @@ const useSingleDrillState = ({
   const [durationString, setDurationString] = useState<string | undefined>();
 
   const { mutate: updateDrillStation } = useUpdateDrill();
+
+  const params = useParams<{ id: string }>();
 
   useEffect(() => {
     setDuration(drill.duration);
@@ -83,6 +85,7 @@ const useSingleDrillState = ({
           show_edit_media: editMedia,
           show_media: showMedia,
           station_id: drill.station_id,
+          session_id: params.id,
         });
       }
     };

@@ -1,5 +1,6 @@
 import ReactQueryProvider from "Providers/ReactQueryProvider";
 import { Inter } from "next/font/google";
+import NavBar from "~/components/NavBar";
 import "~/styles/globals.css";
 
 const inter = Inter({
@@ -21,7 +22,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`font-sans ${inter.variable}`}>
-        <ReactQueryProvider>{children}</ReactQueryProvider>
+        <ReactQueryProvider>
+          <NavBar />
+          {children}
+        </ReactQueryProvider>
       </body>
     </html>
   );

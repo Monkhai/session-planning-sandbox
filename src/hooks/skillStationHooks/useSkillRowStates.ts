@@ -1,4 +1,5 @@
 import { UseMutateFunction } from "@tanstack/react-query";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { SkillType, updateSkillArgs } from "~/utils/types";
 
@@ -22,6 +23,8 @@ const useSkillRowStates = ({
   const [description, setDescription] = useState<string>("");
   const [showReps, setShowReps] = useState<boolean>(false);
 
+  const params = useParams<{ id: string }>();
+
   useEffect(() => {
     setSkillName(skill.name);
     setReps(skill.repetitions);
@@ -44,6 +47,7 @@ const useSkillRowStates = ({
           description: description,
           station_id: skill.station_id,
           show_reps: showReps,
+          session_id: params.id,
         });
       }
     };
@@ -85,6 +89,7 @@ const useSkillRowStates = ({
     setDescription,
     showReps,
     setShowReps,
+    session_id: params.id,
   };
 };
 

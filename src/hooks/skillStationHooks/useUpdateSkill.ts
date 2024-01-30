@@ -9,7 +9,6 @@ import {
 
 const useUpdateSkill = () => {
   return useMutation({
-    mutationKey: ["stations"],
     mutationFn: async ({
       skill_id,
       name,
@@ -18,7 +17,6 @@ const useUpdateSkill = () => {
       show_reps,
     }: updateSkillArgs) => {
       await updateSkill(skill_id, name, repetitions, description, show_reps);
-      // return await getAllStations();
     },
 
     onMutate: ({
@@ -28,11 +26,14 @@ const useUpdateSkill = () => {
       description,
       station_id,
       show_reps,
+      session_id,
     }: updateSkillArgs) => {
-      queryClient.cancelQueries({ queryKey: ["stations"] });
+      queryClient.cancelQueries({
+        queryKey: ["sessions", session_id, "stations"],
+      });
 
       const previousStations: SkillStationWithSkillsType[] =
-        queryClient.getQueryData(["stations"]) ?? [];
+        queryClient.getQueryData(["sessions", session_id, "stations"]) ?? [];
 
       const targetStation = previousStations.find(
         (station) =>
@@ -73,10 +74,16 @@ const useUpdateSkill = () => {
         return station;
       });
 
-      queryClient.setQueryData(["stations"], newStations);
+      queryClient.setQueryData(
+        ["sessions", session_id, "stations"],
+        newStations,
+      );
 
       return () => {
-        queryClient.setQueryData(["stations"], previousStations);
+        queryClient.setQueryData(
+          ["sessions", session_id, "stations"],
+          previousStations,
+        );
       };
     },
 

@@ -7,8 +7,14 @@ import { DrillStationWithDrillsType, DrillType } from "~/utils/types";
 
 const useCreateDrillStation = () => {
   return useMutation({
-    mutationFn: async (lastOrder: number) => {
-      const newStation = await createDrillStation(lastOrder);
+    mutationFn: async ({
+      lastOrder,
+      session_id,
+    }: {
+      lastOrder: number;
+      session_id: string;
+    }) => {
+      const newStation = await createDrillStation(lastOrder, session_id);
 
       const stationId = newStation[0]?.id;
       if (stationId === undefined) {
@@ -18,12 +24,15 @@ const useCreateDrillStation = () => {
       return { newStation, drill };
     },
 
-    onMutate: (lastOrder: number) => {
-      queryClient.cancelQueries({ queryKey: ["stations"] });
+    onMutate: ({ lastOrder, session_id }) => {
+      queryClient.cancelQueries({
+        queryKey: ["sessions", session_id, "stations"],
+      });
 
       const user_id = getUserId();
 
-      const previousStations = queryClient.getQueryData(["stations"]) ?? [];
+      const previousStations =
+        queryClient.getQueryData(["sessions", session_id, "stations"]) ?? [];
       const tempId = Math.floor(Math.random() * 1000000000);
       const newDrill = {
         id: tempId,
@@ -55,7 +64,7 @@ const useCreateDrillStation = () => {
       } as DrillStationWithDrillsType;
 
       queryClient.setQueryData(
-        ["stations"],
+        ["sessions", session_id, "stations"],
         (old: DrillStationWithDrillsType[] | undefined) => {
           if (old === undefined) {
             return [newStation];
@@ -66,14 +75,21 @@ const useCreateDrillStation = () => {
 
       return {
         rollback: () =>
-          queryClient.setQueryData(["stations"], previousStations),
+          queryClient.setQueryData(
+            ["sessions", session_id, "stations"],
+            previousStations,
+          ),
         optimisticStation: newStation,
       };
     },
 
-    onSuccess: ({ newStation, drill }, _, { optimisticStation }) => {
+    onSuccess: (
+      { newStation, drill },
+      { session_id },
+      { optimisticStation },
+    ) => {
       const previousStations: DrillStationWithDrillsType[] =
-        queryClient.getQueryData(["stations"]) ?? [];
+        queryClient.getQueryData(["sessions", session_id, "stations"]) ?? [];
 
       const newDrillStation = {
         ...newStation[0],
@@ -90,7 +106,10 @@ const useCreateDrillStation = () => {
         return station;
       });
 
-      queryClient.setQueryData(["stations"], newStations);
+      queryClient.setQueryData(
+        ["sessions", session_id, "stations"],
+        newStations,
+      );
     },
 
     onError: (error, _, context) => {

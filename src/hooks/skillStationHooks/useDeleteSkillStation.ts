@@ -11,9 +11,11 @@ const useDeleteSkillStation = () => {
     mutationFn: async ({
       station_id,
       skills,
+      session_id,
     }: {
       station_id: number;
       skills: SkillType[];
+      session_id: string;
     }) => {
       if (skills) {
         const skillsId = skills.map((skill) => skill.id);
@@ -22,11 +24,13 @@ const useDeleteSkillStation = () => {
       await deleteSkillStation(station_id);
     },
 
-    onMutate: ({ station_id }: { station_id: number; skills: SkillType[] }) => {
-      queryClient.cancelQueries({ queryKey: ["stations"] });
+    onMutate: ({ station_id, session_id }) => {
+      queryClient.cancelQueries({
+        queryKey: ["sessions", session_id, "stations"],
+      });
 
       const previousStations: Station[] =
-        queryClient.getQueryData(["stations"]) ?? [];
+        queryClient.getQueryData(["sessions", session_id, "stations"]) ?? [];
 
       const index = previousStations.findIndex(
         (station) =>
@@ -46,11 +50,17 @@ const useDeleteSkillStation = () => {
         return station;
       });
 
-      queryClient.setQueryData(["stations"], newStationsWithUpdatedOrder);
+      queryClient.setQueryData(
+        ["sessions", session_id, "stations"],
+        newStationsWithUpdatedOrder,
+      );
 
       return {
         rollback: () =>
-          queryClient.setQueryData(["stations"], previousStations),
+          queryClient.setQueryData(
+            ["sessions", session_id, "stations"],
+            previousStations,
+          ),
         stationsToUpdate: stationsToUpdate,
       };
     },

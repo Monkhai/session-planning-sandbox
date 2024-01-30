@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { convertDurationToString } from "~/services/DurationFunctions";
 import { SkillStationType } from "~/utils/types";
 import useUpdateSkillStation from "./useUpdateSkillStation";
+import { useParams } from "next/navigation";
 
 type useSkillStationStatesArgs = {
   station: SkillStationType;
@@ -18,6 +19,8 @@ const useSkillStationStates = ({
   const [durationString, setDurationString] = useState<string | undefined>();
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
   const [editSkills, setEditSkills] = useState<boolean>(false);
+
+  const params = useParams<{ id: string }>();
 
   const { mutate: updateStation } = useUpdateSkillStation();
 
@@ -59,6 +62,7 @@ const useSkillStationStates = ({
           duration: duration,
           name: stationName,
           show_duration: showDuration,
+          session_id: params.id,
         });
       }
     };
@@ -95,6 +99,7 @@ const useSkillStationStates = ({
     editSkills,
     setEditSkills,
     updateStation,
+    session_id: params.id,
   };
 };
 

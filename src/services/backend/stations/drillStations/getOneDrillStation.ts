@@ -12,7 +12,7 @@ export default async (station_id: number) => {
 
   try {
     const { data, error } = await client
-      .from("drill_stations")
+      .from("stations")
       .select()
       .eq("id", station_id);
 

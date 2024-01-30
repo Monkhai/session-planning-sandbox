@@ -11,12 +11,18 @@ import {
 } from "~/utils/types";
 const useCreateSkill = () => {
   return useMutation({
-    mutationFn: async ({ station_id, lastOrder }: CreateSkillArgs) => {
+    mutationFn: async ({
+      station_id,
+      lastOrder,
+      session_id,
+    }: CreateSkillArgs) => {
       return await createSkill(station_id, lastOrder);
     },
 
-    onMutate: async ({ station_id }: CreateSkillArgs) => {
-      await queryClient.cancelQueries({ queryKey: ["stations"] });
+    onMutate: async ({ station_id, session_id }) => {
+      await queryClient.cancelQueries({
+        queryKey: ["sessions", session_id, "stations"],
+      });
       const user_id = getUserId();
       if (!user_id) {
         console.error("User not found");
@@ -24,7 +30,7 @@ const useCreateSkill = () => {
       }
 
       const previousStations: SkillStationWithSkillsType[] =
-        queryClient.getQueryData(["stations"]) ?? [];
+        queryClient.getQueryData(["sessions", session_id, "stations"]) ?? [];
 
       const parentStation = previousStations.find(
         (station) => station.id === station_id,
@@ -68,22 +74,28 @@ const useCreateSkill = () => {
         return station;
       });
 
-      queryClient.setQueryData(["stations"], newStations);
+      queryClient.setQueryData(
+        ["sessions", session_id, "stations"],
+        newStations,
+      );
 
       return {
         rollback: () =>
-          queryClient.setQueryData(["stations"], previousStations),
+          queryClient.setQueryData(
+            ["sessions", session_id, "stations"],
+            previousStations,
+          ),
         newSkill,
       };
     },
 
-    onSuccess: (data, _, { newSkill }) => {
+    onSuccess: (data, { session_id }, { newSkill }) => {
       if (!data) {
         return;
       }
 
       const previousStations: SkillStationWithSkillsType[] =
-        queryClient.getQueryData(["stations"]) ?? [];
+        queryClient.getQueryData(["sessions", session_id, "stations"]) ?? [];
 
       const parentStation = previousStations.find(
         (station) => station.id === data.station_id,
@@ -110,7 +122,10 @@ const useCreateSkill = () => {
         return station;
       });
 
-      queryClient.setQueryData(["stations"], newStations);
+      queryClient.setQueryData(
+        ["sessions", session_id, "stations"],
+        newStations,
+      );
     },
 
     onError: (error, _, context) => {

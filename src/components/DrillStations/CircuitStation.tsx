@@ -8,6 +8,7 @@ import Spacer from "../utility/Spacer";
 import CircuitStationHeader from "./CircuitStationHeader";
 import { CircuitDrill } from "./CircuitDrill";
 import useCreateDrill from "~/hooks/drillStationHooks/useCreateDrill";
+import { useParams } from "next/navigation";
 
 interface Props {
   station: DrillStationWithDrillsType;
@@ -44,6 +45,9 @@ const CircuitStation = ({ station, isLast }: Props) => {
   const { mutate: deleteDrillStation } = useDeleteDrillStation();
   const { mutate: updateDrillStation } = useUpdateDrillStation();
   const { mutate: addlDrillToCircuit } = useCreateDrill();
+
+  const { id: session_id } = useParams<{ id: string }>();
+
   const handleToggleDuration = useCallback(
     (show: boolean) => {
       setShowDuration(show);
@@ -52,6 +56,7 @@ const CircuitStation = ({ station, isLast }: Props) => {
         name: stationName,
         station_id: station.id,
         show_duration: show,
+        session_id: session_id,
       });
     },
     [duration, stationName, station.id, updateDrillStation],
@@ -65,6 +70,7 @@ const CircuitStation = ({ station, isLast }: Props) => {
           name: stationName,
           station_id: station.id,
           show_duration: showDuration,
+          session_id: session_id,
         });
       }
     };
@@ -79,7 +85,12 @@ const CircuitStation = ({ station, isLast }: Props) => {
   const handleDeleteStation = useCallback(() => {
     const deleteMedia = true;
     const drillsId = station.drills.map((drill) => drill.id);
-    deleteDrillStation({ station_id: station.id, deleteMedia, drillsId });
+    deleteDrillStation({
+      station_id: station.id,
+      deleteMedia,
+      drillsId,
+      session_id,
+    });
   }, [deleteDrillStation, station]);
 
   const handleDurationChange = useCallback(
@@ -90,6 +101,7 @@ const CircuitStation = ({ station, isLast }: Props) => {
         name: stationName,
         station_id: station.id,
         show_duration: showDuration,
+        session_id: session_id,
       });
     },
     [stationName, station.id, showDuration, updateDrillStation],
@@ -99,6 +111,7 @@ const CircuitStation = ({ station, isLast }: Props) => {
     addlDrillToCircuit({
       stationId: station.id,
       lastOrder: station.drills.length,
+      session_id,
     });
   }, [station]);
   //---------------------------------------------

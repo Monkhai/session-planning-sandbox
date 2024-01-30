@@ -19,17 +19,6 @@ export type SkillType = {
 
 export type StationType = "skillStation" | "drillStation";
 
-export type SkillStationWithSkillsType = {
-  id: number;
-  name: string;
-  duration: string;
-  order: number;
-  skills: SkillType[];
-  user_id: string;
-  show_duration: boolean;
-  type: StationType;
-};
-
 export type SkillStationType = {
   id: number;
   name: string;
@@ -38,6 +27,10 @@ export type SkillStationType = {
   user_id: string;
   show_duration: boolean;
   type: StationType;
+};
+
+export type SkillStationWithSkillsType = SkillStationType & {
+  skills: SkillType[];
 };
 
 export type DrillFromDBType = {
@@ -103,11 +96,13 @@ export type updateStationArgs = {
   name: string;
   duration: string | null;
   show_duration: boolean;
+  session_id: string;
 };
 
 export type CreateSkillArgs = {
   station_id: number;
   lastOrder: number;
+  session_id: string;
 };
 
 export type updateSkillArgs = {
@@ -117,6 +112,7 @@ export type updateSkillArgs = {
   description: string;
   station_id: number;
   show_reps: boolean;
+  session_id: string;
 };
 
 export type UpdateDrillArgs = {
@@ -130,6 +126,7 @@ export type UpdateDrillArgs = {
   show_media: boolean;
   show_edit_media: boolean;
   station_id: number;
+  session_id: string;
 };
 
 export type ImageDimensions = { height: number; width: number };
@@ -186,4 +183,14 @@ export type DrillOfDrillStation = {
   drill_id: number;
   drill_station_id: number;
   order: number;
+};
+
+export type StationFromDB = {
+  id: number;
+  user_id: string;
+  name: string;
+  duration: string;
+  show_duration: boolean;
+  order: number;
+  type: StationType;
 };

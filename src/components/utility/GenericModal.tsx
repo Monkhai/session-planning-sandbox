@@ -7,6 +7,7 @@ interface Props {
   left?: string;
   right?: string;
   bottom?: string;
+  showModal: boolean;
 }
 
 const GenericModal = ({
@@ -16,6 +17,7 @@ const GenericModal = ({
   left,
   right,
   bottom,
+  showModal,
 }: Props) => {
   return (
     <div
@@ -25,6 +27,7 @@ const GenericModal = ({
       style={{
         transition: "all 0.150s ease-in-out",
         transformOrigin: origin,
+        scale: showModal ? 1 : 0,
       }}
     >
       {children}

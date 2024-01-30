@@ -1,68 +1,45 @@
 "use client";
-import { useRouter } from "next/navigation";
-import { useCallback, useState } from "react";
-import CreateNewStationButton from "~/components/CreateNewStationButton";
-import HelpButton from "~/components/HelpButton";
-import LogoutButton from "~/components/LogoutButton";
-import NavBar from "~/components/NavBar";
-import StationResponseHandler from "~/components/StationResponseHandler";
+import Link from "next/link";
+import CreateNewSessionButton from "~/components/CreateNewSessionButton";
+import Loader from "~/components/Loader";
 import Spacer from "~/components/utility/Spacer";
-import useCreateDrillStation from "~/hooks/drillStationHooks/useCreateDrillStation";
-import useCreateSkillStation from "~/hooks/skillStationHooks/useCreateSkillStation";
-import useStations from "~/hooks/skillStationHooks/useStations";
-import { useAuth } from "~/hooks/useAuth";
-import client from "~/utils/supabaseClient";
+import useCreateSession from "~/hooks/sessionsHooks/useCreateSession";
+import useGetSessions from "~/hooks/sessionsHooks/useGetSessions";
 
-export default function HomePage() {
-  useAuth();
-  const router = useRouter();
+const page = () => {
+  const { data: sessions, isLoading } = useGetSessions();
+  const { mutate: createNewSession } = useCreateSession();
 
-  const [showContact, setShowContact] = useState(false);
-
-  const { data: allStations, error, isLoading } = useStations();
-
-  const { mutate: createNewSkillStation } = useCreateSkillStation();
-
-  const { mutate: createNewDrillStation } = useCreateDrillStation();
-  const handleCreateSkillStation = useCallback(() => {
-    createNewSkillStation(allStations?.length ?? 0);
-  }, [allStations]);
-
-  const handleCreateDrillStation = useCallback(() => {
-    createNewDrillStation(allStations?.length ?? 0);
-  }, [allStations]);
-
-  const handleLogout = () => {
-    void client.auth.signOut();
-    router.replace("/login");
+  const handleCreateNewSessions = (name: string) => {
+    createNewSession({ name: name, lastOrder: sessions?.length || 0 });
   };
 
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-start bg-background dark:bg-darkBackground">
-      <NavBar />
+  if (isLoading) {
+    return (
+      <div className="flex h-screen flex-1 items-center justify-center">
+        <Loader />
+      </div>
+    );
+  }
 
-      <StationResponseHandler
-        error={error}
-        stations={allStations}
-        isLoading={isLoading}
-      />
+  return (
+    <main className="relative flex flex-col items-center justify-start bg-background dark:bg-darkBackground">
+      <div className="flex h-svh">
+        {sessions &&
+          sessions.map((session) => (
+            <Link key={session.id} href={`/sessions/${session.id}`}>
+              {session.name}
+            </Link>
+          ))}
+      </div>
 
       <Spacer />
 
       <div className="dark:bg-opacNavbarBackground sticky bottom-0 flex w-full flex-row items-center justify-center gap-4 bg-[rgba(215,215,215,0.5)] px-4 py-2 backdrop-blur-md print:hidden md:bottom-0 md:px-10 md:py-5">
-        <Spacer />
-
-        <CreateNewStationButton
-          onCreateSkillStation={handleCreateSkillStation}
-          onCreateDrillStation={handleCreateDrillStation}
-        />
-
-        <HelpButton
-          onLogout={handleLogout}
-          setShowContact={setShowContact}
-          showContact={showContact}
-        />
+        <CreateNewSessionButton onCreateNewSession={() => {}} />
       </div>
     </main>
   );
-}
+};
+
+export default page;

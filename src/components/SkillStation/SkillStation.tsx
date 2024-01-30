@@ -9,6 +9,7 @@ import Spacer from "../utility/Spacer";
 import StationBottomBorder from "./StationBottomBorder";
 import StationSkills from "./StationSkills";
 import useAutoResizeTextarea from "~/hooks/useAutoResizeTextArea";
+import { useParams } from "next/navigation";
 
 interface Props {
   station: SkillStationWithSkillsType;
@@ -33,6 +34,7 @@ const SkillStation = ({ station, isLast }: Props) => {
     showEditModal,
     editSkills,
     setEditSkills,
+    session_id,
   } = useSkillStationStates({ station, stationNameRef });
 
   const { mutate: createSkill } = useCreateSkill();
@@ -47,6 +49,7 @@ const SkillStation = ({ station, isLast }: Props) => {
           duration: duration,
           name: stationName,
           show_duration: showDuration,
+          session_id: session_id,
         });
       } else {
         updateStation({
@@ -54,6 +57,7 @@ const SkillStation = ({ station, isLast }: Props) => {
           duration: null,
           name: stationName,
           show_duration: showDuration,
+          session_id: session_id,
         });
       }
     },
@@ -64,11 +68,16 @@ const SkillStation = ({ station, isLast }: Props) => {
     createSkill({
       station_id: station.id,
       lastOrder: station.skills ? station.skills.length : 0,
+      session_id: session_id,
     });
   }, [station, createSkill]);
 
   const handleDeleteStation = useCallback(() => {
-    deleteStation({ station_id: station.id, skills: station.skills });
+    deleteStation({
+      station_id: station.id,
+      skills: station.skills,
+      session_id: session_id,
+    });
   }, [station.id, deleteStation, station.skills]);
 
   const handleToggleDuration = useCallback(
@@ -79,6 +88,7 @@ const SkillStation = ({ station, isLast }: Props) => {
         duration: duration,
         name: stationName,
         show_duration: show,
+        session_id: session_id,
       });
     },
     [station.id, duration, stationName],

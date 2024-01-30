@@ -3,7 +3,7 @@ import client from "~/utils/supabaseClient";
 export default async (station_id: number) => {
   try {
     const { data, error } = await client
-      .from("skill_stations")
+      .from("stations")
       .delete()
       .eq("id", station_id);
 

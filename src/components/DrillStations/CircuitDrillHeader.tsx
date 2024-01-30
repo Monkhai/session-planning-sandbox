@@ -8,6 +8,7 @@ import { DrillType } from "~/utils/types";
 import DrillStationSettings from "./DrillStationSettings";
 import CircuitDrillDuration from "./circuitDrillDuration";
 import useAutoResizeTextarea from "~/hooks/useAutoResizeTextArea";
+import { useParams } from "next/navigation";
 
 interface Props {
   drill: DrillType;
@@ -51,8 +52,8 @@ const CircuitDrillHeader = ({
   const [hideDurationPicker, setHideDurationPicker] = useState(true);
   const [showSettingsModal, setShowSettingsModal] = useState<boolean>(false);
 
-  // const stationNameRef = useRef<HTMLTextAreaElement>(null);
   const stationNameRef = useAutoResizeTextarea(drillName);
+  const { id: session_id } = useParams<{ id: string }>();
 
   const durationString = useMemo(() => {
     const newDurationString = convertDurationToString(duration);
@@ -84,6 +85,7 @@ const CircuitDrillHeader = ({
           show_edit_media: editMedia,
           show_media: showMedia,
           station_id: drill.station_id,
+          session_id: session_id,
         });
       }
     };
@@ -123,6 +125,7 @@ const CircuitDrillHeader = ({
         show_edit_media: editMedia,
         show_media: showMedia,
         station_id: drill.station_id,
+        session_id: session_id,
       });
     },
     [
@@ -156,6 +159,7 @@ const CircuitDrillHeader = ({
         show_edit_media: editMedia,
         show_media: showMedia,
         station_id: drill.station_id,
+        session_id: session_id,
       });
     },
     [
@@ -188,6 +192,7 @@ const CircuitDrillHeader = ({
         show_duration: showDuration,
         show_media: showMedia,
         station_id: drill.station_id,
+        session_id: session_id,
       });
     },
     [
@@ -220,6 +225,7 @@ const CircuitDrillHeader = ({
         show_duration: showDuration,
         show_edit_media: editMedia,
         station_id: drill.station_id,
+        session_id: session_id,
       });
     },
     [
@@ -243,6 +249,7 @@ const CircuitDrillHeader = ({
       drillId: drill.id,
       stationId: drill.station_id,
       deleteMedia,
+      session_id: session_id,
     });
   }, [deleteDrillStation, drill.id, drillMedia, drill.station_id]);
 
@@ -262,6 +269,7 @@ const CircuitDrillHeader = ({
         show_edit_media: editMedia,
         show_media: showMedia,
         station_id: drill.station_id,
+        session_id: session_id,
       });
     },
     [

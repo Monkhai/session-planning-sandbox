@@ -10,8 +10,6 @@ export function useAuth() {
     client.auth.getSession().then((response) => {
       if (!response || !response.data.session || response.error) {
         router.replace("/login");
-      } else {
-        router.replace("/home");
       }
     });
 
@@ -19,8 +17,6 @@ export function useAuth() {
       (_event, session) => {
         if (!session) {
           router.replace("/login");
-        } else {
-          router.replace("/home");
         }
       },
     );

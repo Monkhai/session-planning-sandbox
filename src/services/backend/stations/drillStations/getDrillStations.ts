@@ -1,3 +1,5 @@
+import { PostgrestSingleResponse } from "@supabase/supabase-js";
+import client from "~/utils/supabaseClient";
 import {
   DrillFromDBType,
   DrillList,
@@ -6,8 +8,6 @@ import {
   DrillType,
 } from "~/utils/types";
 import getUserId from "../../userManagement/getUserId";
-import { PostgrestSingleResponse } from "@supabase/supabase-js";
-import client from "~/utils/supabaseClient";
 
 const getDrillStations = async (
   user_id: string,
