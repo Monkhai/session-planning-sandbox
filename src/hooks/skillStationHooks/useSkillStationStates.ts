@@ -7,11 +7,13 @@ import { useParams } from "next/navigation";
 type useSkillStationStatesArgs = {
   station: SkillStationType;
   stationNameRef: React.RefObject<HTMLTextAreaElement>;
+  session_id: string;
 };
 
 const useSkillStationStates = ({
   station,
   stationNameRef,
+  session_id,
 }: useSkillStationStatesArgs) => {
   const [stationName, setStationName] = useState(station.name);
   const [duration, setDuration] = useState(station.duration);
@@ -19,8 +21,6 @@ const useSkillStationStates = ({
   const [durationString, setDurationString] = useState<string | undefined>();
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
   const [editSkills, setEditSkills] = useState<boolean>(false);
-
-  const params = useParams<{ id: string }>();
 
   const { mutate: updateStation } = useUpdateSkillStation();
 
@@ -62,7 +62,7 @@ const useSkillStationStates = ({
           duration: duration,
           name: stationName,
           show_duration: showDuration,
-          session_id: params.id,
+          session_id: session_id,
         });
       }
     };
@@ -99,7 +99,6 @@ const useSkillStationStates = ({
     editSkills,
     setEditSkills,
     updateStation,
-    session_id: params.id,
   };
 };
 

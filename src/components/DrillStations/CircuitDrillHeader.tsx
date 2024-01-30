@@ -107,6 +107,7 @@ const CircuitDrillHeader = ({
     drill.station_id,
     updateDrill,
     stationNameRef,
+    session_id,
   ]);
 
   const handleToggleComments = useCallback(
@@ -139,6 +140,7 @@ const CircuitDrillHeader = ({
       showMedia,
       drill.station_id,
       updateDrill,
+      session_id,
     ],
   );
 
@@ -173,6 +175,7 @@ const CircuitDrillHeader = ({
       showMedia,
       drill.station_id,
       updateDrill,
+      session_id,
     ],
   );
 
@@ -206,6 +209,7 @@ const CircuitDrillHeader = ({
       showMedia,
       drill.station_id,
       updateDrill,
+      session_id,
     ],
   );
 
@@ -239,6 +243,7 @@ const CircuitDrillHeader = ({
       editMedia,
       drill.station_id,
       updateDrill,
+      session_id,
     ],
   );
 
@@ -251,7 +256,7 @@ const CircuitDrillHeader = ({
       deleteMedia,
       session_id: session_id,
     });
-  }, [deleteDrillStation, drill.id, drillMedia, drill.station_id]);
+  }, [deleteDrillStation, drill.id, drillMedia, drill.station_id, session_id]);
 
   const handleDurationChange = useCallback(
     (duration: string) => {
@@ -283,49 +288,56 @@ const CircuitDrillHeader = ({
       showMedia,
       drill.station_id,
       updateDrill,
+      session_id,
     ],
   );
 
   return (
     <div>
-      <div className="flex flex-row items-center gap-0">
-        <button
-          onClick={() => setShowSettingsModal(!showSettingsModal)}
-          className="mr-1 transition-all duration-150 active:scale-95"
-        >
-          <PiDotsThreeCircleFill color={"gray"} size={22} />
-        </button>
-        <DrillStationSettings
-          title="Drill Settings"
-          setShowSettingsModal={() => setShowSettingsModal(!showSettingsModal)}
-          editMedia={editMedia}
-          onToggleEditMedia={handleToggleEditMedia}
-          onToggleShowComments={handleToggleComments}
-          onToggleShowMedia={handleToggleShowMedia}
-          showComments={showComments}
-          showMedia={showMedia}
-          showSettingsModal={showSettingsModal}
-          handleDeleteStation={handleDeleteDrill}
-          onToggleDuration={handleToggleDuration}
-          showDuration={showDuration}
-        />
+      <div className="relative flex flex-row items-center gap-0">
+        <div className="relative flex print:hidden">
+          <button
+            onClick={() => setShowSettingsModal(!showSettingsModal)}
+            className="mr-1 transition-all duration-150 active:scale-95"
+          >
+            <PiDotsThreeCircleFill color={"gray"} size={22} />
+          </button>
+          <DrillStationSettings
+            title="Drill Settings"
+            setShowSettingsModal={() =>
+              setShowSettingsModal(!showSettingsModal)
+            }
+            editMedia={editMedia}
+            onToggleEditMedia={handleToggleEditMedia}
+            onToggleShowComments={handleToggleComments}
+            onToggleShowMedia={handleToggleShowMedia}
+            showComments={showComments}
+            showMedia={showMedia}
+            showSettingsModal={showSettingsModal}
+            handleDeleteStation={handleDeleteDrill}
+            onToggleDuration={handleToggleDuration}
+            showDuration={showDuration}
+          />
+        </div>
         {/* title */}
-        <textarea
-          inputMode="text"
-          ref={stationNameRef}
-          value={drillName}
-          onChange={(e) => setDrillname(e.target.value)}
-          className="placeholder:text-textInput print:font-sm box-border w-28 max-w-60 resize-none bg-transparent text-base font-semibold outline-none active:outline-none print:w-full print:text-base"
-          placeholder="Station Name"
-        />
-        <CircuitDrillDuration
-          duration={duration}
-          durationString={durationString}
-          hideDurationPicker={hideDurationPicker}
-          setHideDurationPicker={setHideDurationPicker}
-          showDuration={showDuration}
-          handledurationChange={handleDurationChange}
-        />
+        <div className="flex flex-row items-center">
+          <textarea
+            inputMode="text"
+            ref={stationNameRef}
+            value={drillName}
+            onChange={(e) => setDrillname(e.target.value)}
+            className="placeholder:text-textInput print:font-sm box-border w-28 max-w-60 resize-none bg-transparent text-base font-semibold outline-none active:outline-none print:w-full print:text-base"
+            placeholder="Station Name"
+          />
+          <CircuitDrillDuration
+            duration={duration}
+            durationString={durationString}
+            hideDurationPicker={hideDurationPicker}
+            setHideDurationPicker={setHideDurationPicker}
+            showDuration={showDuration}
+            handledurationChange={handleDurationChange}
+          />
+        </div>
       </div>
     </div>
   );

@@ -73,7 +73,7 @@ const StationDuration = ({
         </button>
 
         <div
-          className="absolute z-10 mt-2 w-80"
+          className="absolute z-10 w-80"
           style={{
             transition: "all 0.150s ease-in-out",
             scale: hideDurationPicker ? 0 : 1,

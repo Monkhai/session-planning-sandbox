@@ -41,7 +41,7 @@ const DurationPicker = ({
   };
 
   return (
-    <div className="z-50 flex w-60 flex-col gap-4 rounded-[10px] bg-white p-4 shadow-xl print:hidden md:w-80 dark:bg-darkSecondaryBackground">
+    <div className="border-separator z-50 flex w-60 flex-col gap-4 rounded-[10px] border-2 bg-white p-4 shadow-xl print:hidden md:w-80 dark:border-darkSeperator dark:bg-darkSecondaryBackground">
       <div className="flex flex-row justify-between">
         <p className="font-semibold">Set Duration (in minutes)</p>
         <button onClick={hideDurationPicker}>

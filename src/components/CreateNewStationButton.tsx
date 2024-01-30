@@ -61,7 +61,7 @@ const CreateNewStationButton = ({
         className="z-10 rounded-[10px] bg-primary p-3 transition-all duration-150 active:scale-95 md:p-4"
       >
         <p className="text-center text-base text-white md:text-lg">
-          Create new station
+          Create a New Station
         </p>
       </button>
     </div>

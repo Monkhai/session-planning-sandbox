@@ -194,3 +194,11 @@ export type StationFromDB = {
   order: number;
   type: StationType;
 };
+
+export type SessionFromDB = {
+  id: number;
+  user_id: string;
+  name: string;
+  order: number;
+  created_at: string;
+};

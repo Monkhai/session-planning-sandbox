@@ -1,11 +1,11 @@
 import client from "~/utils/supabaseClient";
 
-export default async (station_id: number) => {
+export default async (station_ids: number[]) => {
   try {
     const { error } = await client
       .from("stations")
       .delete()
-      .eq("id", station_id);
+      .in("id", station_ids);
 
     if (error) {
       throw error;

@@ -20,6 +20,7 @@ const SkillStation = ({ station, isLast }: Props) => {
   const [hideDurationPicker, setHideDurationPicker] = useState(true);
 
   const stationNameRef = React.useRef<HTMLTextAreaElement>(null);
+  const params = useParams<{ id: string }>();
 
   const {
     updateStation,
@@ -34,8 +35,7 @@ const SkillStation = ({ station, isLast }: Props) => {
     showEditModal,
     editSkills,
     setEditSkills,
-    session_id,
-  } = useSkillStationStates({ station, stationNameRef });
+  } = useSkillStationStates({ station, stationNameRef, session_id: params.id });
 
   const { mutate: createSkill } = useCreateSkill();
   const { mutate: deleteStation } = useDeleteSkillStation();
@@ -49,7 +49,7 @@ const SkillStation = ({ station, isLast }: Props) => {
           duration: duration,
           name: stationName,
           show_duration: showDuration,
-          session_id: session_id,
+          session_id: params.id,
         });
       } else {
         updateStation({
@@ -57,28 +57,28 @@ const SkillStation = ({ station, isLast }: Props) => {
           duration: null,
           name: stationName,
           show_duration: showDuration,
-          session_id: session_id,
+          session_id: params.id,
         });
       }
     },
-    [stationName, showDuration, station],
+    [stationName, showDuration, station, params.id],
   );
 
   const handleCreateSkill = useCallback(async () => {
     createSkill({
       station_id: station.id,
       lastOrder: station.skills ? station.skills.length : 0,
-      session_id: session_id,
+      session_id: params.id,
     });
-  }, [station, createSkill]);
+  }, [station, createSkill, params.id]);
 
   const handleDeleteStation = useCallback(() => {
     deleteStation({
       station_id: station.id,
       skills: station.skills,
-      session_id: session_id,
+      session_id: params.id,
     });
-  }, [station.id, deleteStation, station.skills]);
+  }, [station.id, deleteStation, station.skills, params.id]);
 
   const handleToggleDuration = useCallback(
     (show: boolean) => {
@@ -88,10 +88,10 @@ const SkillStation = ({ station, isLast }: Props) => {
         duration: duration,
         name: stationName,
         show_duration: show,
-        session_id: session_id,
+        session_id: params.id,
       });
     },
-    [station.id, duration, stationName],
+    [station.id, duration, stationName, params.id],
   );
 
   return (

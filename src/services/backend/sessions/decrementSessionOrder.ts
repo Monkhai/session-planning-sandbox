@@ -1,12 +1,12 @@
 import client from "~/utils/supabaseClient";
-import { Station } from "~/utils/types";
+import { SessionFromDB, Station } from "~/utils/types";
 
-export default async (station: Station) => {
+export default async (session: SessionFromDB) => {
   try {
     const { data, error } = await client
-      .from("stations")
-      .update({ order: station.order - 1 })
-      .eq("id", station.id)
+      .from("sessions")
+      .update({ order: session.order - 1 })
+      .eq("id", session.id)
       .select();
 
     if (error) {

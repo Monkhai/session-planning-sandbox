@@ -35,7 +35,7 @@ const DrillStationSettings = ({
   return (
     <div className="z-10">
       <div
-        className="absolute left-4 top-10 w-80"
+        className="absolute w-80"
         style={{
           transition: "all 0.150s ease-in-out",
           scale: showSettingsModal ? 1 : 0,
@@ -43,7 +43,7 @@ const DrillStationSettings = ({
           transformOrigin: "top left",
         }}
       >
-        <div className="flex w-full flex-col items-start gap-2 rounded-[10px] bg-white p-4 shadow-xl dark:bg-darkSecondaryBackground">
+        <div className="flex w-full flex-col items-start gap-2 rounded-[10px] border-2 border-seperator bg-white p-4 shadow-xl dark:border-darkSeperator dark:bg-darkSecondaryBackground">
           <div className="flex w-full flex-1 flex-row justify-between pb-2">
             <h3 className="font-lg flex-1 font-semibold">{title}</h3>
             <button

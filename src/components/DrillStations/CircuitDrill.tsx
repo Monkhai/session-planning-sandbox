@@ -1,5 +1,5 @@
+import { useParams } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
-import useDeleteDrill from "~/hooks/drillStationHooks/useDeleteDrill";
 import useDeleteMedia from "~/hooks/drillStationHooks/useDeleteMedia";
 import useGetDrillMedia from "~/hooks/drillStationHooks/useGetDrillStationMedia";
 import useUpdateDrill from "~/hooks/drillStationHooks/useUpdateDrill";
@@ -8,7 +8,6 @@ import { DrillType } from "~/utils/types";
 import CircuitDrillHeader from "./CircuitDrillHeader";
 import CircuitDrillMedia from "./CircuitDrillMedia";
 import CircuitDrillTextArea from "./CircuitDrillTextArea";
-import { useParams } from "next/navigation";
 
 interface Props {
   drill: DrillType;

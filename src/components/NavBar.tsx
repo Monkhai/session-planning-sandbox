@@ -20,10 +20,10 @@ const NavBar = () => {
           onClick={handleBack}
         >
           <IoChevronBack color="white" size={32} />
-          <h2 className="text-white">Back</h2>
+          <h3 className="text-white">Back</h3>
         </button>
       ) : null}
-      <Link className="flex flex-1 justify-center" href="/home">
+      <Link className="flex-[ 2 ] flex justify-center" href="/home">
         <h1 className="p-5 text-white">Session Planning Sandbox</h1>
       </Link>
 

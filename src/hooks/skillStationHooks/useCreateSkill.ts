@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "Providers/ReactQueryProvider";
+import { FaChessKing } from "react-icons/fa6";
 import createSkill from "~/services/backend/skills/createSkill";
 import getUserId from "~/services/backend/userManagement/getUserId";
 import client from "~/utils/supabaseClient";
@@ -8,6 +9,7 @@ import {
   SkillStationType,
   SkillStationWithSkillsType,
   SkillType,
+  Station,
 } from "~/utils/types";
 const useCreateSkill = () => {
   return useMutation({
@@ -29,14 +31,14 @@ const useCreateSkill = () => {
         return;
       }
 
-      const previousStations: SkillStationWithSkillsType[] =
+      const previousStations: Station[] =
         queryClient.getQueryData(["sessions", session_id, "stations"]) ?? [];
 
       const parentStation = previousStations.find(
         (station) => station.id === station_id,
-      );
+      ) as SkillStationWithSkillsType;
       if (parentStation === undefined) {
-        return;
+        throw new Error("No parent station");
       }
 
       const tempId = Math.floor(Math.random() * 1000000000);

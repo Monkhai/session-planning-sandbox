@@ -39,14 +39,14 @@ const Session = ({ params }: Props) => {
       lastOrder: allStations?.length ?? 0,
       session_id: params.id,
     });
-  }, [allStations]);
+  }, [allStations, params]);
 
   const handleCreateDrillStation = useCallback(() => {
     createNewDrillStation({
       lastOrder: allStations?.length ?? 0,
       session_id: params.id,
     });
-  }, [allStations]);
+  }, [allStations, params]);
 
   const handleLogout = () => {
     void client.auth.signOut();
@@ -55,6 +55,8 @@ const Session = ({ params }: Props) => {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-start bg-background dark:bg-darkBackground">
+      <NavBar />
+
       <StationResponseHandler
         error={error}
         stations={allStations}
