@@ -17,6 +17,9 @@ const CreateNewSessionButton = ({ onCreateNewSession }: Props) => {
       inputRef.current?.focus();
     } else {
       dialogRef.current?.close();
+      if (window.innerWidth <= 768) {
+        window.scrollTo(0, 0);
+      }
     }
   }, [isModalOpen]);
 
