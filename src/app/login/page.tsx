@@ -24,7 +24,7 @@ const Login = () => {
   }, []);
 
   return (
-    <section className="flex h-screen flex-col items-center justify-start dark:bg-darkBackground">
+    <section className="flex h-[100dvh] flex-col items-center justify-start dark:bg-darkBackground">
       <NavBar />
 
       <section className="flex h-full w-full flex-col items-center justify-center gap-4 pt-4">

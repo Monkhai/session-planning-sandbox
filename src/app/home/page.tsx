@@ -29,7 +29,7 @@ const page = () => {
   }
 
   return (
-    <main className="relative flex min-h-screen flex-col items-center justify-start bg-background dark:bg-darkBackground">
+    <main className="relative flex h-[100dvh] flex-col items-center justify-start bg-background dark:bg-darkBackground">
       <NavBar />
 
       <SessionList sessions={sessions} />

@@ -54,7 +54,7 @@ const Session = ({ params }: Props) => {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-start bg-background dark:bg-darkBackground">
+    <main className="flex min-h-[100dvh] flex-col items-center justify-start bg-background dark:bg-darkBackground">
       <NavBar />
 
       <StationResponseHandler
@@ -65,7 +65,7 @@ const Session = ({ params }: Props) => {
 
       <Spacer />
 
-      <div className="dark:bg-opacNavbarBackground sticky bottom-0 flex w-full flex-row items-center justify-center gap-4 bg-[rgba(215,215,215,0.5)] px-4 py-2 backdrop-blur-md print:hidden md:bottom-0 md:px-10 md:py-5">
+      <div className="sticky bottom-0 flex w-full flex-row items-center justify-center gap-4 bg-[rgba(215,215,215,0.5)] px-4 py-2 backdrop-blur-md print:hidden md:bottom-0 md:px-10 md:py-5 dark:bg-opacNavbarBackground">
         <Spacer />
 
         <CreateNewStationButton
