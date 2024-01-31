@@ -3,7 +3,7 @@ import { queryClient } from "Providers/ReactQueryProvider";
 import deleteMultipleDrills from "~/services/backend/drills/deleteMultipleDrills";
 import DeleteAllDrillMedia from "~/services/backend/drills/media/DeleteAllDrillMedia";
 import decrementStationOrder from "~/services/backend/stations/decrementStationOrder";
-import deleteDrillStation from "~/services/backend/stations/drillStations/deleteDrillStation";
+import deleteStation from "~/services/backend/stations/deleteStation";
 import { Station } from "~/utils/types";
 
 const useDeleteDrillStation = () => {
@@ -26,7 +26,7 @@ const useDeleteDrillStation = () => {
       if (drillsId) {
         await deleteMultipleDrills(drillsId);
       }
-      return await deleteDrillStation(station_id);
+      return await deleteStation(station_id);
     },
 
     onMutate: async ({ station_id, session_id }) => {

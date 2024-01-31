@@ -1,7 +1,11 @@
 import client from "~/utils/supabaseClient";
-import getUserId from "../userManagement/getUserId";
+import deleteMultipleDrills from "../drills/deleteMultipleDrills";
+import deleteMultipleSkills from "../skills/deleteMultipleSkills";
 import deleteMultipleStations from "../stations/deleteMultipleStations";
-import { PostgrestMaybeSingleResponse } from "@supabase/supabase-js";
+import getListOfDrills from "../stations/drillStations/getListOfDrills";
+import getListOfSkills from "../stations/skillStations/getListOfSkills";
+import getUserId from "../userManagement/getUserId";
+import getListOfStations from "./getListOfStations";
 
 export default async (session_id: number) => {
   try {
@@ -10,25 +14,24 @@ export default async (session_id: number) => {
       throw new Error("No user_id found");
     }
 
-    const {
-      data: stations,
-      error: getStationsError,
-    }: PostgrestMaybeSingleResponse<{ station_id: number }[]> = await client
-      .from("stations_of_sessions")
-      .select("station_id")
-      .eq("session_id", session_id);
+    const stations = await getListOfStations(session_id);
 
-    if (getStationsError) {
-      throw getStationsError;
-    }
+    const skillStationIds = stations.skillStationIds.map(
+      (station) => station.id,
+    );
+    const drillStationIds = stations.drillStationIds.map(
+      (station) => station.id,
+    );
 
-    if (!stations) {
-      throw new Error("No stations found");
-    }
+    const drill_ids = await getListOfDrills(drillStationIds);
+    const skill_ids = await getListOfSkills(skillStationIds);
 
-    const stationIds = stations.map((station) => station.station_id);
+    await deleteMultipleDrills(drill_ids);
+    await deleteMultipleSkills(skill_ids);
 
-    await deleteMultipleStations(stationIds);
+    const station_ids = [...skillStationIds, ...drillStationIds];
+
+    await deleteMultipleStations(station_ids);
 
     const { error: deleteSessionError } = await client
       .from("sessions")

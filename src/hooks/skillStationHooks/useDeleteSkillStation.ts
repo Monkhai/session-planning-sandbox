@@ -1,9 +1,8 @@
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "Providers/ReactQueryProvider";
 import deleteMultipleSkills from "~/services/backend/skills/deleteMultipleSkills";
-import deleteSkill from "~/services/backend/skills/deleteSkill";
 import decrementStationOrder from "~/services/backend/stations/decrementStationOrder";
-import deleteSkillStation from "~/services/backend/stations/skillStations/deleteSkillStation";
+import deleteStation from "~/services/backend/stations/deleteStation";
 import { SkillType, Station } from "~/utils/types";
 
 const useDeleteSkillStation = () => {
@@ -21,7 +20,7 @@ const useDeleteSkillStation = () => {
         const skillsId = skills.map((skill) => skill.id);
         deleteMultipleSkills(skillsId);
       }
-      await deleteSkillStation(station_id);
+      return await deleteStation(station_id);
     },
 
     onMutate: ({ station_id, session_id }) => {

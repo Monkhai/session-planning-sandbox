@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "Providers/ReactQueryProvider";
-import updateSkillStation from "~/services/backend/stations/skillStations/updateSkillStation";
+import updateStation from "~/services/backend/stations/updateStation";
 
 import { SkillStationType, updateStationArgs } from "~/utils/types";
 
@@ -12,7 +12,7 @@ const useUpdateSkillStation = () => {
       show_duration,
       station_id,
     }: updateStationArgs) => {
-      await updateSkillStation(station_id, duration, name, show_duration);
+      await updateStation(station_id, duration, name, show_duration);
     },
 
     onMutate: ({
