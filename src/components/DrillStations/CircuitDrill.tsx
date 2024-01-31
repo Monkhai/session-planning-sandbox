@@ -14,9 +14,12 @@ interface Props {
 }
 
 export const CircuitDrill = ({ drill }: Props) => {
+  const { id: session_id } = useParams<{ id: string }>();
+
   const { mutate: updateDrill } = useUpdateDrill();
   const { data: drillMedia, isLoading: isMediaLoading } = useGetDrillMedia(
     drill.id,
+    session_id,
   );
 
   const { mutate: deleteMedia } = useDeleteMedia();
@@ -45,8 +48,6 @@ export const CircuitDrill = ({ drill }: Props) => {
   const stationNameRef = useRef<HTMLTextAreaElement>(null);
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
   const commentsRef = useRef<HTMLTextAreaElement>(null);
-
-  const { id: session_id } = useParams<{ id: string }>();
 
   useEffect(() => {
     const handleBlur = () => {
@@ -93,7 +94,7 @@ export const CircuitDrill = ({ drill }: Props) => {
   ]);
 
   const handleDeleteMedia = (name: string) => {
-    deleteMedia({ name, station_id: drill.id });
+    deleteMedia({ name, station_id: drill.id, session_id });
   };
 
   const handleFileUpload = useCallback(
@@ -101,7 +102,11 @@ export const CircuitDrill = ({ drill }: Props) => {
       if (e.target.files) {
         const file = e.target.files[0];
         if (file) {
-          uploadMedia({ station_id: drill.id, file: file });
+          uploadMedia({
+            station_id: drill.id,
+            file: file,
+            session_id: session_id,
+          });
         } else {
           alert("no file found");
         }

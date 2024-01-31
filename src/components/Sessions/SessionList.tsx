@@ -3,7 +3,7 @@ import { SessionFromDB } from "~/utils/types";
 import SessionRow from "./SessionRow";
 
 interface Props {
-  sessions: SessionFromDB[] | null;
+  sessions: SessionFromDB[] | undefined;
 }
 
 const SessionList = ({ sessions }: Props) => {

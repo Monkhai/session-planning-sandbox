@@ -20,6 +20,8 @@ interface Props {
 }
 
 const SingleDrillStation = ({ drill, isLast }: Props) => {
+  const { id: session_id } = useParams<{ id: string }>();
+
   const [hideDurationPicker, setHideDurationPicker] = React.useState(true);
   const [showSettingsModal, setShowSettingsModal] =
     React.useState<boolean>(false);
@@ -61,9 +63,7 @@ const SingleDrillStation = ({ drill, isLast }: Props) => {
   const { mutate: addlDrillToCircuit } = useCreateDrill();
 
   const { data: drillMedia, isLoading: isMediaLoading } =
-    useGetDrillStationMedia(drill.id);
-
-  const { id: session_id } = useParams<{ id: string }>();
+    useGetDrillStationMedia(drill.id, session_id);
 
   const handleToggleDuration = useCallback(
     (show: boolean) => {
@@ -108,7 +108,7 @@ const SingleDrillStation = ({ drill, isLast }: Props) => {
 
   const handleDeleteMedia = useCallback(
     (name: string) => {
-      deleteMedia({ name, station_id: drill.id });
+      deleteMedia({ name, station_id: drill.id, session_id });
     },
     [deleteMedia, drill.id],
   );
@@ -148,7 +148,7 @@ const SingleDrillStation = ({ drill, isLast }: Props) => {
       if (e.target.files) {
         const file = e.target.files[0];
         if (file) {
-          uploadMedia({ station_id: drill.id, file: file });
+          uploadMedia({ station_id: drill.id, file: file, session_id });
         } else {
           alert("no file found");
         }

@@ -133,6 +133,7 @@ export type ImageDimensions = { height: number; width: number };
 
 export type UploadMediaArgs = {
   station_id: number;
+  session_id: string;
   file: File;
 };
 

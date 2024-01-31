@@ -6,7 +6,7 @@ import { SessionFromDB } from "~/utils/types";
 export default async () => {
   const user_id = getUserId();
   if (!user_id) {
-    return null;
+    return undefined;
   }
 
   try {
@@ -30,7 +30,7 @@ export default async () => {
     return data;
   } catch (error) {
     console.error(error);
-    // throw error;
-    return null;
+    throw error;
+    // return undefined;
   }
 };

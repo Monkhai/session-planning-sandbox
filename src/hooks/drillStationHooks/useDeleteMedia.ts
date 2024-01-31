@@ -11,17 +11,12 @@ const useDeleteMedia = () => {
     }: {
       name: string;
       station_id: number;
+      session_id: string;
     }) => {
       await deleteMedia(name, station_id);
     },
 
-    onMutate: async ({
-      name,
-      station_id,
-    }: {
-      name: string;
-      station_id: number;
-    }) => {
+    onMutate: async ({ name, station_id, session_id }) => {
       const previousMedia = queryClient.getQueryData([
         "drillStationMedia",
         station_id,
@@ -29,18 +24,21 @@ const useDeleteMedia = () => {
 
       const newMedia = previousMedia?.filter((media) => media.name !== name);
 
-      queryClient.setQueryData(["drillStationMedia", station_id], newMedia);
+      queryClient.setQueryData(
+        [session_id, station_id, "drillStationMedia"],
+        newMedia,
+      );
 
       return {
         rollback: () =>
           queryClient.setQueryData(
-            ["drillStationMedia", station_id],
+            [session_id, station_id, "drillStationMedia"],
             previousMedia,
           ),
       };
     },
 
-    onSuccess: (_, { name, station_id }) => {
+    onSuccess: (_, { name, station_id, session_id }) => {
       const oldMedia = queryClient.getQueryData([
         "drillStationMedia",
         station_id,
@@ -48,7 +46,10 @@ const useDeleteMedia = () => {
 
       const updatedMedia = oldMedia?.filter((media) => media.name !== name);
 
-      queryClient.setQueryData(["drillStationMedia", station_id], updatedMedia);
+      queryClient.setQueryData(
+        [session_id, station_id, "drillStationMedia"],
+        updatedMedia,
+      );
     },
 
     onError: (error, _, context) => {

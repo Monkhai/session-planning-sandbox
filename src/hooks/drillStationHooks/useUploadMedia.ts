@@ -11,7 +11,7 @@ const useUploadMedia = () => {
       return await getAllMediaForDrill(station_id);
     },
 
-    onMutate: async ({ station_id, file }) => {
+    onMutate: async ({ station_id, session_id }) => {
       const previousMedia = queryClient.getQueryData([
         "drillStationMedia",
         station_id,
@@ -28,17 +28,20 @@ const useUploadMedia = () => {
         ? [...previousMedia, tempMediaPlacehoder]
         : [tempMediaPlacehoder];
 
-      queryClient.setQueryData(["drillStationMedia", station_id], newMedia);
+      queryClient.setQueryData(
+        [session_id, station_id, "drillStationMedia"],
+        newMedia,
+      );
 
       return () => {
         queryClient.setQueryData(
-          ["drillStationMedia", station_id],
+          [session_id, station_id, "drillStationMedia"],
           previousMedia,
         );
       };
     },
 
-    onSuccess: (newMedia, { station_id }) => {
+    onSuccess: (newMedia, { station_id, session_id }) => {
       const previousMedia = queryClient.getQueryData([
         "drillStationMedia",
         station_id,
@@ -57,7 +60,10 @@ const useUploadMedia = () => {
         ? [...filteredMedia, mediaToReplace]
         : [mediaToReplace];
 
-      queryClient.setQueryData(["drillStationMedia", station_id], updatedMedia);
+      queryClient.setQueryData(
+        [session_id, station_id, "drillStationMedia"],
+        updatedMedia,
+      );
     },
 
     onError: (error, _, callback) => {

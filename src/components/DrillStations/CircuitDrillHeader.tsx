@@ -45,15 +45,16 @@ const CircuitDrillHeader = ({
   showComments,
   setShowComments,
 }: Props) => {
+  const { id: session_id } = useParams<{ id: string }>();
+
   const { mutate: updateDrill } = useUpdateDrill();
-  const { data: drillMedia } = useGetDrillMedia(drill.id);
+  const { data: drillMedia } = useGetDrillMedia(drill.id, session_id);
   const { mutate: deleteDrillStation } = useDeleteDrill();
 
   const [hideDurationPicker, setHideDurationPicker] = useState(true);
   const [showSettingsModal, setShowSettingsModal] = useState<boolean>(false);
 
   const stationNameRef = useAutoResizeTextarea(drillName);
-  const { id: session_id } = useParams<{ id: string }>();
 
   const durationString = useMemo(() => {
     const newDurationString = convertDurationToString(duration);
