@@ -45,7 +45,7 @@ const useCreateDrillStation = () => {
         show_reps: true,
         comments: "",
         duration: "00:00:00",
-        show_comments: false,
+        show_comments: true,
         show_media: false,
         show_edit_media: false,
         type: "drillStation",
