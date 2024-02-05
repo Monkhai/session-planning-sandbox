@@ -2,15 +2,13 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import client from "~/utils/supabaseClient";
 import {
-  DrillStationType,
   DrillStationWithDrillsType,
   SkillStationWithSkillsType,
   Station,
 } from "~/utils/types";
-import CircuitStation from "./DrillStations/CircuitStation";
+import DrillStationHandler from "./DrillStations/DrillStationHandler";
 import Loader from "./Loader";
 import SkillStation from "./SkillStation/SkillStation";
-import DrillStationHandler from "./DrillStations/DrillStationHandler";
 
 interface Props {
   stations: Station[] | undefined;

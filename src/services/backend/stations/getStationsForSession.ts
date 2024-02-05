@@ -321,12 +321,10 @@ const getStationList = async (session_id: number, user_id: string) => {
       .eq("session_id", session_id);
 
   if (error) {
-    console.error(error);
     throw error;
   }
 
   if (!stations) {
-    console.error("No data");
     throw new Error("No data");
   }
 

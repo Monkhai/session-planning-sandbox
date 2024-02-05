@@ -1,12 +1,12 @@
 import client from "~/utils/supabaseClient";
-import { SessionFromDB } from "~/utils/types";
+import { GroupFromDB } from "~/utils/types";
 
-export default async (session: SessionFromDB) => {
+export default async (group: GroupFromDB) => {
   try {
     const { data, error } = await client
-      .from("sessions")
-      .update({ order: session.order - 1 })
-      .eq("id", session.id)
+      .from("groups")
+      .update({ order: group.order - 1 })
+      .eq("id", group.id)
       .select();
 
     if (error) {
@@ -19,7 +19,7 @@ export default async (session: SessionFromDB) => {
       throw new Error("No data");
     }
 
-    return data[0] as SessionFromDB;
+    return data[0] as GroupFromDB;
   } catch (error) {
     console.error(error);
     throw error;

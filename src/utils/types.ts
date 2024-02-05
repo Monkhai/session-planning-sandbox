@@ -203,3 +203,28 @@ export type SessionFromDB = {
   order: number;
   created_at: string;
 };
+
+export type GroupFromDB = {
+  id: number;
+  user_id: string;
+  name: string;
+  order: number;
+  created_at: string;
+};
+
+export type AthleteFromDB = {
+  id: number;
+  user_id: string;
+  name: string;
+  order: number;
+  created_at: string;
+};
+
+export type athleteType = AthleteFromDB & {
+  sessions: SessionFromDB[];
+};
+
+export type GroupType = GroupFromDB & {
+  athletes: athleteType[];
+  generalSessions: SessionFromDB[];
+};

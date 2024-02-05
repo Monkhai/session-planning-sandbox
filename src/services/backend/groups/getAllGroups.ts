@@ -1,5 +1,5 @@
 import getAll from "../getAll";
 
 export default async <T>() => {
-  return getAll<T>("sessions");
+  return getAll<T>("groups");
 };

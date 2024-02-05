@@ -1,36 +1,36 @@
 import React, { useEffect } from "react";
 import { IoCloseCircleSharp } from "react-icons/io5";
-import useDeleteSession from "~/hooks/sessionsHooks/useDeleteSession";
-import useUpdateSession from "~/hooks/sessionsHooks/useUpdateSession";
-import { SessionFromDB } from "~/utils/types";
+import useDeleteGroup from "~/hooks/groupsHooks/useDeleteGroup";
+import useUpdateGroup from "~/hooks/groupsHooks/useUpdateGroup";
+import { GroupFromDB } from "~/utils/types";
 
 interface Props {
   showSettingsModal: boolean;
   setShowSettingsModal: React.Dispatch<React.SetStateAction<boolean>>;
-  session: SessionFromDB;
+  group: GroupFromDB;
 }
 
-const SessionRowSettings = ({
+const GroupRowSettings = ({
   showSettingsModal,
   setShowSettingsModal,
-  session,
+  group,
 }: Props) => {
-  const [sessionName, setSessionName] = React.useState(session.name || "");
+  const [groupName, setgroupName] = React.useState(group.name || "");
 
-  const { mutate: updateSession } = useUpdateSession();
-  const { mutate: deleteSession } = useDeleteSession();
+  const { mutate: updateGroup } = useUpdateGroup();
+  const { mutate: deleteGroup } = useDeleteGroup();
 
   useEffect(() => {
-    setSessionName(session.name || "");
-  }, [session]);
+    setgroupName(group.name || "");
+  }, [group]);
 
   const handleNameChange = () => {
-    updateSession({ session_id: session.id, name: sessionName });
+    updateGroup({ group_id: group.id, name: groupName });
     setShowSettingsModal(false);
   };
 
-  const handleDeleteSession = () => {
-    deleteSession(session.id);
+  const handleDeletegroup = () => {
+    deleteGroup(group.id);
     setShowSettingsModal(false);
   };
 
@@ -47,7 +47,7 @@ const SessionRowSettings = ({
       >
         <div className="flex w-full flex-col items-start gap-2 rounded-[10px] border-2 border-seperator bg-white p-4 shadow-xl dark:border-darkSeperator dark:bg-darkSecondaryBackground">
           <div className="flex w-full flex-1 flex-row justify-between pb-2">
-            <h3 className="font-lg flex-1 font-semibold">Session Settings</h3>
+            <h3 className="font-lg flex-1 font-semibold">group Settings</h3>
             <button
               onClick={() => setShowSettingsModal(false)}
               className="transition-all duration-150 active:scale-95"
@@ -57,28 +57,28 @@ const SessionRowSettings = ({
           </div>
           {/*  */}
           <div className="flex w-full flex-col items-start gap-2">
-            <p>Change Session Name</p>
+            <p>Change group Name</p>
             <input
               className="w-full rounded-[10px] bg-textInputBackground p-2 text-base outline-none placeholder:text-base md:text-xl md:placeholder:text-xl"
               type="text"
-              placeholder="Session Name"
-              value={sessionName}
-              onChange={(e) => setSessionName(e.target.value)}
+              placeholder="group Name"
+              value={groupName}
+              onChange={(e) => setgroupName(e.target.value)}
             />
           </div>
-          {session.name !== sessionName ? (
+          {group.name !== groupName ? (
             <button
               onClick={handleNameChange}
               className="w-full rounded-[10px] bg-primary p-2 text-white transition-all duration-150 ease-in-out active:scale-95"
             >
-              Update Session
+              Update group
             </button>
           ) : null}
           <button
-            onClick={handleDeleteSession}
+            onClick={handleDeletegroup}
             className="w-full rounded-[10px] bg-red-500 p-2 text-white transition-all duration-150 ease-in-out active:scale-95"
           >
-            Delete Session
+            Delete Group
           </button>
         </div>
       </div>
@@ -86,4 +86,4 @@ const SessionRowSettings = ({
   );
 };
 
-export default SessionRowSettings;
+export default GroupRowSettings;

@@ -1,12 +1,12 @@
 import client from "~/utils/supabaseClient";
-import { SessionFromDB } from "~/utils/types";
+import { AthleteFromDB } from "~/utils/types";
 
-export default async (session: SessionFromDB) => {
+export default async (athlete: AthleteFromDB) => {
   try {
     const { data, error } = await client
-      .from("sessions")
-      .update({ order: session.order - 1 })
-      .eq("id", session.id)
+      .from("athletes")
+      .update({ order: athlete.order - 1 })
+      .eq("id", athlete.id)
       .select();
 
     if (error) {
@@ -19,7 +19,7 @@ export default async (session: SessionFromDB) => {
       throw new Error("No data");
     }
 
-    return data[0] as SessionFromDB;
+    return data[0] as AthleteFromDB;
   } catch (error) {
     console.error(error);
     throw error;

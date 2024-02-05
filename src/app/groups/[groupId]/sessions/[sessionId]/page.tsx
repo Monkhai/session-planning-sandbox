@@ -15,7 +15,7 @@ import client from "~/utils/supabaseClient";
 
 interface Props {
   params: {
-    id: string;
+    sessionId: string;
   };
 }
 
@@ -29,7 +29,7 @@ const Session = ({ params }: Props) => {
     data: allStations,
     error,
     isLoading,
-  } = useStationsForSession(params.id);
+  } = useStationsForSession(params.sessionId);
 
   const { mutate: createNewSkillStation } = useCreateSkillStation();
   const { mutate: createNewDrillStation } = useCreateDrillStation();
@@ -37,14 +37,14 @@ const Session = ({ params }: Props) => {
   const handleCreateSkillStation = useCallback(() => {
     createNewSkillStation({
       lastOrder: allStations?.length ?? 0,
-      session_id: params.id,
+      session_id: params.sessionId,
     });
   }, [allStations, params]);
 
   const handleCreateDrillStation = useCallback(() => {
     createNewDrillStation({
       lastOrder: allStations?.length ?? 0,
-      session_id: params.id,
+      session_id: params.sessionId,
     });
   }, [allStations, params]);
 
