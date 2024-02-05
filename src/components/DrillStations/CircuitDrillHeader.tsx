@@ -327,7 +327,7 @@ const CircuitDrillHeader = ({
             ref={stationNameRef}
             value={drillName}
             onChange={(e) => setDrillname(e.target.value)}
-            className="placeholder:text-textInput print:font-sm box-border w-28 max-w-60 resize-none bg-transparent text-base font-semibold outline-none active:outline-none print:w-full print:text-base"
+            className="placeholder:text-textInput print:font-sm box-border w-28 max-w-60 resize-none bg-transparent text-base font-semibold outline-none active:outline-none print:w-auto print:w-full print:text-base"
             placeholder="Station Name"
           />
           <CircuitDrillDuration

@@ -13,9 +13,11 @@ import SessionRow from "~/components/Sessions/SessionRow";
 import Spacer from "~/components/utility/Spacer";
 import useCreateSession from "~/hooks/sessionsHooks/useCreateSession";
 import useGetSessions from "~/hooks/sessionsHooks/useGetSessions";
+import { useAuth } from "~/hooks/useAuth";
 import client from "~/utils/supabaseClient";
 
 const page = () => {
+  useAuth();
   const [showContact, setShowContact] = React.useState(false);
 
   const router = useRouter();
