@@ -1,6 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "Providers/ReactQueryProvider";
 import createDrill from "~/services/backend/drills/createDrill";
+import { queryKeyFactory } from "~/utils/queryFactories";
 import { DrillStationWithDrillsType, DrillType, Station } from "~/utils/types";
 
 const useCreateDrill = () => {
@@ -17,8 +18,9 @@ const useCreateDrill = () => {
     },
 
     onMutate: ({ lastOrder, stationId, session_id }) => {
-      const oldStations: Station[] =
-        queryClient.getQueryData(["sessions", session_id, "stations"]) ?? [];
+      const queryKey = queryKeyFactory.stations({ session_id });
+
+      const oldStations: Station[] = queryClient.getQueryData(queryKey) ?? [];
 
       const targetStation = oldStations.find(
         (station) =>
@@ -61,29 +63,23 @@ const useCreateDrill = () => {
         return station;
       });
 
-      queryClient.setQueryData(
-        ["sessions", session_id, "stations"],
-        newStations,
-      );
+      queryClient.setQueryData(queryKey, newStations);
 
       return {
-        rollback: () =>
-          queryClient.setQueryData(
-            ["sessions", session_id, "stations"],
-            oldStations,
-          ),
+        rollback: () => queryClient.setQueryData(queryKey, oldStations),
         targetId: newDrill.id,
+        queryKey,
       };
     },
 
-    onSuccess: (newDrill, { session_id }, { rollback, targetId }) => {
+    onSuccess: (newDrill, __, { rollback, targetId, queryKey }) => {
       if (!newDrill) {
         rollback();
         return;
       }
 
       const previousStations: Station[] =
-        queryClient.getQueryData(["sessions", session_id, "stations"]) ?? [];
+        queryClient.getQueryData(queryKey) ?? [];
 
       const targetStation = previousStations.find(
         (station) =>
@@ -109,10 +105,7 @@ const useCreateDrill = () => {
         return station;
       });
 
-      queryClient.setQueryData(
-        ["sessions", session_id, "stations"],
-        newStations,
-      );
+      queryClient.setQueryData(queryKey, newStations);
     },
 
     onError: (error, _, context) => {

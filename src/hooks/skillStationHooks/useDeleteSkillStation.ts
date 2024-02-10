@@ -3,19 +3,18 @@ import { queryClient } from "Providers/ReactQueryProvider";
 import deleteMultipleSkills from "~/services/backend/skills/deleteMultipleSkills";
 import decrementStationOrder from "~/services/backend/stations/decrementStationOrder";
 import deleteStation from "~/services/backend/stations/deleteStation";
+import { queryKeyFactory } from "~/utils/queryFactories";
 import { SkillType, Station } from "~/utils/types";
+
+type Args = {
+  station_id: number;
+  skills: SkillType[];
+  session_id: string;
+};
 
 const useDeleteSkillStation = () => {
   return useMutation({
-    mutationFn: async ({
-      station_id,
-      skills,
-      session_id,
-    }: {
-      station_id: number;
-      skills: SkillType[];
-      session_id: string;
-    }) => {
+    mutationFn: async ({ station_id, skills }: Args) => {
       if (skills) {
         const skillsId = skills.map((skill) => skill.id);
         deleteMultipleSkills(skillsId);
@@ -24,12 +23,12 @@ const useDeleteSkillStation = () => {
     },
 
     onMutate: ({ station_id, session_id }) => {
+      const queryKey = queryKeyFactory.stations({ session_id });
       queryClient.cancelQueries({
-        queryKey: ["sessions", session_id, "stations"],
+        queryKey: queryKey,
       });
-
       const previousStations: Station[] =
-        queryClient.getQueryData(["sessions", session_id, "stations"]) ?? [];
+        queryClient.getQueryData(queryKey) ?? [];
 
       const index = previousStations.findIndex(
         (station) =>
@@ -49,17 +48,10 @@ const useDeleteSkillStation = () => {
         return station;
       });
 
-      queryClient.setQueryData(
-        ["sessions", session_id, "stations"],
-        newStationsWithUpdatedOrder,
-      );
+      queryClient.setQueryData(queryKey, newStationsWithUpdatedOrder);
 
       return {
-        rollback: () =>
-          queryClient.setQueryData(
-            ["sessions", session_id, "stations"],
-            previousStations,
-          ),
+        rollback: () => queryClient.setQueryData(queryKey, previousStations),
         stationsToUpdate: stationsToUpdate,
       };
     },

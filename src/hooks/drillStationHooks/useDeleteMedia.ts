@@ -1,6 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "Providers/ReactQueryProvider";
 import deleteMedia from "~/services/backend/drills/media/deleteMedia";
+import { queryKeyFactory } from "~/utils/queryFactories";
 import { SignedUrls } from "~/utils/types";
 
 const useDeleteMedia = () => {
@@ -17,39 +18,33 @@ const useDeleteMedia = () => {
     },
 
     onMutate: async ({ name, station_id, session_id }) => {
-      const previousMedia = queryClient.getQueryData([
-        "drillStationMedia",
-        station_id,
-      ]) as SignedUrls[] | undefined;
+      const queryKey = queryKeyFactory.drillMedia({
+        session_id,
+        drill_id: station_id,
+      });
+
+      const previousMedia = queryClient.getQueryData(queryKey) as
+        | SignedUrls[]
+        | undefined;
 
       const newMedia = previousMedia?.filter((media) => media.name !== name);
 
-      queryClient.setQueryData(
-        [session_id, station_id, "drillStationMedia"],
-        newMedia,
-      );
+      queryClient.setQueryData(queryKey, newMedia);
 
       return {
-        rollback: () =>
-          queryClient.setQueryData(
-            [session_id, station_id, "drillStationMedia"],
-            previousMedia,
-          ),
+        rollback: () => queryClient.setQueryData(queryKey, previousMedia),
+        queryKey,
       };
     },
 
-    onSuccess: (_, { name, station_id, session_id }) => {
-      const oldMedia = queryClient.getQueryData([
-        "drillStationMedia",
-        station_id,
-      ]) as SignedUrls[] | undefined;
+    onSuccess: (_, { name }, { queryKey }) => {
+      const oldMedia = queryClient.getQueryData(queryKey) as
+        | SignedUrls[]
+        | undefined;
 
       const updatedMedia = oldMedia?.filter((media) => media.name !== name);
 
-      queryClient.setQueryData(
-        [session_id, station_id, "drillStationMedia"],
-        updatedMedia,
-      );
+      queryClient.setQueryData(queryKey, updatedMedia);
     },
 
     onError: (error, _, context) => {

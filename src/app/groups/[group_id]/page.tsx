@@ -6,21 +6,19 @@ import HelpButton from "~/components/HelpButton";
 import NavBar from "~/components/NavBar";
 import AthleteList from "~/components/groups/AthleteList";
 import CreateNewGroupSessionButton from "~/components/groups/CreateNewGroupSessionButton";
-import CreateNewSessionButton from "~/components/groups/CreateNewGroupSessionButton";
-import GroupList from "~/components/groups/GroupList";
 import GroupSessionsList from "~/components/groups/GroupSessionsList";
 import CreateNewAthleteButton from "~/components/groups/createNewAthleteButton";
 import Spacer from "~/components/utility/Spacer";
 import useCreateAthlete from "~/hooks/athletesHooks/useCreateAthlete";
 import useCreateGroupSession from "~/hooks/groupSessionHooks/useCreateGroupSession";
+import useGetGroupSessions from "~/hooks/groupSessionHooks/useGetGroupSessions";
 import useGetGroupAthletes from "~/hooks/groupsHooks/useGetGroupAthletes";
-import useGetGroupSessions from "~/hooks/groupsHooks/useGetGroupSessions";
 import { useAuth } from "~/hooks/useAuth";
 import client from "~/utils/supabaseClient";
 
 interface Props {
   params: {
-    groupId: string;
+    group_id: string;
   };
 }
 
@@ -29,11 +27,11 @@ const Session = ({ params }: Props) => {
   const router = useRouter();
 
   const { data: athletes, isLoading: areAthletesLoading } = useGetGroupAthletes(
-    Number(params.groupId),
+    params.group_id,
   );
 
   const { data: generalSessions, isLoading: areSessionsLoading } =
-    useGetGroupSessions(Number(params.groupId));
+    useGetGroupSessions({ group_id: params.group_id });
 
   const { mutate: createNewAthlete } = useCreateAthlete();
   const { mutate: createNewGroupSession } = useCreateGroupSession();
@@ -47,7 +45,7 @@ const Session = ({ params }: Props) => {
   const handleCreateNewAthlete = (name: string) => {
     createNewAthlete({
       name,
-      group_id: Number(params.groupId),
+      group_id: params.group_id,
       lastOrder: athletes?.length || 0,
     });
   };
@@ -55,7 +53,7 @@ const Session = ({ params }: Props) => {
   const handleCreateNewGroupSession = (name: string) => {
     createNewGroupSession({
       name,
-      group_id: Number(params.groupId),
+      group_id: params.group_id,
       lastOrder: athletes?.length || 0,
     });
   };

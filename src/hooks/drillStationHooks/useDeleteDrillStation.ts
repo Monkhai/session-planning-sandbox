@@ -4,6 +4,7 @@ import deleteMultipleDrills from "~/services/backend/drills/deleteMultipleDrills
 import DeleteAllDrillMedia from "~/services/backend/drills/media/DeleteAllDrillMedia";
 import decrementStationOrder from "~/services/backend/stations/decrementStationOrder";
 import deleteStation from "~/services/backend/stations/deleteStation";
+import { queryKeyFactory } from "~/utils/queryFactories";
 import { Station } from "~/utils/types";
 
 const useDeleteDrillStation = () => {
@@ -30,12 +31,13 @@ const useDeleteDrillStation = () => {
     },
 
     onMutate: async ({ station_id, session_id }) => {
+      const queryKey = queryKeyFactory.stations({ session_id });
       queryClient.cancelQueries({
-        queryKey: ["sessions", session_id, "stations"],
+        queryKey: queryKey,
       });
 
       const previousStations: Station[] =
-        queryClient.getQueryData(["sessions", session_id, "stations"]) ?? [];
+        queryClient.getQueryData(queryKey) ?? [];
 
       const index = previousStations.findIndex(
         (station) =>
@@ -55,17 +57,10 @@ const useDeleteDrillStation = () => {
         return station;
       });
 
-      queryClient.setQueryData(
-        ["sessions", session_id, "stations"],
-        newStationsWithUpdatedOrder,
-      );
+      queryClient.setQueryData(queryKey, newStationsWithUpdatedOrder);
 
       return {
-        rollback: () =>
-          queryClient.setQueryData(
-            ["sessions", session_id, "stations"],
-            previousStations,
-          ),
+        rollback: () => queryClient.setQueryData(queryKey, previousStations),
         stationsToUpdate: stationsToUpdate,
       };
     },

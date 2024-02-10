@@ -228,3 +228,5 @@ export type GroupType = GroupFromDB & {
   athletes: athleteType[];
   generalSessions: SessionFromDB[];
 };
+
+export type SessionType = "general-sessions" | "athlete-sessions";

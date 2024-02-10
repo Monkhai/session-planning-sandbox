@@ -1,9 +1,7 @@
 import Image from "next/image";
-import { useRef } from "react";
+import React, { useRef } from "react";
 import FormLink from "~/utils/FormLink";
 import * as PrintTip from "../../public/howToPrint.png";
-import Spacer from "./utility/Spacer";
-import React from "react";
 
 interface Props {
   showContact: boolean;

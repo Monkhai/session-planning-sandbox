@@ -15,7 +15,7 @@ interface Props {
 const GroupSessionRow = ({ index, isLast, session }: Props) => {
   const [showSettingsModal, setShowSettingsModal] = React.useState(false);
   const dialogRef = React.useRef<HTMLDialogElement>(null);
-  const { groupId: group_id } = useParams<{ groupId: string }>();
+  const { group_id } = useParams<{ group_id: string }>();
 
   useEffect(() => {
     if (showSettingsModal) {
@@ -46,7 +46,7 @@ const GroupSessionRow = ({ index, isLast, session }: Props) => {
     >
       <Link
         className="flex h-[36px] w-full flex-row items-center justify-between p-2 text-base md:h-[50px] md:p-4 md:text-xl"
-        href={`/groups/${group_id}/sessions/${session.id}`}
+        href={`/groups/${group_id}/group-sessions/${session.id}`}
       >
         <p className={session.name ? "" : "text-gray dark:text-darkTextInput"}>
           {session.name ? session.name : "Nameless Session"}

@@ -1,10 +1,9 @@
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "Providers/ReactQueryProvider";
 import createNewAthlete from "~/services/backend/athletes/createNewAthlete";
-import createNewGroup from "~/services/backend/groups/createNewGroup";
-import createNewSession from "~/services/backend/sessions/createNewSession";
 import getUserId from "~/services/backend/userManagement/getUserId";
-import { AthleteFromDB, GroupFromDB, SessionFromDB } from "~/utils/types";
+import { queryKeyFactory } from "~/utils/queryFactories";
+import { AthleteFromDB } from "~/utils/types";
 
 const useCreateAthlete = () => {
   return useMutation({
@@ -15,22 +14,24 @@ const useCreateAthlete = () => {
     }: {
       name: string;
       lastOrder: number;
-      group_id: number;
+      group_id: string;
     }) => {
-      return await createNewAthlete(group_id, name, lastOrder);
+      return await createNewAthlete(Number(group_id), name, lastOrder);
     },
 
     onMutate: async ({ lastOrder, name, group_id }) => {
+      const queryKey = queryKeyFactory.groupAthletes({ group_id });
+
       const user_id = getUserId();
 
       if (!user_id) {
         throw new Error("User not logged in");
       }
 
-      queryClient.cancelQueries({ queryKey: ["groups", group_id, "athletes"] });
+      queryClient.cancelQueries({ queryKey: queryKey });
 
       const previousAthletes: AthleteFromDB[] =
-        queryClient.getQueryData(["groups", group_id, "athletes"]) ?? [];
+        queryClient.getQueryData(queryKey) ?? [];
 
       const tempId = Math.random() * 1000000;
 
@@ -43,22 +44,20 @@ const useCreateAthlete = () => {
 
       const newAthletes = [...previousAthletes, newAthlete];
 
-      queryClient.setQueryData(["groups", group_id, "athletes"], newAthletes);
+      queryClient.setQueryData(queryKey, newAthletes);
 
       return {
         rollback: () => {
-          queryClient.setQueryData(
-            ["groups", group_id, "athletes"],
-            previousAthletes,
-          );
+          queryClient.setQueryData(queryKey, previousAthletes);
         },
         athleteToReplace: newAthlete,
+        queryKey,
       };
     },
 
-    onSuccess: (data, { group_id }, { athleteToReplace }) => {
+    onSuccess: (data, _, { athleteToReplace, queryKey }) => {
       const previousAthletes: AthleteFromDB[] =
-        queryClient.getQueryData(["groups", group_id, "athletes"]) ?? [];
+        queryClient.getQueryData(queryKey) ?? [];
 
       const newAthletes = previousAthletes.map((athlete) => {
         if (athlete.id === athleteToReplace.id) {
@@ -68,7 +67,7 @@ const useCreateAthlete = () => {
         return athlete;
       });
 
-      queryClient.setQueryData(["groups", group_id, "athletes"], newAthletes);
+      queryClient.setQueryData(queryKey, newAthletes);
     },
 
     onError: (error, _, context) => {

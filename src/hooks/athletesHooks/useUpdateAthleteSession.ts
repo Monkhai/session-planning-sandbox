@@ -1,9 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "Providers/ReactQueryProvider";
 import updateSession from "~/services/backend/sessions/updateSession";
+import { queryKeyFactory } from "~/utils/queryFactories";
 import { SessionFromDB } from "~/utils/types";
 
-const useUpdateSession = () => {
+const useUpdateAthleteSession = () => {
   return useMutation({
     mutationFn: async ({
       session_id,
@@ -11,58 +12,61 @@ const useUpdateSession = () => {
     }: {
       session_id: number;
       name: string;
+      group_id: string;
+      athlete_id: string;
     }) => {
       return await updateSession(session_id, name);
     },
 
-    onMutate: async ({
-      session_id,
-      name,
-    }: {
-      session_id: number;
-      name: string;
-    }) => {
+    onMutate: async ({ session_id, name, group_id, athlete_id }) => {
+      const queryKey = queryKeyFactory.athleteSessions({
+        athlete_id,
+        group_id,
+      });
       const previousSessions: SessionFromDB[] =
-        queryClient.getQueryData(["sessions"]) ?? [];
+        queryClient.getQueryData(queryKey) ?? [];
 
       const updatedSessions = previousSessions.map((session) => {
-        if (session.id === session_id) {
+        if (session.id === Number(session_id)) {
           return { ...session, name };
         }
         return session;
       });
 
-      queryClient.setQueryData(["sessions"], updatedSessions);
+      queryClient.setQueryData(queryKey, updatedSessions);
 
-      return () => queryClient.setQueryData(["sessions"], previousSessions);
+      return {
+        rollback: () => queryClient.setQueryData(queryKey, previousSessions),
+        queryKey,
+      };
     },
 
-    onSuccess: async (data, { session_id }) => {
+    onSuccess: async (data, { session_id }, { queryKey }) => {
       if (!data) {
         throw new Error("No data returned from updateSession");
       }
 
       const previousSessions: SessionFromDB[] =
-        queryClient.getQueryData(["sessions"]) ?? [];
+        queryClient.getQueryData(queryKey) ?? [];
 
       const updatedSessions = previousSessions.map((session) => {
-        if (session.id === session_id) {
+        if (session.id === Number(session_id)) {
           return data;
         }
         return session;
       });
 
-      queryClient.setQueryData(["sessions"], updatedSessions);
+      queryClient.setQueryData(queryKey, updatedSessions);
     },
 
-    onError: (error, _, rollback) => {
+    onError: (error, _, context) => {
       console.error(error);
-      if (rollback) {
-        rollback();
+      if (context) {
+        context.rollback();
       }
       return error;
     },
   });
 };
 
-export default useUpdateSession;
+export default useUpdateAthleteSession;

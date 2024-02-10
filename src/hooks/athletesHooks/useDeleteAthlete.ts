@@ -1,8 +1,8 @@
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "Providers/ReactQueryProvider";
-import { group } from "console";
 import decrementAthleteOrder from "~/services/backend/athletes/decrementAthleteOrder";
 import deleteAthlete from "~/services/backend/athletes/deleteAthlete";
+import { queryKeyFactory } from "~/utils/queryFactories";
 import { AthleteFromDB } from "~/utils/types";
 
 const useDeleteAthlete = () => {
@@ -11,16 +11,17 @@ const useDeleteAthlete = () => {
       athlete_id,
     }: {
       athlete_id: number;
-      group_id: number;
+      group_id: string;
     }) => {
       await deleteAthlete(athlete_id);
     },
 
     onMutate: async ({ athlete_id, group_id }) => {
-      queryClient.cancelQueries({ queryKey: ["groups", group_id, "athletes"] });
+      const queryKey = queryKeyFactory.groupAthletes({ group_id });
+      queryClient.cancelQueries({ queryKey: queryKey });
 
       const previousAthletes: AthleteFromDB[] =
-        queryClient.getQueryData(["groups", group_id, "athletes"]) ?? [];
+        queryClient.getQueryData(queryKey) ?? [];
 
       const index = previousAthletes.findIndex(
         (athlete: AthleteFromDB) => athlete.id === athlete_id,
@@ -39,17 +40,10 @@ const useDeleteAthlete = () => {
         return athlete;
       });
 
-      queryClient.setQueryData(
-        ["groups", group_id, "athletes"],
-        newAthletesWithUpdatedOrder,
-      );
+      queryClient.setQueryData(queryKey, newAthletesWithUpdatedOrder);
 
       return {
-        rollback: () =>
-          queryClient.setQueryData(
-            ["groups", group_id, "athletes"],
-            previousAthletes,
-          ),
+        rollback: () => queryClient.setQueryData(queryKey, previousAthletes),
         athletesToUpdate: athletesToUpdate,
       };
     },

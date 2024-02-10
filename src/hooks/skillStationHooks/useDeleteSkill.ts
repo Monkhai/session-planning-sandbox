@@ -2,6 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "Providers/ReactQueryProvider";
 import decrementSkillOrder from "~/services/backend/skills/decrementSkillOrder";
 import deleteSkill from "~/services/backend/skills/deleteSkill";
+import { queryKeyFactory } from "~/utils/queryFactories";
 import { SkillStationWithSkillsType } from "~/utils/types";
 
 const useDeleteSkill = () => {
@@ -17,12 +18,13 @@ const useDeleteSkill = () => {
     },
 
     onMutate: ({ id, station_id, session_id }) => {
+      const queryKey = queryKeyFactory.stations({ session_id });
       queryClient.cancelQueries({
-        queryKey: ["sessions", session_id, "stations"],
+        queryKey: queryKey,
       });
 
       const previousStations: SkillStationWithSkillsType[] =
-        queryClient.getQueryData(["sessions", session_id, "stations"]) ?? [];
+        queryClient.getQueryData(queryKey) ?? [];
 
       const targetStation = previousStations.find(
         (station) =>
@@ -64,23 +66,16 @@ const useDeleteSkill = () => {
         return station;
       });
 
-      queryClient.setQueryData(
-        ["sessions", session_id, "stations"],
-        newStations,
-      );
+      queryClient.setQueryData(queryKey, newStations);
 
       return {
-        rollback: () =>
-          queryClient.setQueryData(
-            ["sessions", session_id, "stations"],
-            previousStations,
-          ),
+        rollback: () => queryClient.setQueryData(queryKey, previousStations),
         targetSkill: targetSkill,
         skillToUpdate: skillToUpdate,
       };
     },
 
-    onSuccess: async (_, { id, station_id }, { skillToUpdate }) => {
+    onSuccess: async (_, { id }, { skillToUpdate }) => {
       try {
         for (const skill of skillToUpdate) {
           if (skill.id !== id) {

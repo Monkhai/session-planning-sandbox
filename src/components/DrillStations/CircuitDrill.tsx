@@ -14,13 +14,13 @@ interface Props {
 }
 
 export const CircuitDrill = ({ drill }: Props) => {
-  const { id: session_id } = useParams<{ id: string }>();
+  const { session_id } = useParams<{ session_id: string }>();
 
   const { mutate: updateDrill } = useUpdateDrill();
-  const { data: drillMedia, isLoading: isMediaLoading } = useGetDrillMedia(
-    drill.id,
+  const { data: drillMedia, isLoading: isMediaLoading } = useGetDrillMedia({
+    drill_id: drill.id,
     session_id,
-  );
+  });
 
   const { mutate: deleteMedia } = useDeleteMedia();
   const { mutate: uploadMedia } = useUploadMedia();

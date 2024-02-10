@@ -1,32 +1,35 @@
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "Providers/ReactQueryProvider";
-import createNewGroupSession from "~/services/backend/sessions/createNewGroupSession";
+import createNewAthleteSession from "~/services/backend/sessions/createNewAthleteSession";
 import getUserId from "~/services/backend/userManagement/getUserId";
 import { queryKeyFactory } from "~/utils/queryFactories";
 import { AthleteFromDB, SessionFromDB } from "~/utils/types";
 
-const useCreateGroupSession = () => {
+const useCreateAthleteSession = () => {
   return useMutation({
     mutationFn: async ({
       lastOrder,
       name,
-      group_id,
+      athlete_id,
     }: {
       name: string;
       lastOrder: number;
       group_id: string;
+      athlete_id: string;
     }) => {
-      return await createNewGroupSession(name, lastOrder, Number(group_id));
+      return await createNewAthleteSession(name, lastOrder, Number(athlete_id));
     },
 
-    onMutate: async ({ lastOrder, name, group_id }) => {
+    onMutate: async ({ lastOrder, name, group_id, athlete_id }) => {
+      const queryKey = queryKeyFactory.athleteSessions({
+        group_id,
+        athlete_id,
+      });
       const user_id = getUserId();
 
       if (!user_id) {
         throw new Error("User not logged in");
       }
-
-      const queryKey = queryKeyFactory.groupSessions({ group_id });
 
       queryClient.cancelQueries({
         queryKey: queryKey,
@@ -57,7 +60,7 @@ const useCreateGroupSession = () => {
       };
     },
 
-    onSuccess: (data, _, { sessionToReplace, queryKey }) => {
+    onSuccess: (data, __, { sessionToReplace, queryKey }) => {
       const previousSessions: AthleteFromDB[] =
         queryClient.getQueryData(queryKey) ?? [];
 
@@ -82,4 +85,4 @@ const useCreateGroupSession = () => {
   });
 };
 
-export default useCreateGroupSession;
+export default useCreateAthleteSession;

@@ -1,8 +1,8 @@
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "Providers/ReactQueryProvider";
 import updateGroup from "~/services/backend/groups/updateGroup";
-import updateSession from "~/services/backend/sessions/updateSession";
-import { GroupFromDB, SessionFromDB } from "~/utils/types";
+import { queryKeyFactory } from "~/utils/queryFactories";
+import { GroupFromDB } from "~/utils/types";
 
 const useUpdateGroup = () => {
   return useMutation({
@@ -17,8 +17,9 @@ const useUpdateGroup = () => {
     },
 
     onMutate: async ({ group_id, name }) => {
+      const queryKey = queryKeyFactory.groups();
       const previousGroups: GroupFromDB[] =
-        queryClient.getQueryData(["groups"]) ?? [];
+        queryClient.getQueryData(queryKey) ?? [];
 
       const updatedGroups = previousGroups.map((group) => {
         if (group.id === group_id) {
@@ -27,18 +28,21 @@ const useUpdateGroup = () => {
         return group;
       });
 
-      queryClient.setQueryData(["groups"], updatedGroups);
+      queryClient.setQueryData(queryKey, updatedGroups);
 
-      return () => queryClient.setQueryData(["groups"], previousGroups);
+      return {
+        rollback: () => queryClient.setQueryData(queryKey, previousGroups),
+        queryKey,
+      };
     },
 
-    onSuccess: async (data, { group_id }) => {
+    onSuccess: async (data, { group_id }, { queryKey }) => {
       if (!data) {
         throw new Error("No data returned from updateSession");
       }
 
       const previousGroups: GroupFromDB[] =
-        queryClient.getQueryData(["groups"]) ?? [];
+        queryClient.getQueryData(queryKey) ?? [];
 
       const updatedGroups = previousGroups.map((group) => {
         if (group.id === group_id) {
@@ -47,13 +51,13 @@ const useUpdateGroup = () => {
         return group;
       });
 
-      queryClient.setQueryData(["groups"], updatedGroups);
+      queryClient.setQueryData(queryKey, updatedGroups);
     },
 
-    onError: (error, _, rollback) => {
+    onError: (error, _, context) => {
       console.error(error);
-      if (rollback) {
-        rollback();
+      if (context) {
+        context.rollback();
       }
       return error;
     },

@@ -2,6 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "Providers/ReactQueryProvider";
 import decrementGroupOrder from "~/services/backend/groups/decrementGroupOrder";
 import deleteGroup from "~/services/backend/groups/deleteGroup";
+import { queryKeyFactory } from "~/utils/queryFactories";
 import { GroupFromDB } from "~/utils/types";
 
 const useDeleteGroup = () => {
@@ -11,10 +12,11 @@ const useDeleteGroup = () => {
     },
 
     onMutate: async (group_id: number) => {
-      queryClient.cancelQueries({ queryKey: ["groups"] });
+      const queryKey = queryKeyFactory.groups();
+      queryClient.cancelQueries({ queryKey: queryKey });
 
       const previousGroups: GroupFromDB[] =
-        queryClient.getQueryData(["groups"]) ?? [];
+        queryClient.getQueryData(queryKey) ?? [];
 
       const index = previousGroups.findIndex(
         (group: GroupFromDB) => group.id === group_id,
@@ -33,10 +35,10 @@ const useDeleteGroup = () => {
         return group;
       });
 
-      queryClient.setQueryData(["groups"], newGroupsWithUpdatedOrder);
+      queryClient.setQueryData(queryKey, newGroupsWithUpdatedOrder);
 
       return {
-        rollback: () => queryClient.setQueryData(["groups"], previousGroups),
+        rollback: () => queryClient.setQueryData(queryKey, previousGroups),
         groupsToUpdate,
       };
     },

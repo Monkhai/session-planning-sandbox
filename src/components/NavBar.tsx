@@ -4,7 +4,10 @@ import Spacer from "./utility/Spacer";
 import { usePathname, useRouter } from "next/navigation";
 import { IoChevronBack } from "react-icons/io5";
 
-const NavBar = () => {
+interface Props {
+  title?: string;
+}
+const NavBar = ({ title = "Gymnastics Session Planner" }: Props) => {
   const router = useRouter();
   const handleBack = () => router.back();
 
@@ -24,7 +27,7 @@ const NavBar = () => {
         </button>
       ) : null}
       <Link className="flex-[ 2 ] flex justify-center" href="/home">
-        <h1 className="p-5 text-white">Session Planning Sandbox</h1>
+        <h1 className="p-5 text-white">{title}</h1>
       </Link>
 
       {!isHome ? <Spacer /> : null}

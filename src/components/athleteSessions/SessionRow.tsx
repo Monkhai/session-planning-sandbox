@@ -1,22 +1,25 @@
 import Link from "next/link";
 import React, { useEffect } from "react";
-import { IoChevronForward } from "react-icons/io5";
+import { IoChevronForward, IoCloseCircle } from "react-icons/io5";
 import { PiDotsThreeCircleFill } from "react-icons/pi";
-import { AthleteFromDB } from "~/utils/types";
-import AthleteRowSettings from "./AthleteRowSettings";
-import { group } from "console";
+import Spacer from "../utility/Spacer";
+import SessionRowSettings from "./SessionRowSettings";
 import { useParams } from "next/navigation";
 
 interface Props {
-  athlete: AthleteFromDB;
+  session: any;
   index: number;
   isLast: boolean;
 }
 
-const AthleteRow = ({ index, isLast, athlete }: Props) => {
+const SessionRow = ({ index, isLast, session }: Props) => {
   const [showSettingsModal, setShowSettingsModal] = React.useState(false);
   const dialogRef = React.useRef<HTMLDialogElement>(null);
-  const { group_id } = useParams<{ group_id: string }>();
+  const { group_id, athlete_id } = useParams<{
+    group_id: string;
+    athlete_id: string;
+  }>();
+
   useEffect(() => {
     if (showSettingsModal) {
       dialogRef.current?.showModal();
@@ -42,27 +45,27 @@ const AthleteRow = ({ index, isLast, athlete }: Props) => {
           ? "relative  flex h-[36px] w-full flex-row items-center border-b-[1px] border-b-seperator bg-white print:h-[35px] print:border-none print:p-2 print:py-0 md:h-[50px]  dark:bg-darkSecondaryBackground"
           : "relative  flex h-[36px] w-full flex-row items-center  bg-white   print:h-[35px] print:p-2 print:py-0 md:h-[50px] dark:bg-darkSecondaryBackground"
       }
-      key={athlete.id}
+      key={session.id}
     >
       <Link
         className="flex h-[36px] w-full flex-row items-center justify-between p-2 text-base md:h-[50px] md:p-4 md:text-xl"
-        href={`/groups/${group_id}/athletes/${athlete.id}`}
+        href={`/groups/${group_id}/athletes/${athlete_id}/athlete-sessions/${session.id}`}
       >
-        <p className={athlete.name ? "" : "text-gray dark:text-darkTextInput"}>
-          {athlete.name ? athlete.name : "Nameless Session"}
+        <p className={session.name ? "" : "text-gray dark:text-darkTextInput"}>
+          {session.name ? session.name : "Nameless Session"}
         </p>
         <IoChevronForward className="h-3 w-3 md:h-5 md:w-5" color={"gray"} />
       </Link>
 
       <button
         onClick={toggleModal}
-        className="absolute -left-10 flex items-center justify-end transition-all duration-150 ease-in-out active:scale-95 md:-right-10 md:left-auto md:text-xl"
+        className="absolute -left-10 flex justify-end text-base transition-all duration-150 ease-in-out active:scale-95 md:text-xl"
       >
         <PiDotsThreeCircleFill size={28} color={"gray"} />
       </button>
 
-      <AthleteRowSettings
-        athlete={athlete}
+      <SessionRowSettings
+        session={session}
         showSettingsModal={showSettingsModal}
         setShowSettingsModal={setShowSettingsModal}
       />
@@ -70,4 +73,4 @@ const AthleteRow = ({ index, isLast, athlete }: Props) => {
   );
 };
 
-export default AthleteRow;
+export default SessionRow;

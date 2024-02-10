@@ -16,7 +16,10 @@ const MediaHandler = ({ editMedia, mediaUrls, onDeleteMedia }: Props) => {
       {mediaUrls.map((media: SignedUrls, index) => {
         if (media.type == "loader") {
           return (
-            <div className="flex h-32 w-60 items-center justify-center">
+            <div
+              key={media.name}
+              className="flex h-32 w-60 items-center justify-center"
+            >
               <Loader size="small" key={media.name + " " + index} />
             </div>
           );

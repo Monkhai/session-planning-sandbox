@@ -1,29 +1,26 @@
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "Providers/ReactQueryProvider";
-import { FaChessKing } from "react-icons/fa6";
 import createSkill from "~/services/backend/skills/createSkill";
 import getUserId from "~/services/backend/userManagement/getUserId";
-import client from "~/utils/supabaseClient";
-import {
-  CreateSkillArgs,
-  SkillStationType,
-  SkillStationWithSkillsType,
-  SkillType,
-  Station,
-} from "~/utils/types";
+import { queryKeyFactory } from "~/utils/queryFactories";
+import { SkillStationWithSkillsType, SkillType, Station } from "~/utils/types";
+
+type Args = {
+  station_id: number;
+  lastOrder: number;
+  session_id: string;
+};
+
 const useCreateSkill = () => {
   return useMutation({
-    mutationFn: async ({
-      station_id,
-      lastOrder,
-      session_id,
-    }: CreateSkillArgs) => {
+    mutationFn: async ({ station_id, lastOrder }: Args) => {
       return await createSkill(station_id, lastOrder);
     },
 
-    onMutate: async ({ station_id, session_id }) => {
+    onMutate: async ({ station_id, lastOrder, session_id }) => {
+      const queryKey = queryKeyFactory.stations({ session_id });
       await queryClient.cancelQueries({
-        queryKey: ["sessions", session_id, "stations"],
+        queryKey: queryKey,
       });
       const user_id = getUserId();
       if (!user_id) {
@@ -32,7 +29,7 @@ const useCreateSkill = () => {
       }
 
       const previousStations: Station[] =
-        queryClient.getQueryData(["sessions", session_id, "stations"]) ?? [];
+        queryClient.getQueryData(queryKey) ?? [];
 
       const parentStation = previousStations.find(
         (station) => station.id === station_id,
@@ -42,7 +39,6 @@ const useCreateSkill = () => {
       }
 
       const tempId = Math.floor(Math.random() * 1000000000);
-      const tempOrder = Math.floor(Math.random() * 1000000000);
 
       const newSkill = {
         id: tempId,
@@ -51,7 +47,7 @@ const useCreateSkill = () => {
         station_id,
         name: "",
         repetitions: 0,
-        order: tempOrder,
+        order: lastOrder + 1,
         user_id,
         show_reps: true,
       } as SkillType;
@@ -76,28 +72,22 @@ const useCreateSkill = () => {
         return station;
       });
 
-      queryClient.setQueryData(
-        ["sessions", session_id, "stations"],
-        newStations,
-      );
+      queryClient.setQueryData(queryKey, newStations);
 
       return {
-        rollback: () =>
-          queryClient.setQueryData(
-            ["sessions", session_id, "stations"],
-            previousStations,
-          ),
+        rollback: () => queryClient.setQueryData(queryKey, previousStations),
         newSkill,
+        queryKey,
       };
     },
 
-    onSuccess: (data, { session_id }, { newSkill }) => {
+    onSuccess: (data, _, { newSkill, queryKey }) => {
       if (!data) {
         return;
       }
 
       const previousStations: SkillStationWithSkillsType[] =
-        queryClient.getQueryData(["sessions", session_id, "stations"]) ?? [];
+        queryClient.getQueryData(queryKey) ?? [];
 
       const parentStation = previousStations.find(
         (station) => station.id === data.station_id,
@@ -124,10 +114,7 @@ const useCreateSkill = () => {
         return station;
       });
 
-      queryClient.setQueryData(
-        ["sessions", session_id, "stations"],
-        newStations,
-      );
+      queryClient.setQueryData(queryKey, newStations);
     },
 
     onError: (error, _, context) => {

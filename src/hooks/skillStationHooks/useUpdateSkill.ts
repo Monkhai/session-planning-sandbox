@@ -1,11 +1,8 @@
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "Providers/ReactQueryProvider";
 import updateSkill from "~/services/backend/skills/updateSkill";
-import {
-  SkillStationType,
-  SkillStationWithSkillsType,
-  updateSkillArgs,
-} from "~/utils/types";
+import { queryKeyFactory } from "~/utils/queryFactories";
+import { SkillStationWithSkillsType, updateSkillArgs } from "~/utils/types";
 
 const useUpdateSkill = () => {
   return useMutation({
@@ -28,12 +25,13 @@ const useUpdateSkill = () => {
       show_reps,
       session_id,
     }: updateSkillArgs) => {
+      const queryKey = queryKeyFactory.stations({ session_id });
       queryClient.cancelQueries({
-        queryKey: ["sessions", session_id, "stations"],
+        queryKey: queryKey,
       });
 
       const previousStations: SkillStationWithSkillsType[] =
-        queryClient.getQueryData(["sessions", session_id, "stations"]) ?? [];
+        queryClient.getQueryData(queryKey) ?? [];
 
       const targetStation = previousStations.find(
         (station) =>
@@ -74,16 +72,10 @@ const useUpdateSkill = () => {
         return station;
       });
 
-      queryClient.setQueryData(
-        ["sessions", session_id, "stations"],
-        newStations,
-      );
+      queryClient.setQueryData(queryKey, newStations);
 
       return () => {
-        queryClient.setQueryData(
-          ["sessions", session_id, "stations"],
-          previousStations,
-        );
+        queryClient.setQueryData(queryKey, previousStations);
       };
     },
 

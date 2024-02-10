@@ -1,4 +1,11 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import useDeleteDrillStation from "~/hooks/drillStationHooks/useDeleteDrillStation";
 import useUpdateDrillStation from "~/hooks/drillStationHooks/useUpdateDrillStation";
 import { convertDurationToString } from "~/services/DurationFunctions";
@@ -9,6 +16,7 @@ import CircuitStationHeader from "./CircuitStationHeader";
 import { CircuitDrill } from "./CircuitDrill";
 import useCreateDrill from "~/hooks/drillStationHooks/useCreateDrill";
 import { useParams } from "next/navigation";
+import { SessionContext } from "~/context/SessionIdContext";
 
 interface Props {
   station: DrillStationWithDrillsType;
@@ -25,6 +33,8 @@ const CircuitStation = ({ station, isLast }: Props) => {
 
   const [duration, setDuration] = useState<string>(station.duration);
   const [stationName, setStationName] = useState<string>(station.name);
+
+  const { session_id } = useContext(SessionContext);
 
   const durationString = useMemo(() => {
     const newDurationString = convertDurationToString(duration);
@@ -45,8 +55,6 @@ const CircuitStation = ({ station, isLast }: Props) => {
   const { mutate: deleteDrillStation } = useDeleteDrillStation();
   const { mutate: updateDrillStation } = useUpdateDrillStation();
   const { mutate: addlDrillToCircuit } = useCreateDrill();
-
-  const { id: session_id } = useParams<{ id: string }>();
 
   const handleToggleDuration = useCallback(
     (show: boolean) => {

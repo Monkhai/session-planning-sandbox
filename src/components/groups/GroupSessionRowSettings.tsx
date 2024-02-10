@@ -16,7 +16,7 @@ const GroupSessionRowSettings = ({
   setShowSettingsModal,
   session,
 }: Props) => {
-  const params = useParams<{ id: string }>();
+  const params = useParams<{ group_id: string }>();
   const [sessionName, setSessionName] = React.useState(session.name || "");
 
   const { mutate: updateSession } = useUpdateGroupSession();
@@ -31,13 +31,13 @@ const GroupSessionRowSettings = ({
     updateSession({
       session_id: session.id,
       name: sessionName,
-      group_id: Number(params.id),
+      group_id: params.group_id,
     });
   };
 
   const handleDeleteGroupSession = () => {
     setShowSettingsModal(false);
-    deleteSession({ session_id: session.id, group_id: Number(params.id) });
+    deleteSession({ session_id: session.id, group_id: params.group_id });
   };
 
   return (

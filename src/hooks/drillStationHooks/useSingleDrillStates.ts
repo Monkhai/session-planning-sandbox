@@ -9,6 +9,7 @@ type useDrillStationStatesArgs = {
   stationNameRef: React.RefObject<HTMLTextAreaElement>;
   descriptionRef: React.RefObject<HTMLTextAreaElement>;
   commentsRef: React.RefObject<HTMLTextAreaElement>;
+  session_id: string;
 };
 
 const useSingleDrillState = ({
@@ -16,6 +17,7 @@ const useSingleDrillState = ({
   commentsRef,
   descriptionRef,
   stationNameRef,
+  session_id,
 }: useDrillStationStatesArgs) => {
   const [drillName, setDrillName] = useState(drill.name);
   const [duration, setDuration] = useState(drill.duration);
@@ -28,8 +30,6 @@ const useSingleDrillState = ({
   const [durationString, setDurationString] = useState<string | undefined>();
 
   const { mutate: updateDrillStation } = useUpdateDrill();
-
-  const params = useParams<{ id: string }>();
 
   useEffect(() => {
     setDuration(drill.duration);
@@ -85,7 +85,7 @@ const useSingleDrillState = ({
           show_edit_media: editMedia,
           show_media: showMedia,
           station_id: drill.station_id,
-          session_id: params.id,
+          session_id,
         });
       }
     };

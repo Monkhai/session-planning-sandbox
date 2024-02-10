@@ -1,12 +1,15 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useCallback, useState } from "react";
+import test from "node:test";
+import { createContext, useCallback, useContext, useState } from "react";
+import { string } from "zod";
 import CreateNewStationButton from "~/components/CreateNewStationButton";
 import HelpButton from "~/components/HelpButton";
 import NavBar from "~/components/NavBar";
 import StationResponseHandler from "~/components/StationResponseHandler";
 import Spacer from "~/components/utility/Spacer";
+import { SessionContext } from "~/context/SessionIdContext";
 import useCreateDrillStation from "~/hooks/drillStationHooks/useCreateDrillStation";
 import useStationsForSession from "~/hooks/sessionsHooks/useStationsForSession";
 import useCreateSkillStation from "~/hooks/skillStationHooks/useCreateSkillStation";
@@ -15,7 +18,8 @@ import client from "~/utils/supabaseClient";
 
 interface Props {
   params: {
-    sessionId: string;
+    group_id: string;
+    group_session_id: string;
   };
 }
 
@@ -29,7 +33,7 @@ const Session = ({ params }: Props) => {
     data: allStations,
     error,
     isLoading,
-  } = useStationsForSession(params.sessionId);
+  } = useStationsForSession({ session_id: params.group_session_id });
 
   const { mutate: createNewSkillStation } = useCreateSkillStation();
   const { mutate: createNewDrillStation } = useCreateDrillStation();
@@ -37,14 +41,14 @@ const Session = ({ params }: Props) => {
   const handleCreateSkillStation = useCallback(() => {
     createNewSkillStation({
       lastOrder: allStations?.length ?? 0,
-      session_id: params.sessionId,
+      session_id: params.group_session_id,
     });
   }, [allStations, params]);
 
   const handleCreateDrillStation = useCallback(() => {
     createNewDrillStation({
       lastOrder: allStations?.length ?? 0,
-      session_id: params.sessionId,
+      session_id: params.group_session_id,
     });
   }, [allStations, params]);
 
@@ -56,12 +60,13 @@ const Session = ({ params }: Props) => {
   return (
     <main className="flex min-h-[100dvh] flex-col items-center justify-start bg-background dark:bg-darkBackground">
       <NavBar />
-
-      <StationResponseHandler
-        error={error}
-        stations={allStations}
-        isLoading={isLoading}
-      />
+      <SessionContext.Provider value={{ session_id: params.group_session_id }}>
+        <StationResponseHandler
+          error={error}
+          stations={allStations}
+          isLoading={isLoading}
+        />
+      </SessionContext.Provider>
 
       <Spacer />
 

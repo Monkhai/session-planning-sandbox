@@ -2,7 +2,6 @@
 import { useRouter } from "next/navigation";
 import React from "react";
 import HelpButton from "~/components/HelpButton";
-import Loader from "~/components/Loader";
 import NavBar from "~/components/NavBar";
 import CreateNewGroupButton from "~/components/groups/CreateNewGroupButton";
 import GroupList from "~/components/groups/GroupList";

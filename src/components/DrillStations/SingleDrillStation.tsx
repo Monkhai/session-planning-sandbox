@@ -1,18 +1,20 @@
-import React, { useCallback } from "react";
-import { DrillStationType, DrillType, SignedUrls } from "~/utils/types";
+import { useParams } from "next/navigation";
+import React, { useCallback, useContext } from "react";
+import useCreateDrill from "~/hooks/drillStationHooks/useCreateDrill";
+import useDeleteDrillStation from "~/hooks/drillStationHooks/useDeleteDrillStation";
+import useDeleteMedia from "~/hooks/drillStationHooks/useDeleteMedia";
+import useGetDrillStationMedia from "~/hooks/drillStationHooks/useGetDrillStationMedia";
+import useSingleDrillState from "~/hooks/drillStationHooks/useSingleDrillStates";
+import useUpdateDrill from "~/hooks/drillStationHooks/useUpdateDrill";
+import useUploadMedia from "~/hooks/drillStationHooks/useUploadMedia";
+import { DrillType } from "~/utils/types";
 import StationBottomBorder from "../SkillStation/StationBottomBorder";
 import Spacer from "../utility/Spacer";
 import DrillStationHeader from "./DrillStationHeader";
 import DrillStationMedia from "./DrillStationMedia";
 import DrillStationTextArea from "./DrillStationTextArea";
-import useDeleteDrillStation from "~/hooks/drillStationHooks/useDeleteDrillStation";
-import useSingleDrillState from "~/hooks/drillStationHooks/useSingleDrillStates";
-import useUpdateDrill from "~/hooks/drillStationHooks/useUpdateDrill";
-import useUploadMedia from "~/hooks/drillStationHooks/useUploadMedia";
-import useDeleteMedia from "~/hooks/drillStationHooks/useDeleteMedia";
-import useGetDrillStationMedia from "~/hooks/drillStationHooks/useGetDrillStationMedia";
-import useCreateDrill from "~/hooks/drillStationHooks/useCreateDrill";
-import { useParams } from "next/navigation";
+import { SessionContext } from "~/context/SessionIdContext";
+import { FaChessKing } from "react-icons/fa6";
 
 interface Props {
   drill: DrillType;
@@ -20,7 +22,7 @@ interface Props {
 }
 
 const SingleDrillStation = ({ drill, isLast }: Props) => {
-  const { id: session_id } = useParams<{ id: string }>();
+  const { session_id } = useContext(SessionContext);
 
   const [hideDurationPicker, setHideDurationPicker] = React.useState(true);
   const [showSettingsModal, setShowSettingsModal] =
@@ -54,6 +56,7 @@ const SingleDrillStation = ({ drill, isLast }: Props) => {
     stationNameRef,
     descriptionRef,
     commentsRef,
+    session_id,
   });
 
   const { mutate: updateDrill } = useUpdateDrill();
@@ -63,7 +66,10 @@ const SingleDrillStation = ({ drill, isLast }: Props) => {
   const { mutate: addlDrillToCircuit } = useCreateDrill();
 
   const { data: drillMedia, isLoading: isMediaLoading } =
-    useGetDrillStationMedia(drill.id, session_id);
+    useGetDrillStationMedia({
+      drill_id: drill.id,
+      session_id,
+    });
 
   const handleToggleDuration = useCallback(
     (show: boolean) => {
@@ -108,7 +114,11 @@ const SingleDrillStation = ({ drill, isLast }: Props) => {
 
   const handleDeleteMedia = useCallback(
     (name: string) => {
-      deleteMedia({ name, station_id: drill.id, session_id });
+      deleteMedia({
+        name,
+        station_id: drill.id,
+        session_id,
+      });
     },
     [deleteMedia, drill.id],
   );
@@ -148,14 +158,18 @@ const SingleDrillStation = ({ drill, isLast }: Props) => {
       if (e.target.files) {
         const file = e.target.files[0];
         if (file) {
-          uploadMedia({ station_id: drill.id, file: file, session_id });
+          uploadMedia({
+            station_id: drill.id,
+            file: file,
+            session_id,
+          });
         } else {
           alert("no file found");
         }
       }
       e.target.value = "";
     },
-    [uploadMedia, drill.id],
+    [uploadMedia, drill.id, session_id],
   );
 
   const handleToggleComments = useCallback(

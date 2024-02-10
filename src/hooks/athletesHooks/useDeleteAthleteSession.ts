@@ -2,19 +2,32 @@ import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "Providers/ReactQueryProvider";
 import decrementSessionOrder from "~/services/backend/sessions/decrementSessionOrder";
 import deleteSession from "~/services/backend/sessions/deleteSession";
+import { queryKeyFactory } from "~/utils/queryFactories";
 import { SessionFromDB } from "~/utils/types";
 
-const useDeleteSession = () => {
+const useDeleteAthleteSession = () => {
   return useMutation({
-    mutationFn: async (session_id: number) => {
+    mutationFn: async ({
+      session_id,
+    }: {
+      session_id: number;
+      group_id: string;
+      athlete_id: string;
+    }) => {
       await deleteSession(session_id);
     },
 
-    onMutate: async (session_id: number) => {
-      queryClient.cancelQueries({ queryKey: ["sessions"] });
+    onMutate: async ({ group_id, session_id, athlete_id }) => {
+      const queryKey = queryKeyFactory.athleteSessions({
+        athlete_id,
+        group_id,
+      });
+      queryClient.cancelQueries({
+        queryKey: queryKey,
+      });
 
       const previousSessions: SessionFromDB[] =
-        queryClient.getQueryData(["sessions"]) ?? [];
+        queryClient.getQueryData(queryKey) ?? [];
 
       const index = previousSessions.findIndex(
         (session: SessionFromDB) => session.id === session_id,
@@ -33,11 +46,10 @@ const useDeleteSession = () => {
         return session;
       });
 
-      queryClient.setQueryData(["sessions"], newSessionsWithUpdatedOrder);
+      queryClient.setQueryData(queryKey, newSessionsWithUpdatedOrder);
 
       return {
-        rollback: () =>
-          queryClient.setQueryData(["sessions"], previousSessions),
+        rollback: () => queryClient.setQueryData(queryKey, previousSessions),
         sessionsToUpdate,
       };
     },
@@ -62,4 +74,4 @@ const useDeleteSession = () => {
   });
 };
 
-export default useDeleteSession;
+export default useDeleteAthleteSession;

@@ -3,6 +3,7 @@ import { queryClient } from "Providers/ReactQueryProvider";
 import decrementDrillOrder from "~/services/backend/drills/decrementDrillOrder";
 import deleteDrill from "~/services/backend/drills/deleteDrill";
 import DeleteAllDrillMedia from "~/services/backend/drills/media/DeleteAllDrillMedia";
+import { queryKeyFactory } from "~/utils/queryFactories";
 import { DrillStationWithDrillsType, Station } from "~/utils/types";
 
 const useDeleteDrill = () => {
@@ -24,11 +25,12 @@ const useDeleteDrill = () => {
     },
 
     onMutate: ({ drillId, stationId, session_id }) => {
+      const queryKey = queryKeyFactory.stations({ session_id });
       queryClient.cancelQueries({
-        queryKey: ["sessions", session_id, "stations"],
+        queryKey: queryKey,
       });
       const previousStations: Station[] =
-        queryClient.getQueryData(["sessions", session_id, "stations"]) ?? [];
+        queryClient.getQueryData(queryKey) ?? [];
 
       const targetStation = previousStations.find(
         (station: Station) =>
@@ -64,17 +66,10 @@ const useDeleteDrill = () => {
         return station;
       });
 
-      queryClient.setQueryData(
-        ["sessions", session_id, "stations"],
-        newStations,
-      );
+      queryClient.setQueryData(queryKey, newStations);
 
       return {
-        rollback: () =>
-          queryClient.setQueryData(
-            ["sessions", session_id, "stations"],
-            previousStations,
-          ),
+        rollback: () => queryClient.setQueryData(queryKey, previousStations),
         drillsToUpdate: drillsToUpdate,
       };
     },

@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { convertDurationToString } from "~/services/DurationFunctions";
 import { SkillStationType } from "~/utils/types";
 import useUpdateSkillStation from "./useUpdateSkillStation";
-import { useParams } from "next/navigation";
 
 type useSkillStationStatesArgs = {
   station: SkillStationType;
@@ -62,7 +61,7 @@ const useSkillStationStates = ({
           duration: duration,
           name: stationName,
           show_duration: showDuration,
-          session_id: session_id,
+          session_id,
         });
       }
     };

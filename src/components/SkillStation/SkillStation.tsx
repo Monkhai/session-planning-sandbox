@@ -1,5 +1,6 @@
 "use client";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useContext, useState } from "react";
+import { SessionContext } from "~/context/SessionIdContext";
 import useCreateSkill from "~/hooks/skillStationHooks/useCreateSkill";
 import useDeleteSkillStation from "~/hooks/skillStationHooks/useDeleteSkillStation";
 import useSkillStationStates from "~/hooks/skillStationHooks/useSkillStationStates";
@@ -8,8 +9,6 @@ import StationHeader from "../StationHeader";
 import Spacer from "../utility/Spacer";
 import StationBottomBorder from "./StationBottomBorder";
 import StationSkills from "./StationSkills";
-import useAutoResizeTextarea from "~/hooks/useAutoResizeTextArea";
-import { useParams } from "next/navigation";
 
 interface Props {
   station: SkillStationWithSkillsType;
@@ -20,7 +19,8 @@ const SkillStation = ({ station, isLast }: Props) => {
   const [hideDurationPicker, setHideDurationPicker] = useState(true);
 
   const stationNameRef = React.useRef<HTMLTextAreaElement>(null);
-  const params = useParams<{ id: string }>();
+
+  const { session_id } = useContext(SessionContext);
 
   const {
     updateStation,
@@ -35,7 +35,11 @@ const SkillStation = ({ station, isLast }: Props) => {
     showEditModal,
     editSkills,
     setEditSkills,
-  } = useSkillStationStates({ station, stationNameRef, session_id: params.id });
+  } = useSkillStationStates({
+    station,
+    stationNameRef,
+    session_id,
+  });
 
   const { mutate: createSkill } = useCreateSkill();
   const { mutate: deleteStation } = useDeleteSkillStation();
@@ -49,7 +53,7 @@ const SkillStation = ({ station, isLast }: Props) => {
           duration: duration,
           name: stationName,
           show_duration: showDuration,
-          session_id: params.id,
+          session_id,
         });
       } else {
         updateStation({
@@ -57,28 +61,28 @@ const SkillStation = ({ station, isLast }: Props) => {
           duration: null,
           name: stationName,
           show_duration: showDuration,
-          session_id: params.id,
+          session_id,
         });
       }
     },
-    [stationName, showDuration, station, params.id],
+    [stationName, showDuration, station],
   );
 
   const handleCreateSkill = useCallback(async () => {
     createSkill({
       station_id: station.id,
       lastOrder: station.skills ? station.skills.length : 0,
-      session_id: params.id,
+      session_id,
     });
-  }, [station, createSkill, params.id]);
+  }, [station, createSkill]);
 
   const handleDeleteStation = useCallback(() => {
     deleteStation({
       station_id: station.id,
       skills: station.skills,
-      session_id: params.id,
+      session_id,
     });
-  }, [station.id, deleteStation, station.skills, params.id]);
+  }, [station.id, deleteStation, station.skills]);
 
   const handleToggleDuration = useCallback(
     (show: boolean) => {
@@ -88,10 +92,10 @@ const SkillStation = ({ station, isLast }: Props) => {
         duration: duration,
         name: stationName,
         show_duration: show,
-        session_id: params.id,
+        session_id,
       });
     },
-    [station.id, duration, stationName, params.id],
+    [station.id, duration, stationName],
   );
 
   return (

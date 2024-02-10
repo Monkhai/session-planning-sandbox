@@ -1,33 +1,32 @@
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "Providers/ReactQueryProvider";
 import updateStation from "~/services/backend/stations/updateStation";
+import { queryKeyFactory } from "~/utils/queryFactories";
 
-import { SkillStationType, updateStationArgs } from "~/utils/types";
+import { SkillStationType } from "~/utils/types";
+
+type Args = {
+  station_id: number;
+  name: string;
+  duration: string | null;
+  show_duration: boolean;
+  session_id: string;
+};
 
 const useUpdateSkillStation = () => {
   return useMutation({
-    mutationFn: async ({
-      duration,
-      name,
-      show_duration,
-      station_id,
-    }: updateStationArgs) => {
+    mutationFn: async ({ duration, name, show_duration, station_id }: Args) => {
       await updateStation(station_id, duration, name, show_duration);
     },
 
-    onMutate: ({
-      duration,
-      name,
-      show_duration,
-      station_id,
-      session_id,
-    }: updateStationArgs) => {
+    onMutate: ({ duration, name, show_duration, station_id, session_id }) => {
+      const queryKey = queryKeyFactory.stations({ session_id });
       queryClient.cancelQueries({
-        queryKey: ["sessions", session_id, "stations"],
+        queryKey: queryKey,
       });
 
       const previousStations: SkillStationType[] =
-        queryClient.getQueryData(["sessions", session_id, "stations"]) ?? [];
+        queryClient.getQueryData(queryKey) ?? [];
 
       const newStations = previousStations.map((station) => {
         if (station.id === station_id && station.type === "skillStation") {
@@ -41,16 +40,10 @@ const useUpdateSkillStation = () => {
         return station;
       });
 
-      queryClient.setQueryData(
-        ["sessions", session_id, "stations"],
-        newStations,
-      );
+      queryClient.setQueryData(queryKey, newStations);
 
       return () => {
-        queryClient.setQueryData(
-          ["sessions", session_id, "stations"],
-          previousStations,
-        );
+        queryClient.setQueryData(queryKey, previousStations);
       };
     },
 

@@ -1,14 +1,14 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { PiDotsThreeCircleFill } from "react-icons/pi";
 import useDeleteDrill from "~/hooks/drillStationHooks/useDeleteDrill";
 import useGetDrillMedia from "~/hooks/drillStationHooks/useGetDrillStationMedia";
 import useUpdateDrill from "~/hooks/drillStationHooks/useUpdateDrill";
+import useAutoResizeTextarea from "~/hooks/useAutoResizeTextArea";
 import { convertDurationToString } from "~/services/DurationFunctions";
 import { DrillType } from "~/utils/types";
 import DrillStationSettings from "./DrillStationSettings";
 import CircuitDrillDuration from "./circuitDrillDuration";
-import useAutoResizeTextarea from "~/hooks/useAutoResizeTextArea";
-import { useParams } from "next/navigation";
+import { SessionContext } from "~/context/SessionIdContext";
 
 interface Props {
   drill: DrillType;
@@ -45,10 +45,13 @@ const CircuitDrillHeader = ({
   showComments,
   setShowComments,
 }: Props) => {
-  const { id: session_id } = useParams<{ id: string }>();
+  const { session_id } = useContext(SessionContext);
 
   const { mutate: updateDrill } = useUpdateDrill();
-  const { data: drillMedia } = useGetDrillMedia(drill.id, session_id);
+  const { data: drillMedia } = useGetDrillMedia({
+    drill_id: drill.id,
+    session_id,
+  });
   const { mutate: deleteDrillStation } = useDeleteDrill();
 
   const [hideDurationPicker, setHideDurationPicker] = useState(true);
@@ -327,7 +330,7 @@ const CircuitDrillHeader = ({
             ref={stationNameRef}
             value={drillName}
             onChange={(e) => setDrillname(e.target.value)}
-            className="placeholder:text-textInput print:font-sm box-border w-28 max-w-60 resize-none bg-transparent text-base font-semibold outline-none active:outline-none print:w-auto print:w-full print:text-base"
+            className="placeholder:text-textInput print:font-sm box-border w-28 max-w-60 resize-none bg-transparent text-base font-semibold outline-none active:outline-none print:w-full print:text-base"
             placeholder="Station Name"
           />
           <CircuitDrillDuration
