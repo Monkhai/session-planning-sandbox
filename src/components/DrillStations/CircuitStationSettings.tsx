@@ -1,6 +1,6 @@
 import React from "react";
-import { IoCloseCircleSharp } from "react-icons/io5";
 import useModalControl from "~/hooks/useModalControl";
+import CloseIcon from "../icons/CloseIcon";
 
 interface Props {
   showSettingsModal: boolean;
@@ -33,7 +33,7 @@ const DrillStationSettings = ({
     <div className="z-10">
       <div
         ref={ref}
-        className="absolute w-80"
+        className="absolute left-6 top-8 w-60 md:top-10 md:w-80"
         style={{
           transition: "all 0.150s ease-in-out",
           scale: showSettingsModal ? 1 : 0,
@@ -48,7 +48,7 @@ const DrillStationSettings = ({
               onClick={() => setShowSettingsModal(false)}
               className="transition-all duration-150 active:scale-95"
             >
-              <IoCloseCircleSharp size={24} color={"var(--color-blue)"} />
+              <CloseIcon size={22} color={"red"} />
             </button>
           </div>
           {/*  */}

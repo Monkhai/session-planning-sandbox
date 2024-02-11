@@ -1,5 +1,4 @@
 import React from "react";
-import { FaCirclePlus } from "react-icons/fa6";
 import { SignedUrls } from "~/utils/types";
 import Loader from "../Loader";
 import MediaHandler from "./MediaHandler";

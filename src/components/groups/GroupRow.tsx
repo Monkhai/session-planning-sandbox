@@ -1,8 +1,8 @@
 import Link from "next/link";
 import React, { useEffect } from "react";
 import { IoChevronForward } from "react-icons/io5";
-import { PiDotsThreeCircleFill } from "react-icons/pi";
-import { GroupFromDB, GroupType } from "~/utils/types";
+import { GroupFromDB } from "~/utils/types";
+import SettingsIcon from "../icons/SettingsIcon";
 import GroupRowSettings from "./GroupRowSettings";
 
 interface Props {
@@ -38,8 +38,8 @@ const GroupRow = ({ index, isLast, group }: Props) => {
       }}
       className={
         !isLast
-          ? "relative  flex h-[36px] w-full flex-row items-center border-b-[1px] border-b-seperator bg-white print:h-[35px] print:border-none print:p-2 print:py-0 md:h-[50px]  dark:bg-darkSecondaryBackground"
-          : "relative  flex h-[36px] w-full flex-row items-center  bg-white   print:h-[35px] print:p-2 print:py-0 md:h-[50px] dark:bg-darkSecondaryBackground"
+          ? "relative flex h-[36px] w-full flex-row items-center border-b-[1px] border-b-seperator bg-white print:h-[35px] print:border-none print:p-2 print:py-0 md:h-[50px]  dark:bg-darkSecondaryBackground"
+          : "relative flex h-[36px] w-full flex-row items-center  bg-white   print:h-[35px] print:p-2 print:py-0 md:h-[50px] dark:bg-darkSecondaryBackground"
       }
       key={group.id}
     >
@@ -58,7 +58,7 @@ const GroupRow = ({ index, isLast, group }: Props) => {
         onClick={toggleModal}
         className="absolute -left-10 flex justify-end text-base transition-all duration-150 ease-in-out active:scale-95 md:text-xl"
       >
-        <PiDotsThreeCircleFill size={28} color={"gray"} />
+        <SettingsIcon size={28} color={"gray"} />
       </button>
 
       <GroupRowSettings

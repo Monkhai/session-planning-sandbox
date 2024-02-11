@@ -1,7 +1,7 @@
 import React from "react";
-import { PiDotsThreeCircleFill } from "react-icons/pi";
 import StationDuration from "../StationDuration";
 import StationTitle from "../StationTitle";
+import SettingsIcon from "../icons/SettingsIcon";
 import DrillStationSettings from "./DrillStationSettings";
 
 interface Props {
@@ -52,38 +52,40 @@ const DrillStationHeader = ({
   const controlButtonRef = React.useRef<HTMLButtonElement>(null);
 
   return (
-    <div className="flex min-h-20 w-full flex-row items-start justify-around gap-2 py-2">
-      <div className="relative bottom-1 flex flex-row print:hidden">
-        <button
-          ref={controlButtonRef}
-          className="transition-all duration-150 active:scale-95"
-          onClick={() => setShowSettingsModal(!showSettingsModal)}
-        >
-          <PiDotsThreeCircleFill size={36} color={"gray"} />
-        </button>
-        <DrillStationSettings
-          controlButtonRef={controlButtonRef}
-          onAddDrill={onAddDrill}
-          editMedia={editMedia}
-          onToggleShowComments={onToggleShowComments}
-          onToggleShowMedia={onToggleShowMedia}
-          onToggleEditMedia={onToggleEditMedia}
-          showComments={showComments}
-          showMedia={showMedia}
-          showDuration={showDuration}
-          onToggleDuration={onToggleDuration}
-          showSettingsModal={showSettingsModal}
-          setShowSettingsModal={setShowSettingsModal}
-          handleDeleteStation={handleDeleteStation}
-        />
-      </div>
-
-      <div className="flex-1 pr-6">
+    <div className="flex w-full flex-col items-start justify-start py-2 md:min-h-20">
+      <div className="flex flex-row items-center justify-center gap-4">
+        <div className="relative flex print:hidden">
+          <button
+            ref={controlButtonRef}
+            className="transition-all duration-150 active:scale-95"
+            onClick={() => setShowSettingsModal(!showSettingsModal)}
+          >
+            <SettingsIcon size={28} color={"gray"} />
+          </button>
+          <DrillStationSettings
+            controlButtonRef={controlButtonRef}
+            onAddDrill={onAddDrill}
+            editMedia={editMedia}
+            onToggleShowComments={onToggleShowComments}
+            onToggleShowMedia={onToggleShowMedia}
+            onToggleEditMedia={onToggleEditMedia}
+            showComments={showComments}
+            showMedia={showMedia}
+            showDuration={showDuration}
+            onToggleDuration={onToggleDuration}
+            showSettingsModal={showSettingsModal}
+            setShowSettingsModal={setShowSettingsModal}
+            handleDeleteStation={handleDeleteStation}
+          />
+        </div>
         <StationTitle
           stationName={stationName}
           setStationName={setStationName}
           stationNameRef={stationNameRef}
         />
+      </div>
+
+      <div className="pl-[38px]">
         <StationDuration
           duration={duration}
           durationString={durationString}

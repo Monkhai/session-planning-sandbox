@@ -1,5 +1,5 @@
-import { useParams } from "next/navigation";
 import React, { useCallback, useContext } from "react";
+import { SessionContext } from "~/context/SessionIdContext";
 import useCreateDrill from "~/hooks/drillStationHooks/useCreateDrill";
 import useDeleteDrillStation from "~/hooks/drillStationHooks/useDeleteDrillStation";
 import useDeleteMedia from "~/hooks/drillStationHooks/useDeleteMedia";
@@ -13,8 +13,6 @@ import Spacer from "../utility/Spacer";
 import DrillStationHeader from "./DrillStationHeader";
 import DrillStationMedia from "./DrillStationMedia";
 import DrillStationTextArea from "./DrillStationTextArea";
-import { SessionContext } from "~/context/SessionIdContext";
-import { FaChessKing } from "react-icons/fa6";
 
 interface Props {
   drill: DrillType;

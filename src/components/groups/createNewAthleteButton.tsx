@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from "react";
-import { IoCloseCircle } from "react-icons/io5";
+import CloseIcon from "../icons/CloseIcon";
 
 interface Props {
   onCreateNewAthlete: (name: string) => void;
@@ -50,7 +50,7 @@ const createNewAthleteButton = ({ onCreateNewAthlete }: Props) => {
             onClick={toggleModal}
             className="absolute right-2 top-2 flex flex-1 items-center justify-end transition-all duration-150 ease-in-out active:scale-95"
           >
-            <IoCloseCircle className="h-6 w-6 md:h-7 md:w-7" color={"red"} />
+            <CloseIcon size={22} color={"red"} />
           </button>
           <h2>Name Your New Athlete</h2>
           <input

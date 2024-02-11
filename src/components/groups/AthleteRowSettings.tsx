@@ -1,10 +1,10 @@
 import { useParams } from "next/navigation";
 import React, { useEffect } from "react";
-import { IoCloseCircleSharp } from "react-icons/io5";
 import useDeleteAthlete from "~/hooks/athletesHooks/useDeleteAthlete";
 import useUpdateAthlete from "~/hooks/athletesHooks/useUpdateAthlete";
 import useModalControl from "~/hooks/useModalControl";
 import { AthleteFromDB } from "~/utils/types";
+import CloseIcon from "../icons/CloseIcon";
 
 interface Props {
   showSettingsModal: boolean;
@@ -70,7 +70,7 @@ const AthleteRowSettings = ({
               onClick={() => setShowSettingsModal(false)}
               className="transition-all duration-150 active:scale-95"
             >
-              <IoCloseCircleSharp size={24} color={"var(--color-blue)"} />
+              <CloseIcon size={22} color={"red"} />
             </button>
           </div>
           {/*  */}

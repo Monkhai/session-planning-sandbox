@@ -2,8 +2,8 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import React, { useEffect } from "react";
 import { IoChevronForward } from "react-icons/io5";
-import { PiDotsThreeCircleFill } from "react-icons/pi";
 import { SessionFromDB } from "~/utils/types";
+import SettingsIcon from "../icons/SettingsIcon";
 import GroupSessionRowSettings from "./GroupSessionRowSettings";
 
 interface Props {
@@ -60,7 +60,7 @@ const GroupSessionRow = ({ index, isLast, session }: Props) => {
         ref={controlButtonRef}
         className="absolute -left-10 flex justify-end text-base transition-all duration-150 ease-in-out active:scale-95 md:text-xl"
       >
-        <PiDotsThreeCircleFill size={28} color={"gray"} />
+        <SettingsIcon size={28} color={"gray"} />
       </button>
 
       <GroupSessionRowSettings

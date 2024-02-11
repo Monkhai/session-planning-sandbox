@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
-import { IoCloseCircleSharp } from "react-icons/io5";
 import useModalControl from "~/hooks/useModalControl";
+import CloseIcon from "../icons/CloseIcon";
 
 interface Props {
   showInfo: boolean;
@@ -49,7 +49,7 @@ const SkillStationDescriptionModal = ({
             tabIndex={showInfo ? 0 : -1}
             onClick={() => setShowInfo(false)}
           >
-            <IoCloseCircleSharp size={24} color={"var(--color-blue)"} />
+            <CloseIcon size={22} color={"red"} />
           </button>
         </div>
 

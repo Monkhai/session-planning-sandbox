@@ -20,7 +20,6 @@ export default async (station_id: number, file: File) => {
       throw error;
     }
   } catch (error) {
-    console.error(error);
-    return;
+    throw error;
   }
 };

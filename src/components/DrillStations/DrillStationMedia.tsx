@@ -1,7 +1,7 @@
 import React from "react";
-import { FaCirclePlus } from "react-icons/fa6";
 import { SignedUrls } from "~/utils/types";
 import Loader from "../Loader";
+import PlusIcon from "../icons/PlusIcon";
 import MediaHandler from "./MediaHandler";
 
 interface Props {
@@ -57,12 +57,8 @@ const DrillStationMedia = ({
               }
               onClick={() => mediaInputRef.current?.click()}
             >
-              <FaCirclePlus
-                color={
-                  mediaUrls.length < 3
-                    ? "var(--color-blue)"
-                    : "var(--color-gray)"
-                }
+              <PlusIcon
+                color={mediaUrls.length < 3 ? "blue" : "gray"}
                 size={20}
               />
             </button>

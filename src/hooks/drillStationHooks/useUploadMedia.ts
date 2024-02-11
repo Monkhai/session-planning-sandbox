@@ -68,6 +68,7 @@ const useUploadMedia = () => {
 
     onError: (error, _, context) => {
       console.error(error);
+      alert("Error uploading media");
       if (context) {
         context.callback();
       }

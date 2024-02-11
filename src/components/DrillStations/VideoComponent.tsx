@@ -1,6 +1,5 @@
-import React from "react";
-import { IoMdRemoveCircle } from "react-icons/io";
 import { SignedUrls } from "~/utils/types";
+import RemoveIcon from "../icons/RemoveIcon";
 
 interface Props {
   editMedia: boolean;
@@ -27,7 +26,7 @@ const VideoComponent = ({ editMedia, onDeleteMedia, media }: Props) => {
           className="transition-all duration-150 active:scale-95"
           onClick={() => onDeleteMedia(media.name)}
         >
-          <IoMdRemoveCircle color={"red"} size={24} />
+          <RemoveIcon size={24} />
         </button>
       )}
     </div>

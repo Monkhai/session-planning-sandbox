@@ -6,16 +6,16 @@ import {
   useRef,
   useState,
 } from "react";
-import { PiDotsThreeCircleFill } from "react-icons/pi";
+import { SessionContext } from "~/context/SessionIdContext";
 import useDeleteDrill from "~/hooks/drillStationHooks/useDeleteDrill";
 import useGetDrillMedia from "~/hooks/drillStationHooks/useGetDrillStationMedia";
 import useUpdateDrill from "~/hooks/drillStationHooks/useUpdateDrill";
 import useAutoResizeTextarea from "~/hooks/useAutoResizeTextArea";
 import { convertDurationToString } from "~/services/DurationFunctions";
 import { DrillType } from "~/utils/types";
+import SettingsIcon from "../icons/SettingsIcon";
 import DrillStationSettings from "./DrillStationSettings";
 import CircuitDrillDuration from "./circuitDrillDuration";
-import { SessionContext } from "~/context/SessionIdContext";
 
 interface Props {
   drill: DrillType;
@@ -314,7 +314,7 @@ const CircuitDrillHeader = ({
             onClick={() => setShowSettingsModal(!showSettingsModal)}
             className="mr-1 transition-all duration-150 active:scale-95"
           >
-            <PiDotsThreeCircleFill color={"gray"} size={22} />
+            <SettingsIcon color={"gray"} size={22} />
           </button>
           <DrillStationSettings
             controlButtonRef={controlButtonRef}

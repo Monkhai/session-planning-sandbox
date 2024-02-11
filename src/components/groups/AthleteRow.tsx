@@ -2,8 +2,8 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import React from "react";
 import { IoChevronForward } from "react-icons/io5";
-import { PiDotsThreeCircleFill } from "react-icons/pi";
 import { AthleteFromDB } from "~/utils/types";
+import SettingsIcon from "../icons/SettingsIcon";
 import AthleteRowSettings from "./AthleteRowSettings";
 
 interface Props {
@@ -52,7 +52,7 @@ const AthleteRow = ({ index, isLast, athlete }: Props) => {
         onClick={toggleModal}
         className="absolute -left-10 flex items-center justify-end transition-all duration-150 ease-in-out active:scale-95 md:-right-10 md:left-auto md:text-xl"
       >
-        <PiDotsThreeCircleFill size={28} color={"gray"} />
+        <SettingsIcon size={28} color={"gray"} />
       </button>
 
       <AthleteRowSettings

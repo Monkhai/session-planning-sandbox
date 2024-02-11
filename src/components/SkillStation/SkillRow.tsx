@@ -1,10 +1,10 @@
 import React, { useCallback, useState } from "react";
-import { IoMdRemoveCircle } from "react-icons/io";
 import { IoInformationCircleOutline } from "react-icons/io5";
 import useDeleteSkill from "~/hooks/skillStationHooks/useDeleteSkill";
 import useSkillRowStates from "~/hooks/skillStationHooks/useSkillRowStates";
 import useUpdateSkill from "~/hooks/skillStationHooks/useUpdateSkill";
 import { SkillType } from "~/utils/types";
+import RemoveIcon from "../icons/RemoveIcon";
 import SkillStationDescriptionModal from "./SkillStationDescriptionModal";
 
 interface Props {
@@ -108,10 +108,7 @@ const SkillRow = ({ isLast, skill, editSkills, index }: Props) => {
             className="ml-2 transition-all duration-150 active:scale-95 print:hidden md:ml-4"
             onClick={handleDeleteSkill}
           >
-            <IoMdRemoveCircle
-              color={"red"}
-              className="h-4 w-4 md:h-[24px] md:w-[24px]"
-            />
+            <RemoveIcon size={20} />
           </button>
         )}
       </div>
