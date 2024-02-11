@@ -1,5 +1,6 @@
 import React from "react";
 import { IoCloseCircleSharp } from "react-icons/io5";
+import useModalControl from "~/hooks/useModalControl";
 
 interface Props {
   showSettingsModal: boolean;
@@ -8,6 +9,7 @@ interface Props {
   onToggleDuration: (show: boolean) => void;
   onAddDrill: () => void;
   showDuration: boolean;
+  controlButtonRef: React.RefObject<HTMLButtonElement>;
 }
 
 const DrillStationSettings = ({
@@ -17,10 +19,20 @@ const DrillStationSettings = ({
   setShowSettingsModal,
   showSettingsModal,
   onToggleDuration,
+  controlButtonRef,
 }: Props) => {
+  const ref = React.useRef<HTMLDivElement>(null);
+  useModalControl(
+    ref,
+    showSettingsModal,
+    setShowSettingsModal,
+    controlButtonRef,
+  );
+
   return (
     <div className="z-10">
       <div
+        ref={ref}
         className="absolute w-80"
         style={{
           transition: "all 0.150s ease-in-out",

@@ -127,6 +127,16 @@ textarea::-webkit-scrollbar {
   display: none; /* For Chrome, Safari, and Opera */
 }
 
+/* no horizontal scrollbar */
+.no-horizontal-scrollbar {
+  overflow-x: hidden;
+}
+
+.no-scrollbar {
+  scrollbar-width: none; /* For Firefox */
+  -ms-overflow-style: none; /* For Internet Explorer and Edge */
+}
+
 @media (max-width: 768px) {
   textarea,
   input {

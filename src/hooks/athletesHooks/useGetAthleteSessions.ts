@@ -13,6 +13,7 @@ const useGetAthleteSessions = ({
   return useQuery({
     queryKey: queryKey,
     queryFn: async () => await getListOfAthleteSessions(Number(athlete_id)),
+    staleTime: 1000 * 60 * 60, // 1 hour
   });
 };
 

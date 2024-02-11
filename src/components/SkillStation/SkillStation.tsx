@@ -16,7 +16,7 @@ interface Props {
 }
 
 const SkillStation = ({ station, isLast }: Props) => {
-  const [hideDurationPicker, setHideDurationPicker] = useState(true);
+  const [showDurationPicker, setShowDurationPicker] = useState(false);
 
   const stationNameRef = React.useRef<HTMLTextAreaElement>(null);
 
@@ -112,8 +112,8 @@ const SkillStation = ({ station, isLast }: Props) => {
           duration={duration}
           durationString={durationString}
           handleDurationChange={handleDurationChange}
-          hideDurationPicker={hideDurationPicker}
-          setHideDurationPicker={setHideDurationPicker}
+          setShowDurationPicker={setShowDurationPicker}
+          showDurationPicker={showDurationPicker}
           setShowSettingsModal={setShowEditModal}
           setStationName={setStationName}
           showDuration={showDuration}

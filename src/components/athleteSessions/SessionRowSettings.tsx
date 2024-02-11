@@ -3,23 +3,35 @@ import React, { useEffect } from "react";
 import { IoCloseCircleSharp } from "react-icons/io5";
 import useDeleteAthleteSession from "~/hooks/athletesHooks/useDeleteAthleteSession";
 import useUpdateAthleteSession from "~/hooks/athletesHooks/useUpdateAthleteSession";
+import useModalControl from "~/hooks/useModalControl";
 import { SessionFromDB } from "~/utils/types";
 
 interface Props {
   showSettingsModal: boolean;
   setShowSettingsModal: React.Dispatch<React.SetStateAction<boolean>>;
+  controlButtonRef: React.RefObject<HTMLButtonElement>;
   session: SessionFromDB;
 }
 
 const SessionRowSettings = ({
   showSettingsModal,
   setShowSettingsModal,
+  controlButtonRef,
   session,
 }: Props) => {
   const [sessionName, setSessionName] = React.useState(session.name || "");
 
   const { mutate: updateSession } = useUpdateAthleteSession();
   const { mutate: deleteSession } = useDeleteAthleteSession();
+
+  const ref = React.useRef<HTMLDivElement>(null);
+
+  useModalControl(
+    ref,
+    showSettingsModal,
+    setShowSettingsModal,
+    controlButtonRef,
+  );
 
   const { athlete_id, group_id } = useParams<{
     athlete_id: string;
@@ -52,6 +64,7 @@ const SessionRowSettings = ({
   return (
     <div className="z-10">
       <div
+        ref={ref}
         className="absolute -left-2 top-8 w-60 md:top-10 md:w-80"
         style={{
           transition: "all 0.150s ease-in-out",
@@ -64,6 +77,7 @@ const SessionRowSettings = ({
           <div className="flex w-full flex-1 flex-row justify-between pb-2">
             <h3 className="font-lg flex-1 font-semibold">Session Settings</h3>
             <button
+              tabIndex={showSettingsModal ? 0 : -1}
               onClick={() => setShowSettingsModal(false)}
               className="transition-all duration-150 active:scale-95"
             >
@@ -74,6 +88,7 @@ const SessionRowSettings = ({
           <div className="flex w-full flex-col items-start gap-2">
             <p>Change Session Name</p>
             <input
+              tabIndex={showSettingsModal ? 0 : -1}
               className="w-full rounded-[10px] bg-textInputBackground p-2 text-base outline-none placeholder:text-base md:text-xl md:placeholder:text-xl"
               type="text"
               placeholder="Session Name"
@@ -83,6 +98,7 @@ const SessionRowSettings = ({
           </div>
           {session.name !== sessionName ? (
             <button
+              tabIndex={showSettingsModal ? 0 : -1}
               onClick={handleNameChange}
               className="w-full rounded-[10px] bg-primary p-2 text-white transition-all duration-150 ease-in-out active:scale-95"
             >
@@ -90,6 +106,7 @@ const SessionRowSettings = ({
             </button>
           ) : null}
           <button
+            tabIndex={showSettingsModal ? 0 : -1}
             onClick={handleDeleteSession}
             className="w-full rounded-[10px] bg-red-500 p-2 text-white transition-all duration-150 ease-in-out active:scale-95"
           >

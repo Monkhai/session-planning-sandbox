@@ -3,19 +3,31 @@ import React, { useEffect } from "react";
 import { IoCloseCircleSharp } from "react-icons/io5";
 import useDeleteGroupSession from "~/hooks/groupSessionHooks/useDeleteGroupSession";
 import useUpdateGroupSession from "~/hooks/groupSessionHooks/useUpdateGroupSession";
+import useModalControl from "~/hooks/useModalControl";
 import { SessionFromDB } from "~/utils/types";
 
 interface Props {
   showSettingsModal: boolean;
   setShowSettingsModal: React.Dispatch<React.SetStateAction<boolean>>;
+  controlButtonRef: React.RefObject<HTMLButtonElement>;
   session: SessionFromDB;
 }
 
 const GroupSessionRowSettings = ({
   showSettingsModal,
   setShowSettingsModal,
+  controlButtonRef,
   session,
 }: Props) => {
+  const ref = React.useRef<HTMLDivElement>(null);
+
+  useModalControl(
+    ref,
+    showSettingsModal,
+    setShowSettingsModal,
+    controlButtonRef,
+  );
+
   const params = useParams<{ group_id: string }>();
   const [sessionName, setSessionName] = React.useState(session.name || "");
 
@@ -43,6 +55,7 @@ const GroupSessionRowSettings = ({
   return (
     <div className="z-10">
       <div
+        ref={ref}
         className="absolute -left-2 top-8 w-60 md:top-10 md:w-80"
         style={{
           transition: "all 0.150s ease-in-out",

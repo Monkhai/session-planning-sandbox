@@ -8,7 +8,7 @@ interface Args {
 }
 
 export default ({ athlete_id, group_id }: Args) => {
-  const queryKey = queryKeyFactory.groupAthletes({ group_id });
+  const queryKey = queryKeyFactory.specificAthlete({ group_id, athlete_id });
   return useQuery({
     queryKey: queryKey,
     queryFn: async () => await getOneAthlete(Number(athlete_id)),

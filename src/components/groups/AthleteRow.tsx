@@ -1,11 +1,10 @@
 import Link from "next/link";
-import React, { useEffect } from "react";
+import { useParams } from "next/navigation";
+import React from "react";
 import { IoChevronForward } from "react-icons/io5";
 import { PiDotsThreeCircleFill } from "react-icons/pi";
 import { AthleteFromDB } from "~/utils/types";
 import AthleteRowSettings from "./AthleteRowSettings";
-import { group } from "console";
-import { useParams } from "next/navigation";
 
 interface Props {
   athlete: AthleteFromDB;
@@ -15,15 +14,9 @@ interface Props {
 
 const AthleteRow = ({ index, isLast, athlete }: Props) => {
   const [showSettingsModal, setShowSettingsModal] = React.useState(false);
-  const dialogRef = React.useRef<HTMLDialogElement>(null);
   const { group_id } = useParams<{ group_id: string }>();
-  useEffect(() => {
-    if (showSettingsModal) {
-      dialogRef.current?.showModal();
-    } else {
-      dialogRef.current?.close();
-    }
-  }, [showSettingsModal]);
+
+  const controlButtonRef = React.useRef<HTMLButtonElement>(null);
 
   const toggleModal = () => {
     setShowSettingsModal(!showSettingsModal);
@@ -55,6 +48,7 @@ const AthleteRow = ({ index, isLast, athlete }: Props) => {
       </Link>
 
       <button
+        ref={controlButtonRef}
         onClick={toggleModal}
         className="absolute -left-10 flex items-center justify-end transition-all duration-150 ease-in-out active:scale-95 md:-right-10 md:left-auto md:text-xl"
       >
@@ -64,6 +58,7 @@ const AthleteRow = ({ index, isLast, athlete }: Props) => {
       <AthleteRowSettings
         athlete={athlete}
         showSettingsModal={showSettingsModal}
+        controlButtonRef={controlButtonRef}
         setShowSettingsModal={setShowSettingsModal}
       />
     </div>

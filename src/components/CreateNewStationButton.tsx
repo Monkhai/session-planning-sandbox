@@ -1,4 +1,5 @@
 import React from "react";
+import useModalControl from "~/hooks/useModalControl";
 
 interface Props {
   onCreateSkillStation: () => void;
@@ -10,6 +11,11 @@ const CreateNewStationButton = ({
   onCreateSkillStation,
 }: Props) => {
   const [showModal, setShowModal] = React.useState(false);
+
+  const ref = React.useRef<HTMLDivElement>(null);
+  const controlButtonRef = React.useRef<HTMLButtonElement>(null);
+
+  useModalControl(ref, showModal, setShowModal, controlButtonRef);
 
   const toggleModal = () => setShowModal(!showModal);
 
@@ -26,6 +32,7 @@ const CreateNewStationButton = ({
   return (
     <div className="relative flex items-center justify-center">
       <div
+        ref={ref}
         style={{
           transformOrigin: "bottom",
           scale: showModal ? 1 : 0,
@@ -57,6 +64,7 @@ const CreateNewStationButton = ({
       {/*  */}
 
       <button
+        ref={controlButtonRef}
         onClick={toggleModal}
         className="z-10 rounded-[10px] bg-primary p-3 transition-all duration-150 active:scale-95 md:p-4"
       >

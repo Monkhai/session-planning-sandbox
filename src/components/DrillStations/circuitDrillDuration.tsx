@@ -6,14 +6,14 @@ interface Props {
   durationString: string | undefined;
   showDuration: boolean;
   handledurationChange: (duration: string) => void;
-  hideDurationPicker: boolean;
-  setHideDurationPicker: React.Dispatch<React.SetStateAction<boolean>>;
+  showDurationPicker: boolean;
+  setShowDurationPicker: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const CircuitDrillDuration = ({
   duration,
-  hideDurationPicker,
-  setHideDurationPicker,
+  showDurationPicker,
+  setShowDurationPicker,
   durationString,
   handledurationChange,
   showDuration,
@@ -21,6 +21,8 @@ const CircuitDrillDuration = ({
   if (!showDuration) return null;
 
   const isDarkTheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+  const controlButtonRef = React.useRef<HTMLButtonElement>(null);
 
   const durationStyleClasses = `
   pl-2 
@@ -31,7 +33,7 @@ const CircuitDrillDuration = ({
   print:text-xs
 
   ${
-    hideDurationPicker
+    !showDurationPicker
       ? durationString
         ? "text-[var(--color-text)]"
         : "text-[var(--color-gray)]"
@@ -47,7 +49,7 @@ const CircuitDrillDuration = ({
   print:text-xs
 
   ${
-    hideDurationPicker
+    !showDurationPicker
       ? durationString
         ? "text-[var(--color-text)]"
         : "text-[var(--color-dark-sub-title)]"
@@ -57,7 +59,10 @@ const CircuitDrillDuration = ({
   if (showDuration) {
     return (
       <div>
-        <button onClick={() => setHideDurationPicker(!hideDurationPicker)}>
+        <button
+          ref={controlButtonRef}
+          onClick={() => setShowDurationPicker(!showDurationPicker)}
+        >
           <p
             className={
               !isDarkTheme ? durationStyleClasses : darkDurationStyleClasses
@@ -67,20 +72,13 @@ const CircuitDrillDuration = ({
           </p>
         </button>
 
-        <div
-          style={{
-            transition: "all 0.150s ease-in-out",
-            scale: hideDurationPicker ? 0 : 1,
-            opacity: hideDurationPicker ? 0 : 1,
-          }}
-          className="absolute z-10 origin-top md:origin-top-left"
-        >
-          <DurationPicker
-            hideDurationPicker={() => setHideDurationPicker(true)}
-            duration={duration}
-            onDurationSubmit={handledurationChange}
-          />
-        </div>
+        <DurationPicker
+          showDurationPicker={showDurationPicker}
+          setShowDurationPicker={setShowDurationPicker}
+          controlButtonRef={controlButtonRef}
+          duration={duration}
+          onDurationSubmit={handledurationChange}
+        />
       </div>
     );
   }

@@ -29,6 +29,15 @@ export const queryKeyFactory = {
     group_id,
     "athletes",
   ],
+  specificAthlete: ({
+    athlete_id,
+    group_id,
+  }: QKFAthleteSessionsArgs): string[] => [
+    "groups",
+    group_id,
+    "athletes",
+    athlete_id,
+  ],
   athleteSessions: ({
     athlete_id,
     group_id,

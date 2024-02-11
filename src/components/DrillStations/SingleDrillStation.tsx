@@ -24,7 +24,7 @@ interface Props {
 const SingleDrillStation = ({ drill, isLast }: Props) => {
   const { session_id } = useContext(SessionContext);
 
-  const [hideDurationPicker, setHideDurationPicker] = React.useState(true);
+  const [showDurationPicker, setShowDurationPicker] = React.useState(false);
   const [showSettingsModal, setShowSettingsModal] =
     React.useState<boolean>(false);
 
@@ -301,10 +301,10 @@ const SingleDrillStation = ({ drill, isLast }: Props) => {
           setShowSettingsModal={setShowSettingsModal}
           showDuration={showDuration}
           onToggleDuration={handleToggleDuration}
-          hideDurationPicker={hideDurationPicker}
           handleDeleteStation={handleDeleteStation}
           handleDurationChange={handleDurationChange}
-          setHideDurationPicker={setHideDurationPicker}
+          showDurationPicker={showDurationPicker}
+          setShowDurationPicker={setShowDurationPicker}
         />
       </div>
       <div className="flex flex-1 flex-col gap-4 print:w-3/5 md:w-1/2 md:flex-none">

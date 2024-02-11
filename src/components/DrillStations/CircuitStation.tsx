@@ -6,17 +6,15 @@ import {
   useRef,
   useState,
 } from "react";
+import { SessionContext } from "~/context/SessionIdContext";
+import useCreateDrill from "~/hooks/drillStationHooks/useCreateDrill";
 import useDeleteDrillStation from "~/hooks/drillStationHooks/useDeleteDrillStation";
 import useUpdateDrillStation from "~/hooks/drillStationHooks/useUpdateDrillStation";
 import { convertDurationToString } from "~/services/DurationFunctions";
 import { DrillStationWithDrillsType } from "~/utils/types";
 import StationBottomBorder from "../SkillStation/StationBottomBorder";
-import Spacer from "../utility/Spacer";
-import CircuitStationHeader from "./CircuitStationHeader";
 import { CircuitDrill } from "./CircuitDrill";
-import useCreateDrill from "~/hooks/drillStationHooks/useCreateDrill";
-import { useParams } from "next/navigation";
-import { SessionContext } from "~/context/SessionIdContext";
+import CircuitStationHeader from "./CircuitStationHeader";
 
 interface Props {
   station: DrillStationWithDrillsType;
@@ -24,7 +22,7 @@ interface Props {
 }
 
 const CircuitStation = ({ station, isLast }: Props) => {
-  const [hideDurationPicker, setHideDurationPicker] = useState(true);
+  const [showDurationPicker, setShowDurationPicker] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState<boolean>(false);
 
   const [showDuration, setShowDuration] = useState<boolean>(
@@ -141,9 +139,9 @@ const CircuitStation = ({ station, isLast }: Props) => {
           duration={duration}
           handleDurationChange={handleDurationChange}
           handleDeleteStation={handleDeleteStation}
-          hideDurationPicker={hideDurationPicker}
+          showDurationPicker={showDurationPicker}
+          setShowDurationPicker={setShowDurationPicker}
           onToggleDuration={handleToggleDuration}
-          setHideDurationPicker={setHideDurationPicker}
           setStationName={setStationName}
           setShowSettingsModal={setShowSettingsModal}
           showDuration={showDuration}

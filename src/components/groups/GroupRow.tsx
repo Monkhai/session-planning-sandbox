@@ -14,6 +14,7 @@ interface Props {
 const GroupRow = ({ index, isLast, group }: Props) => {
   const [showSettingsModal, setShowSettingsModal] = React.useState(false);
   const dialogRef = React.useRef<HTMLDialogElement>(null);
+  const controlButtonRef = React.useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (showSettingsModal) {
@@ -53,6 +54,7 @@ const GroupRow = ({ index, isLast, group }: Props) => {
       </Link>
 
       <button
+        ref={controlButtonRef}
         onClick={toggleModal}
         className="absolute -left-10 flex justify-end text-base transition-all duration-150 ease-in-out active:scale-95 md:text-xl"
       >
@@ -63,6 +65,7 @@ const GroupRow = ({ index, isLast, group }: Props) => {
         group={group}
         showSettingsModal={showSettingsModal}
         setShowSettingsModal={setShowSettingsModal}
+        controlButtonRef={controlButtonRef}
       />
     </div>
   );

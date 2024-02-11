@@ -13,8 +13,8 @@ interface Props {
   stationName: string;
   setStationName: React.Dispatch<React.SetStateAction<string>>;
   stationNameRef: React.RefObject<HTMLTextAreaElement>;
-  hideDurationPicker: boolean;
-  setHideDurationPicker: React.Dispatch<React.SetStateAction<boolean>>;
+  showDurationPicker: boolean;
+  setShowDurationPicker: React.Dispatch<React.SetStateAction<boolean>>;
   duration: string;
   durationString: string | undefined;
   showDuration: boolean;
@@ -30,23 +30,27 @@ const StationHeader = ({
   duration,
   durationString,
   handleDurationChange,
-  hideDurationPicker,
-  setHideDurationPicker,
+  showDurationPicker,
+  setShowDurationPicker,
   setStationName,
   stationName,
   stationNameRef,
   showDuration,
 }: Props) => {
+  const controlButtonRef = React.useRef<HTMLButtonElement>(null);
+
   return (
     <div className="flex w-full flex-row items-start justify-around gap-2 py-2 md:min-h-20">
       <div className="relative bottom-1 flex print:hidden">
         <button
+          ref={controlButtonRef}
           className="transition-all duration-150 active:scale-95"
           onClick={() => setShowSettingsModal(!showSettingsModal)}
         >
           <PiDotsThreeCircleFill className="h-[36px] w-[36px]" color={"gray"} />
         </button>
         <StationSettings
+          controlButtonRef={controlButtonRef}
           showDuration={showDuration}
           onToggleDuration={onToggleDuration}
           showSettingsModal={showSettingsModal}
@@ -67,8 +71,8 @@ const StationHeader = ({
           durationString={durationString}
           showDuration={showDuration}
           handledurationChange={handleDurationChange}
-          hideDurationPicker={hideDurationPicker}
-          setHideDurationPicker={setHideDurationPicker}
+          showDurationPicker={showDurationPicker}
+          setShowDurationPicker={setShowDurationPicker}
         />
       </div>
     </div>

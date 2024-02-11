@@ -21,6 +21,8 @@ const SkillRow = ({ isLast, skill, editSkills, index }: Props) => {
   const repsRef = React.useRef<HTMLInputElement>(null);
   const descriptionRef = React.useRef<HTMLTextAreaElement>(null);
 
+  const controlButtonRef = React.useRef<HTMLButtonElement>(null);
+
   const { mutate: deleteSkill } = useDeleteSkill();
   const { mutate: updateSkill } = useUpdateSkill();
 
@@ -89,14 +91,17 @@ const SkillRow = ({ isLast, skill, editSkills, index }: Props) => {
           placeholder={"Skill name"}
         />
         {showReps && (
-          <input
-            ref={repsRef}
-            value={reps ? reps : ""}
-            onChange={(e) => setReps(Number(e.target.value))}
-            className="h-[24px] flex-1 text-right text-base outline-none placeholder:text-base active:outline-none print:text-xs md:text-xl md:placeholder:text-xl dark:bg-transparent"
-            // className="h-[24px] flex-1 text-right text-xl outline-none active:outline-none print:text-sm dark:bg-transparent"
-            placeholder="Reps"
-          />
+          <div className="flex flex-row items-center gap-2">
+            <input
+              ref={repsRef}
+              value={reps ? reps : ""}
+              onChange={(e) => setReps(Number(e.target.value))}
+              className="h-[24px] flex-1 text-right text-base outline-none placeholder:text-base active:outline-none print:text-xs md:text-xl md:placeholder:text-xl dark:bg-transparent"
+              // className="h-[24px] flex-1 text-right text-xl outline-none active:outline-none print:text-sm dark:bg-transparent"
+              placeholder="Reps"
+            />
+            {reps ? <p className="text-base md:text-xl">reps</p> : null}
+          </div>
         )}
         {editSkills && (
           <button
@@ -113,17 +118,19 @@ const SkillRow = ({ isLast, skill, editSkills, index }: Props) => {
 
       <div className="flex items-center justify-center print:hidden md:relative md:left-4">
         <button
+          ref={controlButtonRef}
           onClick={() => setShowInfo(!showInfo)}
           style={{
             rotate: showInfo ? "22.5deg" : "0deg",
             transition: "all 0.300s cubic-bezier(0, 0, 0.58, 1.0)",
           }}
-          className="rounded-full  active:scale-95"
+          className="rounded-full active:scale-95"
         >
           <IoInformationCircleOutline color={"var(--color-blue)"} size={28} />
         </button>
 
         <SkillStationDescriptionModal
+          controlButtonRef={controlButtonRef}
           handleToggleReps={handleToggleReps}
           showReps={showReps}
           description={description}

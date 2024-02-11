@@ -3,17 +3,20 @@ import React, { useEffect } from "react";
 import { IoCloseCircleSharp } from "react-icons/io5";
 import useDeleteAthlete from "~/hooks/athletesHooks/useDeleteAthlete";
 import useUpdateAthlete from "~/hooks/athletesHooks/useUpdateAthlete";
+import useModalControl from "~/hooks/useModalControl";
 import { AthleteFromDB } from "~/utils/types";
 
 interface Props {
   showSettingsModal: boolean;
   setShowSettingsModal: React.Dispatch<React.SetStateAction<boolean>>;
+  controlButtonRef: React.RefObject<HTMLButtonElement>;
   athlete: AthleteFromDB;
 }
 
 const AthleteRowSettings = ({
   showSettingsModal,
   setShowSettingsModal,
+  controlButtonRef,
   athlete,
 }: Props) => {
   const params = useParams<{ group_id: string; athlete_id: string }>();
@@ -40,9 +43,18 @@ const AthleteRowSettings = ({
     deleteAthlete({ athlete_id: athlete.id, group_id: params.group_id });
   };
 
+  const ref = React.useRef<HTMLDivElement>(null);
+  useModalControl(
+    ref,
+    showSettingsModal,
+    setShowSettingsModal,
+    controlButtonRef,
+  );
+
   return (
     <div className="z-10">
       <div
+        ref={ref}
         style={{
           transition: "all 0.150s ease-in-out",
           scale: showSettingsModal ? 1 : 0,
@@ -54,6 +66,7 @@ const AthleteRowSettings = ({
           <div className="flex w-full flex-1 flex-row justify-between pb-2">
             <h3 className="font-lg flex-1 font-semibold">group Settings</h3>
             <button
+              tabIndex={showSettingsModal ? 0 : -1}
               onClick={() => setShowSettingsModal(false)}
               className="transition-all duration-150 active:scale-95"
             >
@@ -64,6 +77,7 @@ const AthleteRowSettings = ({
           <div className="flex w-full flex-col items-start gap-2">
             <p>Change group Name</p>
             <input
+              tabIndex={showSettingsModal ? 0 : -1}
               className="w-full rounded-[10px] bg-textInputBackground p-2 text-base outline-none placeholder:text-base md:text-xl md:placeholder:text-xl"
               type="text"
               placeholder="Athlete Name"
@@ -73,6 +87,7 @@ const AthleteRowSettings = ({
           </div>
           {athlete.name !== athleteName ? (
             <button
+              tabIndex={showSettingsModal ? 0 : -1}
               onClick={handleNameChange}
               className="w-full rounded-[10px] bg-primary p-2 text-white transition-all duration-150 ease-in-out active:scale-95"
             >
@@ -80,6 +95,7 @@ const AthleteRowSettings = ({
             </button>
           ) : null}
           <button
+            tabIndex={showSettingsModal ? 0 : -1}
             onClick={handleDeletegroup}
             className="w-full rounded-[10px] bg-red-500 p-2 text-white transition-all duration-150 ease-in-out active:scale-95"
           >

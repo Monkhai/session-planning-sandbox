@@ -2,7 +2,6 @@ import React from "react";
 import { PiDotsThreeCircleFill } from "react-icons/pi";
 import StationDuration from "../StationDuration";
 import StationTitle from "../StationTitle";
-import DrillStationSettings from "./DrillStationSettings";
 import CircuitStationSettings from "./CircuitStationSettings";
 
 interface Props {
@@ -13,8 +12,8 @@ interface Props {
   stationName: string;
   setStationName: React.Dispatch<React.SetStateAction<string>>;
   stationNameRef: React.RefObject<HTMLTextAreaElement>;
-  hideDurationPicker: boolean;
-  setHideDurationPicker: React.Dispatch<React.SetStateAction<boolean>>;
+  showDurationPicker: boolean;
+  setShowDurationPicker: React.Dispatch<React.SetStateAction<boolean>>;
   duration: string;
   durationString: string | undefined;
   showDuration: boolean;
@@ -31,23 +30,26 @@ const CircuitStationHeader = ({
   duration,
   durationString,
   handleDurationChange,
-  hideDurationPicker,
-  setHideDurationPicker,
+  showDurationPicker,
+  setShowDurationPicker,
   setStationName,
   stationName,
   stationNameRef,
   showDuration,
 }: Props) => {
+  const controlButtonRef = React.useRef<HTMLButtonElement>(null);
   return (
     <div className="flex min-h-20 w-full flex-row items-start justify-around gap-2 py-2">
       <div className="relative bottom-1 flex flex-row print:hidden">
         <button
+          ref={controlButtonRef}
           className="transition-all duration-150 active:scale-95"
           onClick={() => setShowSettingsModal(!showSettingsModal)}
         >
           <PiDotsThreeCircleFill size={36} color={"gray"} />
         </button>
         <CircuitStationSettings
+          controlButtonRef={controlButtonRef}
           onAddDrill={onAddDrill}
           showDuration={showDuration}
           onToggleDuration={onToggleDuration}
@@ -68,8 +70,8 @@ const CircuitStationHeader = ({
           durationString={durationString}
           showDuration={showDuration}
           handledurationChange={handleDurationChange}
-          hideDurationPicker={hideDurationPicker}
-          setHideDurationPicker={setHideDurationPicker}
+          showDurationPicker={showDurationPicker}
+          setShowDurationPicker={setShowDurationPicker}
         />
       </div>
     </div>

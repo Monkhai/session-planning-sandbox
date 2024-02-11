@@ -28,21 +28,23 @@ const GroupSessionsList = ({ sessions, areSessionsLoading }: Props) => {
 
   if (sessions) {
     return (
-      <div className="flex w-3/4 flex-col gap-1 pt-4 md:w-1/2 md:gap-4">
+      <div className="flex w-3/4 flex-col gap-2 pt-4 md:w-1/2 md:gap-4">
         <h2>General Sessions</h2>
-        {sessions.map((session, index) => {
-          const lastSession = sessions[sessions.length - 1];
-          const isLast =
-            (lastSession && session.id === lastSession.id) || false;
-          return (
-            <GroupSessionRow
-              key={session.id}
-              session={session}
-              index={index}
-              isLast={isLast}
-            />
-          );
-        })}
+        <div>
+          {sessions.map((session, index) => {
+            const lastSession = sessions[sessions.length - 1];
+            const isLast =
+              (lastSession && session.id === lastSession.id) || false;
+            return (
+              <GroupSessionRow
+                key={session.id}
+                session={session}
+                index={index}
+                isLast={isLast}
+              />
+            );
+          })}
+        </div>
       </div>
     );
   }

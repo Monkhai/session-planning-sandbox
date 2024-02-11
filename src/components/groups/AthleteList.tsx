@@ -26,26 +26,30 @@ const AthleteList = ({ athletes, areAthletesLoading }: Props) => {
     );
   }
 
-  if (athletes) {
+  if (athletes !== undefined && athletes.length > 0) {
     return (
-      <div className="flex w-3/4 flex-col gap-1 pt-4 md:w-1/2 md:gap-4">
+      <div className="flex w-3/4 flex-col gap-2 pt-4 md:w-1/2 md:gap-4">
         <h2>Athletes</h2>
-        {athletes.map((athlete, index) => {
-          const lastAthlete = athletes[athletes.length - 1];
-          const isLast =
-            (lastAthlete && athlete.id === lastAthlete.id) || false;
-          return (
-            <AthleteRow
-              key={athlete.id}
-              athlete={athlete}
-              index={index}
-              isLast={isLast}
-            />
-          );
-        })}
+        <div>
+          {athletes.map((athlete, index) => {
+            const lastAthlete = athletes[athletes.length - 1];
+            const isLast =
+              (lastAthlete && athlete.id === lastAthlete.id) || false;
+            return (
+              <AthleteRow
+                key={athlete.id}
+                athlete={athlete}
+                index={index}
+                isLast={isLast}
+              />
+            );
+          })}
+        </div>
       </div>
     );
   }
+
+  return null;
 };
 
 export default AthleteList;

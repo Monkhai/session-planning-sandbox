@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { IoCloseCircleSharp } from "react-icons/io5";
+import useModalControl from "~/hooks/useModalControl";
 
 interface Props {
   showSettingsModal: boolean;
@@ -8,6 +9,7 @@ interface Props {
   handleDeleteStation: () => void;
   onToggleDuration: (show: boolean) => void;
   showDuration: boolean;
+  controlButtonRef: React.RefObject<HTMLButtonElement>;
 }
 
 const StationSettings = ({
@@ -17,10 +19,20 @@ const StationSettings = ({
   setEditSkills,
   showSettingsModal,
   onToggleDuration,
+  controlButtonRef,
 }: Props) => {
+  const modalRef = useRef<HTMLDivElement>(null);
+  useModalControl(
+    modalRef,
+    showSettingsModal,
+    setShowSettingsModal,
+    controlButtonRef,
+  );
+
   return (
     <div className="z-10">
       <div
+        ref={modalRef}
         className="absolute z-10 w-80"
         style={{
           transition: "all 0.150s ease-in-out",
@@ -33,6 +45,7 @@ const StationSettings = ({
           <div className="flex w-full flex-1 flex-row justify-between pb-2">
             <h3 className="font-lg flex-1 font-semibold">Station Settings</h3>
             <button
+              tabIndex={showSettingsModal ? 0 : -1}
               onClick={() => setShowSettingsModal(false)}
               className="transition-all duration-150 active:scale-95"
             >
@@ -42,6 +55,7 @@ const StationSettings = ({
           <div className="flex w-full flex-1 flex-row items-center justify-between pr-1">
             <p className="">Show Duration</p>
             <input
+              tabIndex={showSettingsModal ? 0 : -1}
               onChange={(e) => onToggleDuration(e.target.checked)}
               checked={showDuration}
               className="h-4 w-4"
@@ -53,6 +67,7 @@ const StationSettings = ({
           <div className="flex w-full flex-1 flex-row items-center justify-between pr-1">
             <p className="">Edit Skills</p>
             <input
+              tabIndex={showSettingsModal ? 0 : -1}
               onChange={(e) => setEditSkills(e.target.checked)}
               className="h-4 w-4"
               type="checkbox"
@@ -62,6 +77,7 @@ const StationSettings = ({
           </div>
           <div className=" w-full pt-2">
             <button
+              tabIndex={showSettingsModal ? 0 : -1}
               onClick={handleDeleteStation}
               className="w-full rounded-[12px] bg-red-500 px-4 py-2 text-white transition-all duration-150 active:scale-95"
             >

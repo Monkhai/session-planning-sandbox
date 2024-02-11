@@ -15,6 +15,7 @@ interface Props {
 const GroupSessionRow = ({ index, isLast, session }: Props) => {
   const [showSettingsModal, setShowSettingsModal] = React.useState(false);
   const dialogRef = React.useRef<HTMLDialogElement>(null);
+  const controlButtonRef = React.useRef<HTMLButtonElement>(null);
   const { group_id } = useParams<{ group_id: string }>();
 
   useEffect(() => {
@@ -39,8 +40,8 @@ const GroupSessionRow = ({ index, isLast, session }: Props) => {
       }}
       className={
         !isLast
-          ? "relative  flex h-[36px] w-full flex-row items-center border-b-[1px] border-b-seperator bg-white print:h-[35px] print:border-none print:p-2 print:py-0 md:h-[50px]  dark:bg-darkSecondaryBackground"
-          : "relative  flex h-[36px] w-full flex-row items-center  bg-white   print:h-[35px] print:p-2 print:py-0 md:h-[50px] dark:bg-darkSecondaryBackground"
+          ? "relative flex h-[36px] w-full flex-row items-center border-b-[1px] border-b-seperator bg-white print:h-[35px] print:border-none print:p-2 print:py-0 md:h-[50px]  dark:bg-darkSecondaryBackground"
+          : "relative flex h-[36px] w-full flex-row items-center bg-white   print:h-[35px] print:p-2 print:py-0 md:h-[50px] dark:bg-darkSecondaryBackground"
       }
       key={session.id}
     >
@@ -56,12 +57,14 @@ const GroupSessionRow = ({ index, isLast, session }: Props) => {
 
       <button
         onClick={toggleModal}
+        ref={controlButtonRef}
         className="absolute -left-10 flex justify-end text-base transition-all duration-150 ease-in-out active:scale-95 md:text-xl"
       >
         <PiDotsThreeCircleFill size={28} color={"gray"} />
       </button>
 
       <GroupSessionRowSettings
+        controlButtonRef={controlButtonRef}
         session={session}
         showSettingsModal={showSettingsModal}
         setShowSettingsModal={setShowSettingsModal}

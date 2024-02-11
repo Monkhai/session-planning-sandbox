@@ -1,10 +1,9 @@
 import Link from "next/link";
-import React, { useEffect } from "react";
-import { IoChevronForward, IoCloseCircle } from "react-icons/io5";
-import { PiDotsThreeCircleFill } from "react-icons/pi";
-import Spacer from "../utility/Spacer";
-import SessionRowSettings from "./SessionRowSettings";
 import { useParams } from "next/navigation";
+import React, { useEffect } from "react";
+import { IoChevronForward } from "react-icons/io5";
+import { PiDotsThreeCircleFill } from "react-icons/pi";
+import SessionRowSettings from "./SessionRowSettings";
 
 interface Props {
   session: any;
@@ -15,6 +14,9 @@ interface Props {
 const SessionRow = ({ index, isLast, session }: Props) => {
   const [showSettingsModal, setShowSettingsModal] = React.useState(false);
   const dialogRef = React.useRef<HTMLDialogElement>(null);
+
+  const controlButtonRef = React.useRef<HTMLButtonElement>(null);
+
   const { group_id, athlete_id } = useParams<{
     group_id: string;
     athlete_id: string;
@@ -42,8 +44,8 @@ const SessionRow = ({ index, isLast, session }: Props) => {
       }}
       className={
         !isLast
-          ? "relative  flex h-[36px] w-full flex-row items-center border-b-[1px] border-b-seperator bg-white print:h-[35px] print:border-none print:p-2 print:py-0 md:h-[50px]  dark:bg-darkSecondaryBackground"
-          : "relative  flex h-[36px] w-full flex-row items-center  bg-white   print:h-[35px] print:p-2 print:py-0 md:h-[50px] dark:bg-darkSecondaryBackground"
+          ? "relative flex h-[36px] w-full flex-row items-center rounded-[10px] border-b-[1px] border-b-seperator bg-white print:h-[35px] print:border-none print:p-2 print:py-0 md:h-[50px]  dark:bg-darkSecondaryBackground"
+          : "relative flex h-[36px] w-full flex-row items-center rounded-[10px]  bg-white   print:h-[35px] print:p-2 print:py-0 md:h-[50px] dark:bg-darkSecondaryBackground"
       }
       key={session.id}
     >
@@ -58,6 +60,7 @@ const SessionRow = ({ index, isLast, session }: Props) => {
       </Link>
 
       <button
+        ref={controlButtonRef}
         onClick={toggleModal}
         className="absolute -left-10 flex justify-end text-base transition-all duration-150 ease-in-out active:scale-95 md:text-xl"
       >
@@ -65,6 +68,7 @@ const SessionRow = ({ index, isLast, session }: Props) => {
       </button>
 
       <SessionRowSettings
+        controlButtonRef={controlButtonRef}
         session={session}
         showSettingsModal={showSettingsModal}
         setShowSettingsModal={setShowSettingsModal}

@@ -2,23 +2,34 @@ import React, { useEffect } from "react";
 import { IoCloseCircleSharp } from "react-icons/io5";
 import useDeleteGroup from "~/hooks/groupsHooks/useDeleteGroup";
 import useUpdateGroup from "~/hooks/groupsHooks/useUpdateGroup";
+import useModalControl from "~/hooks/useModalControl";
 import { GroupFromDB } from "~/utils/types";
 
 interface Props {
   showSettingsModal: boolean;
   setShowSettingsModal: React.Dispatch<React.SetStateAction<boolean>>;
   group: GroupFromDB;
+  controlButtonRef: React.RefObject<HTMLButtonElement>;
 }
 
 const GroupRowSettings = ({
   showSettingsModal,
   setShowSettingsModal,
   group,
+  controlButtonRef,
 }: Props) => {
   const [groupName, setgroupName] = React.useState(group.name || "");
 
   const { mutate: updateGroup } = useUpdateGroup();
   const { mutate: deleteGroup } = useDeleteGroup();
+
+  const ref = React.useRef<HTMLDivElement>(null);
+  useModalControl(
+    ref,
+    showSettingsModal,
+    setShowSettingsModal,
+    controlButtonRef,
+  );
 
   useEffect(() => {
     setgroupName(group.name || "");
@@ -37,6 +48,7 @@ const GroupRowSettings = ({
   return (
     <div className="z-10">
       <div
+        ref={ref}
         className="absolute -left-2 top-8 w-60 md:top-10 md:w-80"
         style={{
           transition: "all 0.150s ease-in-out",

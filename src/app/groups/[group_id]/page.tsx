@@ -61,7 +61,7 @@ const Session = ({ params }: Props) => {
   return (
     <main className="flex min-h-[100dvh] flex-col items-center justify-start bg-background dark:bg-darkBackground">
       <NavBar />
-      <div className="flex w-full flex-col items-center gap-2 md:w-3/4 md:flex-row md:gap-4">
+      <div className="flex w-full flex-col justify-center gap-2 md:w-3/4 md:flex-row md:gap-4">
         <GroupSessionsList
           sessions={generalSessions}
           areSessionsLoading={areSessionsLoading}
@@ -77,10 +77,10 @@ const Session = ({ params }: Props) => {
         <Spacer />
 
         <div className="flex flex-row gap-4 md:gap-24">
-          <CreateNewAthleteButton onCreateNewAthlete={handleCreateNewAthlete} />
           <CreateNewGroupSessionButton
             onCreateNewSession={handleCreateNewGroupSession}
           />
+          <CreateNewAthleteButton onCreateNewAthlete={handleCreateNewAthlete} />
         </div>
 
         <HelpButton

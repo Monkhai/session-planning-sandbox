@@ -1,4 +1,11 @@
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { PiDotsThreeCircleFill } from "react-icons/pi";
 import useDeleteDrill from "~/hooks/drillStationHooks/useDeleteDrill";
 import useGetDrillMedia from "~/hooks/drillStationHooks/useGetDrillStationMedia";
@@ -54,10 +61,12 @@ const CircuitDrillHeader = ({
   });
   const { mutate: deleteDrillStation } = useDeleteDrill();
 
-  const [hideDurationPicker, setHideDurationPicker] = useState(true);
+  const [showDurationPicker, setShowDurationPicker] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState<boolean>(false);
 
   const stationNameRef = useAutoResizeTextarea(drillName);
+
+  const controlButtonRef = useRef<HTMLButtonElement>(null);
 
   const durationString = useMemo(() => {
     const newDurationString = convertDurationToString(duration);
@@ -301,12 +310,14 @@ const CircuitDrillHeader = ({
       <div className="relative flex flex-row items-center gap-0">
         <div className="relative flex print:hidden">
           <button
+            ref={controlButtonRef}
             onClick={() => setShowSettingsModal(!showSettingsModal)}
             className="mr-1 transition-all duration-150 active:scale-95"
           >
             <PiDotsThreeCircleFill color={"gray"} size={22} />
           </button>
           <DrillStationSettings
+            controlButtonRef={controlButtonRef}
             title="Drill Settings"
             setShowSettingsModal={() =>
               setShowSettingsModal(!showSettingsModal)
@@ -336,8 +347,8 @@ const CircuitDrillHeader = ({
           <CircuitDrillDuration
             duration={duration}
             durationString={durationString}
-            hideDurationPicker={hideDurationPicker}
-            setHideDurationPicker={setHideDurationPicker}
+            setShowDurationPicker={setShowDurationPicker}
+            showDurationPicker={showDurationPicker}
             showDuration={showDuration}
             handledurationChange={handleDurationChange}
           />
