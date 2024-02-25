@@ -1,10 +1,9 @@
-import React from "react";
-import { SessionFromDB } from "~/utils/types";
-import SessionRow from "./SessionRow";
+import { SessionWithOrder } from "~/utils/types";
 import Loader from "../Loader";
+import SessionRow from "./SessionRow";
 
 interface Props {
-  sessions: SessionFromDB[] | undefined;
+  sessions: SessionWithOrder[] | undefined;
   areSessionsLoading: boolean;
 }
 

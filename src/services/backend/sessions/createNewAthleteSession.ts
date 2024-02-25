@@ -1,7 +1,7 @@
 import client from "~/utils/supabaseClient";
 import getUserId from "../userManagement/getUserId";
 import { PostgrestSingleResponse } from "@supabase/supabase-js";
-import { SessionFromDB } from "~/utils/types";
+import { SessionWithOrder } from "~/utils/types";
 
 export default async (name: string, lastOrder: number, athlete_id: number) => {
   try {
@@ -9,7 +9,7 @@ export default async (name: string, lastOrder: number, athlete_id: number) => {
 
     if (!user_id) throw new Error("User not logged in");
 
-    const { data, error }: PostgrestSingleResponse<SessionFromDB[]> =
+    const { data, error }: PostgrestSingleResponse<SessionWithOrder[]> =
       await client
         .from("sessions")
         .insert([{ name: name, user_id: user_id, order: lastOrder + 1 }])

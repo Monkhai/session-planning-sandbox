@@ -2,17 +2,25 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import React, { useEffect } from "react";
 import { IoChevronForward } from "react-icons/io5";
-import { SessionFromDB } from "~/utils/types";
+import { SessionWithOrder } from "~/utils/types";
 import SettingsIcon from "../icons/SettingsIcon";
 import GroupSessionRowSettings from "./GroupSessionRowSettings";
+import { Reorder, useDragControls } from "framer-motion";
+import ReorderController from "../ReorderController";
 
 interface Props {
-  session: SessionFromDB;
+  session: SessionWithOrder;
   index: number;
   isLast: boolean;
+  handleReorderEnd: () => void;
 }
 
-const GroupSessionRow = ({ index, isLast, session }: Props) => {
+const GroupSessionRow = ({
+  index,
+  isLast,
+  session,
+  handleReorderEnd,
+}: Props) => {
   const [showSettingsModal, setShowSettingsModal] = React.useState(false);
   const dialogRef = React.useRef<HTMLDialogElement>(null);
   const controlButtonRef = React.useRef<HTMLButtonElement>(null);
@@ -29,9 +37,13 @@ const GroupSessionRow = ({ index, isLast, session }: Props) => {
   const toggleModal = () => {
     setShowSettingsModal(!showSettingsModal);
   };
-
+  const dragControls = useDragControls();
   return (
-    <div
+    <Reorder.Item
+      dragControls={dragControls}
+      dragListener={false}
+      value={session}
+      key={session.id}
       style={{
         borderBottomLeftRadius: isLast ? "10px" : "0px",
         borderBottomRightRadius: isLast ? "10px" : "0px",
@@ -40,11 +52,14 @@ const GroupSessionRow = ({ index, isLast, session }: Props) => {
       }}
       className={
         !isLast
-          ? "relative flex h-[36px] w-full flex-row items-center border-b-[1px] border-b-seperator bg-white print:h-[35px] print:border-none print:p-2 print:py-0 md:h-[50px]  dark:bg-darkSecondaryBackground"
+          ? "relative flex h-[36px] w-full flex-row items-center border-b-[1px] border-b-seperator bg-white print:h-[35px] print:border-none print:p-2 print:py-0 md:h-[50px]  dark:border-b-darkSeperator dark:bg-darkSecondaryBackground"
           : "relative flex h-[36px] w-full flex-row items-center bg-white   print:h-[35px] print:p-2 print:py-0 md:h-[50px] dark:bg-darkSecondaryBackground"
       }
-      key={session.id}
     >
+      <ReorderController
+        controls={dragControls}
+        handleReorderEnd={handleReorderEnd}
+      />
       <Link
         className="flex h-[36px] w-full flex-row items-center justify-between p-2 text-base md:h-[50px] md:p-4 md:text-xl"
         href={`/groups/${group_id}/group-sessions/${session.id}`}
@@ -69,7 +84,7 @@ const GroupSessionRow = ({ index, isLast, session }: Props) => {
         showSettingsModal={showSettingsModal}
         setShowSettingsModal={setShowSettingsModal}
       />
-    </div>
+    </Reorder.Item>
   );
 };
 

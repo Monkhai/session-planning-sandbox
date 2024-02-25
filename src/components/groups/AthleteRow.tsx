@@ -5,14 +5,17 @@ import { IoChevronForward } from "react-icons/io5";
 import { AthleteFromDB } from "~/utils/types";
 import SettingsIcon from "../icons/SettingsIcon";
 import AthleteRowSettings from "./AthleteRowSettings";
+import { Reorder, useDragControls } from "framer-motion";
+import ReorderController from "../ReorderController";
 
 interface Props {
   athlete: AthleteFromDB;
   index: number;
   isLast: boolean;
+  handleReorderEnd: () => void;
 }
 
-const AthleteRow = ({ index, isLast, athlete }: Props) => {
+const AthleteRow = ({ index, isLast, athlete, handleReorderEnd }: Props) => {
   const [showSettingsModal, setShowSettingsModal] = React.useState(false);
   const { group_id } = useParams<{ group_id: string }>();
 
@@ -22,8 +25,14 @@ const AthleteRow = ({ index, isLast, athlete }: Props) => {
     setShowSettingsModal(!showSettingsModal);
   };
 
+  const dragControls = useDragControls();
+
   return (
-    <div
+    <Reorder.Item
+      dragControls={dragControls}
+      dragListener={false}
+      value={athlete}
+      key={athlete.id}
       style={{
         borderBottomLeftRadius: isLast ? "10px" : "0px",
         borderBottomRightRadius: isLast ? "10px" : "0px",
@@ -32,11 +41,14 @@ const AthleteRow = ({ index, isLast, athlete }: Props) => {
       }}
       className={
         !isLast
-          ? "relative  flex h-[36px] w-full flex-row items-center border-b-[1px] border-b-seperator bg-white print:h-[35px] print:border-none print:p-2 print:py-0 md:h-[50px]  dark:bg-darkSecondaryBackground"
+          ? "relative  flex h-[36px] w-full flex-row items-center border-b-[1px] border-b-seperator bg-white print:h-[35px] print:border-none print:p-2 print:py-0 md:h-[50px] dark:border-b-darkSeperator dark:bg-darkSecondaryBackground"
           : "relative  flex h-[36px] w-full flex-row items-center  bg-white   print:h-[35px] print:p-2 print:py-0 md:h-[50px] dark:bg-darkSecondaryBackground"
       }
-      key={athlete.id}
     >
+      <ReorderController
+        controls={dragControls}
+        handleReorderEnd={handleReorderEnd}
+      />
       <Link
         className="flex h-[36px] w-full flex-row items-center justify-between p-2 text-base md:h-[50px] md:p-4 md:text-xl"
         href={`/groups/${group_id}/athletes/${athlete.id}`}
@@ -61,7 +73,7 @@ const AthleteRow = ({ index, isLast, athlete }: Props) => {
         controlButtonRef={controlButtonRef}
         setShowSettingsModal={setShowSettingsModal}
       />
-    </div>
+    </Reorder.Item>
   );
 };
 

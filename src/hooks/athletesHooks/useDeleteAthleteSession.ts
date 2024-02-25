@@ -3,7 +3,7 @@ import { queryClient } from "Providers/ReactQueryProvider";
 import decrementSessionOrder from "~/services/backend/sessions/decrementSessionOrder";
 import deleteSession from "~/services/backend/sessions/deleteSession";
 import { queryKeyFactory } from "~/utils/queryFactories";
-import { SessionFromDB } from "~/utils/types";
+import { SessionWithOrder } from "~/utils/types";
 
 const useDeleteAthleteSession = () => {
   return useMutation({
@@ -26,15 +26,15 @@ const useDeleteAthleteSession = () => {
         queryKey: queryKey,
       });
 
-      const previousSessions: SessionFromDB[] =
+      const previousSessions: SessionWithOrder[] =
         queryClient.getQueryData(queryKey) ?? [];
 
       const index = previousSessions.findIndex(
-        (session: SessionFromDB) => session.id === session_id,
+        (session: SessionWithOrder) => session.id === session_id,
       );
 
       const newSessions = previousSessions.filter(
-        (session: SessionFromDB) => session.id !== session_id,
+        (session: SessionWithOrder) => session.id !== session_id,
       );
 
       const sessionsToUpdate = newSessions.slice(index);

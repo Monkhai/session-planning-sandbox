@@ -63,11 +63,18 @@ const SingleDrillStation = ({ drill, isLast }: Props) => {
   const { mutate: deleteMedia } = useDeleteMedia();
   const { mutate: addlDrillToCircuit } = useCreateDrill();
 
-  const { data: drillMedia, isLoading: isMediaLoading } =
-    useGetDrillStationMedia({
-      drill_id: drill.id,
-      session_id,
-    });
+  const {
+    data: drillMedia,
+    isLoading: isMediaLoading,
+    error: mediaError,
+  } = useGetDrillStationMedia({
+    drill_id: drill.id,
+    session_id,
+  });
+
+  // if (mediaError) {
+  //   alert("Error fetching media");
+  // }
 
   const handleToggleDuration = useCallback(
     (show: boolean) => {

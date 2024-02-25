@@ -200,8 +200,11 @@ export type SessionFromDB = {
   id: number;
   user_id: string;
   name: string;
-  order: number;
   created_at: string;
+};
+
+export type SessionWithOrder = SessionFromDB & {
+  order: number;
 };
 
 export type GroupFromDB = {
@@ -216,16 +219,20 @@ export type AthleteFromDB = {
   id: number;
   user_id: string;
   name: string;
-  order: number;
   created_at: string;
 };
 
-export type athleteType = AthleteFromDB & {
+export type AthleteWithOrder = AthleteFromDB & {
+  order: number;
+};
+
+export type AthleteOfGroupFromDB = AthleteFromDB & {
   sessions: SessionFromDB[];
+  order: number;
 };
 
 export type GroupType = GroupFromDB & {
-  athletes: athleteType[];
+  athletes: AthleteOfGroupFromDB[];
   generalSessions: SessionFromDB[];
 };
 

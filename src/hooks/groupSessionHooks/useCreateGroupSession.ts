@@ -3,7 +3,7 @@ import { queryClient } from "Providers/ReactQueryProvider";
 import createNewGroupSession from "~/services/backend/sessions/createNewGroupSession";
 import getUserId from "~/services/backend/userManagement/getUserId";
 import { queryKeyFactory } from "~/utils/queryFactories";
-import { AthleteFromDB, SessionFromDB } from "~/utils/types";
+import { AthleteFromDB, SessionWithOrder } from "~/utils/types";
 
 const useCreateGroupSession = () => {
   return useMutation({
@@ -32,7 +32,7 @@ const useCreateGroupSession = () => {
         queryKey: queryKey,
       });
 
-      const previousSessions: SessionFromDB[] =
+      const previousSessions: SessionWithOrder[] =
         queryClient.getQueryData(queryKey) ?? [];
 
       const tempId = Math.random() * 1000000;

@@ -3,14 +3,14 @@ import React, { useEffect } from "react";
 import useDeleteGroupSession from "~/hooks/groupSessionHooks/useDeleteGroupSession";
 import useUpdateGroupSession from "~/hooks/groupSessionHooks/useUpdateGroupSession";
 import useModalControl from "~/hooks/useModalControl";
-import { SessionFromDB } from "~/utils/types";
+import { SessionWithOrder } from "~/utils/types";
 import CloseIcon from "../icons/CloseIcon";
 
 interface Props {
   showSettingsModal: boolean;
   setShowSettingsModal: React.Dispatch<React.SetStateAction<boolean>>;
   controlButtonRef: React.RefObject<HTMLButtonElement>;
-  session: SessionFromDB;
+  session: SessionWithOrder;
 }
 
 const GroupSessionRowSettings = ({
@@ -44,6 +44,7 @@ const GroupSessionRowSettings = ({
       session_id: session.id,
       name: sessionName,
       group_id: params.group_id,
+      order: session.order,
     });
   };
 

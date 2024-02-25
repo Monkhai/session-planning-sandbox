@@ -9,11 +9,13 @@ const useUpdateGroup = () => {
     mutationFn: async ({
       group_id,
       name,
+      order,
     }: {
       group_id: number;
       name: string;
+      order: number;
     }) => {
-      return await updateGroup(group_id, name);
+      return await updateGroup(group_id, name, order);
     },
 
     onMutate: async ({ group_id, name }) => {

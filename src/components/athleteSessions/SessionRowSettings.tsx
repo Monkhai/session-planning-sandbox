@@ -3,14 +3,14 @@ import React, { useEffect } from "react";
 import useDeleteAthleteSession from "~/hooks/athletesHooks/useDeleteAthleteSession";
 import useUpdateAthleteSession from "~/hooks/athletesHooks/useUpdateAthleteSession";
 import useModalControl from "~/hooks/useModalControl";
-import { SessionFromDB } from "~/utils/types";
+import { SessionWithOrder } from "~/utils/types";
 import CloseIcon from "../icons/CloseIcon";
 
 interface Props {
   showSettingsModal: boolean;
   setShowSettingsModal: React.Dispatch<React.SetStateAction<boolean>>;
   controlButtonRef: React.RefObject<HTMLButtonElement>;
-  session: SessionFromDB;
+  session: SessionWithOrder;
 }
 
 const SessionRowSettings = ({
@@ -48,6 +48,7 @@ const SessionRowSettings = ({
       group_id: group_id,
       session_id: session.id,
       name: sessionName,
+      order: session.order,
     });
     setShowSettingsModal(false);
   };

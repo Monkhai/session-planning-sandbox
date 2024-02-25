@@ -1,7 +1,7 @@
 import client from "~/utils/supabaseClient";
-import { SessionFromDB } from "~/utils/types";
+import { SessionWithOrder } from "~/utils/types";
 
-export default async (session: SessionFromDB) => {
+export default async (session: SessionWithOrder) => {
   try {
     const { data, error } = await client
       .from("sessions")
@@ -19,7 +19,7 @@ export default async (session: SessionFromDB) => {
       throw new Error("No data");
     }
 
-    return data[0] as SessionFromDB;
+    return data[0] as SessionWithOrder;
   } catch (error) {
     console.error(error);
     throw error;

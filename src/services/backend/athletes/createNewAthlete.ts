@@ -15,7 +15,7 @@ export default async (group_id: number, name: string, lastOrder: number) => {
       error: athleteError,
     }: PostgrestSingleResponse<AthleteFromDB[]> = await client
       .from("athletes")
-      .insert([{ user_id, name, order: lastOrder + 1 }])
+      .insert([{ user_id, name }])
       .select();
 
     if (athleteError) throw athleteError;
@@ -28,7 +28,7 @@ export default async (group_id: number, name: string, lastOrder: number) => {
 
     const { error: athletes_of_groupsError } = await client
       .from("athletes_of_groups")
-      .insert([{ group_id, athlete_id, user_id }]);
+      .insert([{ group_id, athlete_id, user_id, order: lastOrder + 1 }]);
 
     if (athletes_of_groupsError) throw athletes_of_groupsError;
 

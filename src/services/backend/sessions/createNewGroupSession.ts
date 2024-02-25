@@ -1,7 +1,7 @@
 import client from "~/utils/supabaseClient";
 import getUserId from "../userManagement/getUserId";
 import { PostgrestSingleResponse } from "@supabase/supabase-js";
-import { SessionFromDB } from "~/utils/types";
+import { SessionWithOrder } from "~/utils/types";
 
 export default async (name: string, lastOrder: number, group_id: number) => {
   try {
@@ -9,10 +9,10 @@ export default async (name: string, lastOrder: number, group_id: number) => {
 
     if (!user_id) throw new Error("User not logged in");
 
-    const { data, error }: PostgrestSingleResponse<SessionFromDB[]> =
+    const { data, error }: PostgrestSingleResponse<SessionWithOrder[]> =
       await client
         .from("sessions")
-        .insert([{ name: name, user_id: user_id, order: lastOrder + 1 }])
+        .insert([{ name: name, user_id: user_id }])
         .select();
 
     if (error) throw error;
@@ -25,7 +25,7 @@ export default async (name: string, lastOrder: number, group_id: number) => {
 
     const { error: groupSessionError } = await client
       .from("sessions_of_groups")
-      .insert([{ group_id, session_id, user_id }]);
+      .insert([{ group_id, session_id, user_id, order: lastOrder + 1 }]);
 
     if (groupSessionError) throw groupSessionError;
 

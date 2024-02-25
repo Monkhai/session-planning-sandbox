@@ -2,20 +2,22 @@ import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "Providers/ReactQueryProvider";
 import updateSession from "~/services/backend/sessions/updateSession";
 import { queryKeyFactory } from "~/utils/queryFactories";
-import { SessionFromDB } from "~/utils/types";
+import { SessionWithOrder } from "~/utils/types";
 
 const useUpdateAthleteSession = () => {
   return useMutation({
     mutationFn: async ({
       session_id,
       name,
+      order,
     }: {
       session_id: number;
       name: string;
       group_id: string;
       athlete_id: string;
+      order: number;
     }) => {
-      return await updateSession(session_id, name);
+      return await updateSession(session_id, name, order);
     },
 
     onMutate: async ({ session_id, name, group_id, athlete_id }) => {
@@ -23,7 +25,7 @@ const useUpdateAthleteSession = () => {
         athlete_id,
         group_id,
       });
-      const previousSessions: SessionFromDB[] =
+      const previousSessions: SessionWithOrder[] =
         queryClient.getQueryData(queryKey) ?? [];
 
       const updatedSessions = previousSessions.map((session) => {
@@ -46,7 +48,7 @@ const useUpdateAthleteSession = () => {
         throw new Error("No data returned from updateSession");
       }
 
-      const previousSessions: SessionFromDB[] =
+      const previousSessions: SessionWithOrder[] =
         queryClient.getQueryData(queryKey) ?? [];
 
       const updatedSessions = previousSessions.map((session) => {

@@ -1,7 +1,11 @@
 import client from "~/utils/supabaseClient";
 import getUserId from "../userManagement/getUserId";
 import { PostgrestSingleResponse } from "@supabase/supabase-js";
-import { AthleteFromDB } from "~/utils/types";
+import {
+  AthleteFromDB,
+  AthleteOfGroupFromDB,
+  AthleteWithOrder,
+} from "~/utils/types";
 
 export default async (group_id: number) => {
   try {
@@ -9,11 +13,15 @@ export default async (group_id: number) => {
 
     if (!user_id) throw new Error("User not found");
 
-    const { data, error }: PostgrestSingleResponse<{ athlete_id: number }[]> =
+    const {
+      data,
+      error,
+    }: PostgrestSingleResponse<{ athlete_id: number; order: number }[]> =
       await client
         .from("athletes_of_groups")
-        .select("athlete_id")
-        .eq("group_id", group_id);
+        .select("athlete_id, order")
+        .eq("group_id", group_id)
+        .order("order", { ascending: true });
 
     if (error) throw error;
     if (!data) throw new Error("No data");
@@ -32,7 +40,23 @@ export default async (group_id: number) => {
 
     if (!athletes) throw new Error("No athletes");
 
-    return athletes;
+    //reorder athletes to match the order in the athletes_of_groups table
+    const orderedAthletes = data.map((athleteFromDB) => {
+      const athlete = athletes.find(
+        (athlete) => athlete.id === athleteFromDB.athlete_id,
+      );
+
+      if (!athlete) throw new Error("No athlete");
+
+      return {
+        ...athlete,
+        order: athleteFromDB.order,
+      } as AthleteWithOrder;
+    });
+
+    if (!orderedAthletes) throw new Error("No athletes");
+
+    return orderedAthletes;
   } catch (error) {
     throw error;
   }

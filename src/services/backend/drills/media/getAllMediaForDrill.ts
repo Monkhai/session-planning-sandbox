@@ -19,11 +19,11 @@ const getAllMediaFromStation = async (station_id: number) => {
       .list(`${user_id}/drills/${station_id}`);
 
     if (error) {
-      return [];
+      throw error;
     }
     return data;
   } catch (error) {
-    return [];
+    throw error;
   }
 };
 
@@ -37,31 +37,37 @@ export default async (station_id: number): Promise<SignedUrls[]> => {
   try {
     const media = await getAllMediaFromStation(station_id);
 
-    const signedUrls: SignedUrls[] = await Promise.all(
+    const signedUrls: (SignedUrls | undefined)[] = await Promise.all(
       media.map(async (file) => {
         const { data: signedUrl, error } = await client.storage
           .from("user-media")
           .createSignedUrl(`${user_id}/drills/${station_id}/${file.name}`, 120);
 
         if (error) {
-          console.error(error);
+          console.error(error, "error getting signed url");
           return {} as SignedUrls;
         }
 
         if (file.metadata.mimetype.split("/")[0] === "image") {
-          const dimensions = await getImageDimensions(signedUrl.signedUrl);
+          try {
+            const dimensions = await getImageDimensions(signedUrl.signedUrl);
+            const fileType: string = file.metadata.mimetype.split("/")[0];
+            return {
+              url: signedUrl.signedUrl,
+              type: fileType,
+              dimensions: dimensions,
+              name: file.name,
+            };
+          } catch (error) {
+            return undefined;
+          }
+        } else {
+          const dimenstions = await getVideoDimensions(signedUrl.signedUrl);
+
           const fileType: string = file.metadata.mimetype.split("/")[0];
           return {
             url: signedUrl.signedUrl,
             type: fileType,
-            dimensions: dimensions,
-            name: file.name,
-          };
-        } else {
-          const dimenstions = await getVideoDimensions(signedUrl.signedUrl);
-          return {
-            url: signedUrl.signedUrl,
-            type: file.metadata.mimetype.split("/")[0],
             dimensions: dimenstions,
             name: file.name,
           };
@@ -69,7 +75,7 @@ export default async (station_id: number): Promise<SignedUrls[]> => {
       }),
     );
 
-    return signedUrls;
+    return signedUrls.filter((url) => url !== undefined) as SignedUrls[];
   } catch (error) {
     throw error;
   }

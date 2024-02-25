@@ -1,15 +1,15 @@
-import client from "~/utils/supabaseClient";
-import getUserId from "../userManagement/getUserId";
-import { GroupFromDB, SessionFromDB } from "~/utils/types";
 import { PostgrestSingleResponse } from "@supabase/supabase-js";
+import client from "~/utils/supabaseClient";
+import { GroupFromDB } from "~/utils/types";
+import getUserId from "../userManagement/getUserId";
 
-export default async (group_id: number, name: string) => {
+export default async (group_id: number, name: string, order: number) => {
   const user_id = getUserId();
 
   try {
     const { data, error }: PostgrestSingleResponse<GroupFromDB[]> = await client
       .from("groups")
-      .update({ name })
+      .update({ name, order })
       .eq("id", group_id)
       .eq("user_id", user_id)
       .select();

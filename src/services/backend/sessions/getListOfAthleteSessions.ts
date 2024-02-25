@@ -1,7 +1,7 @@
 import client from "~/utils/supabaseClient";
 import getUserId from "../userManagement/getUserId";
 import { PostgrestSingleResponse } from "@supabase/supabase-js";
-import { SessionFromDB } from "~/utils/types";
+import { SessionFromDB, SessionWithOrder } from "~/utils/types";
 
 export default async (athlete_id: number) => {
   try {
@@ -9,11 +9,15 @@ export default async (athlete_id: number) => {
 
     if (!user_id) throw new Error("User not found");
 
-    const { data, error }: PostgrestSingleResponse<{ session_id: number }[]> =
+    const {
+      data,
+      error,
+    }: PostgrestSingleResponse<{ session_id: number; order: number }[]> =
       await client
         .from("sessions_of_athletes")
-        .select("session_id")
-        .eq("athlete_id", athlete_id);
+        .select("session_id, order")
+        .eq("athlete_id", athlete_id)
+        .order("order", { ascending: true });
 
     if (error) throw error;
 
@@ -33,7 +37,15 @@ export default async (athlete_id: number) => {
 
     if (!sessions) throw new Error("No sessions");
 
-    return sessions;
+    const sessionsWithOrder: SessionWithOrder[] = sessions.map((session) => {
+      const order = data.find((s) => s.session_id === session.id)?.order;
+
+      if (order === undefined) throw new Error("No order");
+
+      return { ...session, order };
+    });
+
+    return sessionsWithOrder;
   } catch (error) {
     throw error;
   }

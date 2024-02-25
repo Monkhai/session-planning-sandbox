@@ -1,6 +1,9 @@
-import { GroupFromDB, GroupType } from "~/utils/types";
-import GroupRow from "./GroupRow";
+import { Reorder } from "framer-motion";
+import useUpdateGroupOrder from "~/hooks/groupsHooks/useUpdateGroupsOrder";
+import { GroupFromDB } from "~/utils/types";
 import Loader from "../Loader";
+import GroupRow from "./GroupRow";
+import React, { useEffect } from "react";
 
 interface Props {
   groups: GroupFromDB[] | undefined;
@@ -8,6 +11,16 @@ interface Props {
 }
 
 const GroupList = ({ groups, areGroupsLoading }: Props) => {
+  const [mutableGroups, setMutableGroups] = React.useState<GroupFromDB[]>(
+    groups || [],
+  );
+
+  useEffect(() => {
+    setMutableGroups(groups || []);
+  }, [groups]);
+
+  const { mutate: updateGroupsOrder } = useUpdateGroupOrder();
+
   if (areGroupsLoading) {
     return (
       <div className="flex h-full w-full flex-1 items-center justify-center">
@@ -24,14 +37,29 @@ const GroupList = ({ groups, areGroupsLoading }: Props) => {
     );
   }
 
+  const handleReorder = (newGroups: GroupFromDB[]) => {
+    setMutableGroups(newGroups);
+  };
+
+  const onReorderEnd = () => {
+    updateGroupsOrder({ groups: mutableGroups });
+  };
+
   if (groups) {
     return (
-      <div className="flex w-3/4 flex-col pt-4 md:w-1/2">
-        {groups.map((group, index) => {
+      <Reorder.Group
+        values={mutableGroups}
+        axis="y"
+        onReorder={(newGroups) => handleReorder(newGroups)}
+        className="flex w-3/4 flex-col pt-4 md:w-1/2"
+        id="group-list"
+      >
+        {mutableGroups.map((group, index) => {
           const lastGroup = groups[groups.length - 1];
           const isLast = (lastGroup && group.id === lastGroup.id) || false;
           return (
             <GroupRow
+              handleReorderEnd={onReorderEnd}
               key={group.id}
               group={group}
               index={index}
@@ -39,7 +67,7 @@ const GroupList = ({ groups, areGroupsLoading }: Props) => {
             />
           );
         })}
-      </div>
+      </Reorder.Group>
     );
   }
 

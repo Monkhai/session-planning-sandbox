@@ -1,13 +1,20 @@
 "use client";
+import { Reorder, motion, useDragControls } from "framer-motion";
+import { Chela_One } from "next/font/google";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { Dispatch, SetStateAction, useRef, useState } from "react";
+import { IoReorderThreeOutline } from "react-icons/io5";
+import { set } from "zod";
 import HelpButton from "~/components/HelpButton";
 import NavBar from "~/components/NavBar";
 import Spacer from "~/components/utility/Spacer";
 import { useAuth } from "~/hooks/useAuth";
 import client from "~/utils/supabaseClient";
-
+type ComplexItem = {
+  id: number;
+  name: string;
+};
 const page = () => {
   useAuth();
   const [showContact, setShowContact] = React.useState(false);
@@ -20,10 +27,10 @@ const page = () => {
   };
 
   return (
-    <main className="relative flex h-[100dvh] flex-col items-center justify-start bg-background dark:bg-darkBackground">
-      <NavBar />
+    <main className="relative flex h-[100dvh] flex-col items-center justify-center bg-background dark:bg-darkBackground">
+      {/*<NavBar />
 
-      <Link href={"/groups"}>
+       <Link href={"/groups"}>
         <h2>Go To Groups!</h2>
       </Link>
 
@@ -36,7 +43,7 @@ const page = () => {
           setShowContact={setShowContact}
           showContact={showContact}
         />
-      </div>
+      </div> */}
     </main>
   );
 };

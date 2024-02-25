@@ -1,7 +1,9 @@
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "Providers/ReactQueryProvider";
 import getAllMediaForDrill from "~/services/backend/drills/media/getAllMediaForDrill";
-import uploadDrillMedia from "~/services/backend/drills/media/uploadDrillMedia";
+import uploadDrillMedia, {
+  checkIsImage,
+} from "~/services/backend/drills/media/uploadDrillMedia";
 import { queryKeyFactory } from "~/utils/queryFactories";
 import { SignedUrls, UploadMediaArgs } from "~/utils/types";
 type Args = {
@@ -16,7 +18,11 @@ const useUploadMedia = () => {
       return await getAllMediaForDrill(station_id);
     },
 
-    onMutate: async ({ station_id, session_id }) => {
+    onMutate: async ({ station_id, session_id, file }) => {
+      const isImage = checkIsImage(file);
+      if (!isImage) {
+        return;
+      }
       const queryKey = queryKeyFactory.drillMedia({
         session_id,
         drill_id: station_id,
@@ -68,7 +74,9 @@ const useUploadMedia = () => {
 
     onError: (error, _, context) => {
       console.error(error);
-      alert("Error uploading media");
+      if (error.message === "The resource already exists") {
+        alert("This image is already saved for this station");
+      }
       if (context) {
         context.callback();
       }

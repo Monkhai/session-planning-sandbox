@@ -7,8 +7,8 @@ export const getImageDimensions = (url: string) => {
     img.onload = () => {
       resolve({ height: img.height, width: img.width });
     };
-    img.onerror = () => {
-      reject("Error loading image");
+    img.onerror = (e) => {
+      reject("Error loading image dimensions");
     };
   });
 };
@@ -21,7 +21,7 @@ export const getVideoDimensions = (url: string) => {
       resolve({ height: video.videoHeight, width: video.videoWidth });
     };
     video.onerror = () => {
-      reject("Error loading video");
+      reject("Error loading video dimensions");
     };
   });
 };

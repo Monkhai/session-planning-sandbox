@@ -1,8 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import getAllGroups from "~/services/backend/groups/getAllGroups";
-import getAllSessions from "~/services/backend/sessions/getAllSessions";
 import { queryKeyFactory } from "~/utils/queryFactories";
-import { GroupFromDB, SessionFromDB } from "~/utils/types";
+import { GroupFromDB } from "~/utils/types";
 
 const useGetGroups = () => {
   const queryKey = queryKeyFactory.groups();

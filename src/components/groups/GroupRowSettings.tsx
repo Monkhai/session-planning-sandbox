@@ -36,7 +36,7 @@ const GroupRowSettings = ({
   }, [group]);
 
   const handleNameChange = () => {
-    updateGroup({ group_id: group.id, name: groupName });
+    updateGroup({ group_id: group.id, name: groupName, order: group.order });
     setShowSettingsModal(false);
   };
 

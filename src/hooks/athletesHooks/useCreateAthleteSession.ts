@@ -3,7 +3,7 @@ import { queryClient } from "Providers/ReactQueryProvider";
 import createNewAthleteSession from "~/services/backend/sessions/createNewAthleteSession";
 import getUserId from "~/services/backend/userManagement/getUserId";
 import { queryKeyFactory } from "~/utils/queryFactories";
-import { AthleteFromDB, SessionFromDB } from "~/utils/types";
+import { AthleteFromDB, SessionWithOrder } from "~/utils/types";
 
 const useCreateAthleteSession = () => {
   return useMutation({
@@ -35,7 +35,7 @@ const useCreateAthleteSession = () => {
         queryKey: queryKey,
       });
 
-      const previousSessions: SessionFromDB[] =
+      const previousSessions: SessionWithOrder[] =
         queryClient.getQueryData(queryKey) ?? [];
 
       const tempId = Math.random() * 1000000;
