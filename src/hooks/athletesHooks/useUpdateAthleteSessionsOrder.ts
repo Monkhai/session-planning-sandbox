@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "Providers/ReactQueryProvider";
+import updateAthleteSessionOrder from "~/services/backend/athletes/updateAthleteSessionOrder";
 import updateGroupSessionOrder from "~/services/backend/sessions/updateGroupSessionOrder";
 import { queryKeyFactory } from "~/utils/queryFactories";
 import { SessionWithOrder } from "~/utils/types";
@@ -13,7 +14,7 @@ const useUpdateAthleteSessionsOrder = () => {
       group_id: string;
       athlete_id: string;
     }) => {
-      return await updateGroupSessionOrder(sessions);
+      return await updateAthleteSessionOrder(sessions);
     },
 
     onMutate: async ({ sessions, group_id, athlete_id }) => {

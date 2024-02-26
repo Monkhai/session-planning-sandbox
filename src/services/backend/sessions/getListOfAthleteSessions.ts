@@ -45,7 +45,7 @@ export default async (athlete_id: number) => {
       return { ...session, order };
     });
 
-    return sessionsWithOrder;
+    return sessionsWithOrder.sort((a, b) => a.order - b.order);
   } catch (error) {
     throw error;
   }
