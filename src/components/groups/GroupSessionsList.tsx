@@ -5,6 +5,8 @@ import { Reorder } from "framer-motion";
 import useUpdateGroupSessionOrder from "~/hooks/groupSessionHooks/useUpdateGroupSessionOrder";
 import { useParams } from "next/navigation";
 import React, { useEffect } from "react";
+import { queryKeyFactory } from "~/utils/queryFactories";
+import { queryClient } from "Providers/ReactQueryProvider";
 
 interface Props {
   sessions: SessionWithOrder[] | undefined;
@@ -12,14 +14,6 @@ interface Props {
 }
 
 const GroupSessionsList = ({ sessions, areSessionsLoading }: Props) => {
-  const [mutableSessions, setMutableSessions] = React.useState<
-    SessionWithOrder[]
-  >(sessions || []);
-
-  useEffect(() => {
-    setMutableSessions(sessions || []);
-  }, [sessions]);
-
   const { mutate: updateGroupSessionOrder } = useUpdateGroupSessionOrder();
   const { group_id } = useParams<{ group_id: string }>();
   if (areSessionsLoading) {
@@ -41,11 +35,14 @@ const GroupSessionsList = ({ sessions, areSessionsLoading }: Props) => {
   }
 
   const handleReorder = (newGroupSessions: SessionWithOrder[]) => {
-    setMutableSessions(newGroupSessions);
+    const queryKey = queryKeyFactory.groupSessions({ group_id });
+    queryClient.setQueryData(queryKey, newGroupSessions);
   };
 
   const onReorderEnd = () => {
-    updateGroupSessionOrder({ sessions: mutableSessions, group_id: group_id });
+    if (sessions) {
+      updateGroupSessionOrder({ sessions: sessions, group_id: group_id });
+    }
   };
 
   if (sessions) {
@@ -53,7 +50,7 @@ const GroupSessionsList = ({ sessions, areSessionsLoading }: Props) => {
       <div className="flex w-3/4 flex-col gap-2 pt-4 md:w-1/2 md:gap-4">
         <h2>General Sessions</h2>
         <Reorder.Group values={sessions} onReorder={handleReorder} axis="y">
-          {mutableSessions.map((session, index) => {
+          {sessions.map((session, index) => {
             const lastSession = sessions[sessions.length - 1];
 
             const isLast =

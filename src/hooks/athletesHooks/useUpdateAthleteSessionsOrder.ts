@@ -4,19 +4,23 @@ import updateGroupSessionOrder from "~/services/backend/sessions/updateGroupSess
 import { queryKeyFactory } from "~/utils/queryFactories";
 import { SessionWithOrder } from "~/utils/types";
 
-const useUpdateGroupSessionOrder = () => {
+const useUpdateAthleteSessionsOrder = () => {
   return useMutation({
     mutationFn: async ({
       sessions,
     }: {
       sessions: SessionWithOrder[];
       group_id: string;
+      athlete_id: string;
     }) => {
       return await updateGroupSessionOrder(sessions);
     },
 
-    onMutate: async ({ sessions, group_id }) => {
-      const queryKey = queryKeyFactory.groupSessions({ group_id });
+    onMutate: async ({ sessions, group_id, athlete_id }) => {
+      const queryKey = queryKeyFactory.athleteSessions({
+        athlete_id,
+        group_id,
+      });
 
       const previousAthletes: SessionWithOrder[] =
         queryClient.getQueryData(queryKey) ?? [];
@@ -35,7 +39,7 @@ const useUpdateGroupSessionOrder = () => {
 
     onSuccess: async (data, _, { queryKey }) => {
       if (!data) {
-        throw new Error("No data returned from updateGroupSessionOrder");
+        throw new Error("No data returned from updateAthleteSessionsOrder");
       }
 
       queryClient.setQueryData(queryKey, data);
@@ -48,4 +52,4 @@ const useUpdateGroupSessionOrder = () => {
   });
 };
 
-export default useUpdateGroupSessionOrder;
+export default useUpdateAthleteSessionsOrder;

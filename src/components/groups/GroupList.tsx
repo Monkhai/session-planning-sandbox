@@ -4,6 +4,8 @@ import { GroupFromDB } from "~/utils/types";
 import Loader from "../Loader";
 import GroupRow from "./GroupRow";
 import React, { useEffect } from "react";
+import { queryKeyFactory } from "~/utils/queryFactories";
+import { queryClient } from "Providers/ReactQueryProvider";
 
 interface Props {
   groups: GroupFromDB[] | undefined;
@@ -11,14 +13,6 @@ interface Props {
 }
 
 const GroupList = ({ groups, areGroupsLoading }: Props) => {
-  const [mutableGroups, setMutableGroups] = React.useState<GroupFromDB[]>(
-    groups || [],
-  );
-
-  useEffect(() => {
-    setMutableGroups(groups || []);
-  }, [groups]);
-
   const { mutate: updateGroupsOrder } = useUpdateGroupOrder();
 
   if (areGroupsLoading) {
@@ -38,28 +32,31 @@ const GroupList = ({ groups, areGroupsLoading }: Props) => {
   }
 
   const handleReorder = (newGroups: GroupFromDB[]) => {
-    setMutableGroups(newGroups);
+    const queryKey = queryKeyFactory.groups();
+    queryClient.setQueryData(queryKey, newGroups);
   };
 
-  const onReorderEnd = () => {
-    updateGroupsOrder({ groups: mutableGroups });
+  const handleReorderEnd = () => {
+    if (groups) {
+      updateGroupsOrder({ groups: groups });
+    }
   };
 
   if (groups) {
     return (
       <Reorder.Group
-        values={mutableGroups}
+        values={groups}
         axis="y"
         onReorder={(newGroups) => handleReorder(newGroups)}
         className="flex w-3/4 flex-col pt-4 md:w-1/2"
         id="group-list"
       >
-        {mutableGroups.map((group, index) => {
+        {groups.map((group, index) => {
           const lastGroup = groups[groups.length - 1];
           const isLast = (lastGroup && group.id === lastGroup.id) || false;
           return (
             <GroupRow
-              handleReorderEnd={onReorderEnd}
+              handleReorderEnd={handleReorderEnd}
               key={group.id}
               group={group}
               index={index}

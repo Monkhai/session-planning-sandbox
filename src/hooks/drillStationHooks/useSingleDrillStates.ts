@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { convertDurationToString } from "~/services/DurationFunctions";
 import { DrillType } from "~/utils/types";
 import useUpdateDrill from "./useUpdateDrill";
-import { useParams } from "next/navigation";
 
 type useDrillStationStatesArgs = {
   drill: DrillType;

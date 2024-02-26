@@ -4,14 +4,17 @@ import React, { useEffect } from "react";
 import { IoChevronForward } from "react-icons/io5";
 import SettingsIcon from "../icons/SettingsIcon";
 import SessionRowSettings from "./SessionRowSettings";
+import { Reorder, useDragControls } from "framer-motion";
+import ReorderController from "../ReorderController";
 
 interface Props {
   session: any;
   index: number;
   isLast: boolean;
+  onReorderEnd: () => void;
 }
 
-const SessionRow = ({ index, isLast, session }: Props) => {
+const SessionRow = ({ index, isLast, session, onReorderEnd }: Props) => {
   const [showSettingsModal, setShowSettingsModal] = React.useState(false);
   const dialogRef = React.useRef<HTMLDialogElement>(null);
 
@@ -33,9 +36,13 @@ const SessionRow = ({ index, isLast, session }: Props) => {
   const toggleModal = () => {
     setShowSettingsModal(!showSettingsModal);
   };
-
+  const dragControls = useDragControls();
   return (
-    <div
+    <Reorder.Item
+      dragControls={dragControls}
+      dragListener={false}
+      key={session.id}
+      value={session}
       style={{
         borderBottomLeftRadius: isLast ? "10px" : "0px",
         borderBottomRightRadius: isLast ? "10px" : "0px",
@@ -47,8 +54,11 @@ const SessionRow = ({ index, isLast, session }: Props) => {
           ? "relative flex h-[36px] w-full flex-row items-center rounded-[10px] border-b-[1px] border-b-seperator bg-white print:h-[35px] print:border-none print:p-2 print:py-0 md:h-[50px]  dark:bg-darkSecondaryBackground"
           : "relative flex h-[36px] w-full flex-row items-center rounded-[10px]  bg-white   print:h-[35px] print:p-2 print:py-0 md:h-[50px] dark:bg-darkSecondaryBackground"
       }
-      key={session.id}
     >
+      <ReorderController
+        controls={dragControls}
+        handleReorderEnd={onReorderEnd}
+      />
       <Link
         className="flex h-[36px] w-full flex-row items-center justify-between p-2 text-base md:h-[50px] md:p-4 md:text-xl"
         href={`/groups/${group_id}/athletes/${athlete_id}/athlete-sessions/${session.id}`}
@@ -73,7 +83,7 @@ const SessionRow = ({ index, isLast, session }: Props) => {
         showSettingsModal={showSettingsModal}
         setShowSettingsModal={setShowSettingsModal}
       />
-    </div>
+    </Reorder.Item>
   );
 };
 

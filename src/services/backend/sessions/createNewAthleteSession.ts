@@ -12,7 +12,7 @@ export default async (name: string, lastOrder: number, athlete_id: number) => {
     const { data, error }: PostgrestSingleResponse<SessionWithOrder[]> =
       await client
         .from("sessions")
-        .insert([{ name: name, user_id: user_id, order: lastOrder + 1 }])
+        .insert([{ name: name, user_id: user_id }])
         .select();
 
     if (error) throw error;
@@ -25,7 +25,7 @@ export default async (name: string, lastOrder: number, athlete_id: number) => {
 
     const { error: groupSessionError } = await client
       .from("sessions_of_athletes")
-      .insert([{ athlete_id, session_id, user_id }]);
+      .insert([{ athlete_id, session_id, user_id, order: lastOrder + 1 }]);
 
     if (groupSessionError) throw groupSessionError;
 

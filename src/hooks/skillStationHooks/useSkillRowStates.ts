@@ -1,6 +1,7 @@
 import { UseMutateFunction } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { SessionContext } from "~/context/SessionIdContext";
 import { SkillType, updateSkillArgs } from "~/utils/types";
 
 type useSkillRowStatesArgs = {
@@ -23,7 +24,7 @@ const useSkillRowStates = ({
   const [description, setDescription] = useState<string>("");
   const [showReps, setShowReps] = useState<boolean>(false);
 
-  const params = useParams<{ id: string }>();
+  const { session_id } = useContext(SessionContext);
 
   useEffect(() => {
     setSkillName(skill.name);
@@ -47,7 +48,7 @@ const useSkillRowStates = ({
           description: description,
           station_id: skill.station_id,
           show_reps: showReps,
-          session_id: params.id,
+          session_id: session_id,
         });
       }
     };
@@ -78,7 +79,7 @@ const useSkillRowStates = ({
         descriptionElement.removeEventListener("blur", handleBlur);
       }
     };
-  }, [skill, skillName, reps, description, showReps]);
+  }, [skill, skillName, reps, description, showReps, updateSkill, session_id]);
 
   return {
     skillName,
@@ -89,7 +90,7 @@ const useSkillRowStates = ({
     setDescription,
     showReps,
     setShowReps,
-    session_id: params.id,
+    session_id,
   };
 };
 

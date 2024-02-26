@@ -2,7 +2,14 @@ import client from "~/utils/supabaseClient";
 import getUserId from "../userManagement/getUserId";
 import { SessionWithOrder } from "~/utils/types";
 
-export default async (session_id: number, name: string, order: number) => {
+type Args = {
+  session_id: number;
+  name: string;
+  order: number;
+  joinTable: "sessions_of_groups" | "sessions_of_athletes";
+};
+
+export default async ({ session_id, name, order, joinTable }: Args) => {
   const user_id = getUserId();
 
   try {
@@ -20,13 +27,13 @@ export default async (session_id: number, name: string, order: number) => {
       throw new Error("No data returned from updateSession");
     }
 
-    const { error: sessions_of_groupsError } = await client
-      .from("sessions_of_groups")
+    const { error: sessionsOfError } = await client
+      .from(joinTable)
       .update({ order })
       .eq("session_id", session_id)
       .eq("user_id", user_id);
 
-    if (sessions_of_groupsError) throw sessions_of_groupsError;
+    if (sessionsOfError) throw sessionsOfError;
 
     return data[0] as SessionWithOrder;
   } catch (error) {

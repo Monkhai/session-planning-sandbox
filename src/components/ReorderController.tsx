@@ -19,7 +19,7 @@ const ReorderController = ({ controls, handleReorderEnd }: Props) => {
         touchAction: "none",
       }}
       onPointerDown={onPointerDown}
-      className="ml-2 md:ml-4"
+      className="ml-2 hover:cursor-grab active:cursor-grabbing md:ml-4"
     >
       <ReorderIcon size={28} />
     </button>

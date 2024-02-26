@@ -84,4 +84,4 @@ const GroupRow = ({ index, isLast, group, handleReorderEnd }: Props) => {
   );
 };
 
-export default React.memo(GroupRow);
+export default GroupRow;

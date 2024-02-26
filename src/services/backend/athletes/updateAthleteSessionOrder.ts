@@ -1,5 +1,5 @@
 import { SessionWithOrder } from "~/utils/types";
-import updateSession from "./updateSession";
+import updateSession from "../sessions/updateSession";
 
 export default async (sessions: SessionWithOrder[]) => {
   try {
@@ -7,7 +7,7 @@ export default async (sessions: SessionWithOrder[]) => {
       sessions.map(async (session, index) => {
         if (session.order !== index + 1) {
           const newSession = await updateSession({
-            joinTable: "sessions_of_groups",
+            joinTable: "sessions_of_athletes",
             name: session.name,
             order: index + 1,
             session_id: session.id,

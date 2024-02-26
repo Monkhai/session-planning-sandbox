@@ -6,6 +6,8 @@ import useUpdateAthletesOrder from "~/hooks/athletesHooks/useUpdateAthletesOrder
 import { useParams } from "next/navigation";
 import { on } from "events";
 import React, { useEffect } from "react";
+import { queryKeyFactory } from "~/utils/queryFactories";
+import { queryClient } from "Providers/ReactQueryProvider";
 
 interface Props {
   athletes: AthleteWithOrder[] | undefined;
@@ -13,14 +15,6 @@ interface Props {
 }
 
 const AthleteList = ({ athletes, areAthletesLoading }: Props) => {
-  const [mutableAthletes, setMutableAthletes] = React.useState<
-    AthleteWithOrder[]
-  >(athletes || []);
-
-  useEffect(() => {
-    setMutableAthletes(athletes || []);
-  }, [athletes]);
-
   const { mutate: updateAthletesOrder } = useUpdateAthletesOrder();
   const { group_id } = useParams<{ group_id: string }>();
   if (areAthletesLoading) {
@@ -42,11 +36,14 @@ const AthleteList = ({ athletes, areAthletesLoading }: Props) => {
   }
 
   const handleReorder = (newAthletes: AthleteWithOrder[]) => {
-    setMutableAthletes(newAthletes);
+    const queryKey = queryKeyFactory.groupAthletes({ group_id });
+    queryClient.setQueryData(queryKey, newAthletes);
   };
 
   const onReorderEnd = () => {
-    updateAthletesOrder({ athletes: mutableAthletes, group_id: group_id });
+    if (athletes) {
+      updateAthletesOrder({ athletes: athletes, group_id: group_id });
+    }
   };
 
   if (athletes !== undefined && athletes.length > 0) {
@@ -54,7 +51,7 @@ const AthleteList = ({ athletes, areAthletesLoading }: Props) => {
       <div className="flex w-3/4 flex-col gap-2 pt-4 md:w-1/2 md:gap-4">
         <h2>Athletes</h2>
         <Reorder.Group values={athletes} axis="y" onReorder={handleReorder}>
-          {mutableAthletes.map((athlete, index) => {
+          {athletes.map((athlete, index) => {
             const lastAthlete = athletes[athletes.length - 1];
             const isLast =
               (lastAthlete && athlete.id === lastAthlete.id) || false;

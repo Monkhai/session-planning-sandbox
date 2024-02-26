@@ -21,7 +21,10 @@ const useUpdateAthletesOrder = () => {
       const previousAthletes: AthleteWithOrder[] =
         queryClient.getQueryData(queryKey) ?? [];
 
-      queryClient.setQueryData(queryKey, athletes);
+      const orderedAthletes = athletes.map((athlete, index) => {
+        return { ...athlete, order: index + 1 };
+      });
+      queryClient.setQueryData(queryKey, orderedAthletes);
 
       return {
         rollback: () => queryClient.setQueryData(queryKey, previousAthletes),

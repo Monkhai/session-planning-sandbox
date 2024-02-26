@@ -16,7 +16,11 @@ const useUpdateGroupOrder = () => {
       const previousGroups: GroupFromDB[] =
         queryClient.getQueryData(queryKey) ?? [];
 
-      queryClient.setQueryData(queryKey, groups);
+      const orderedGroups = groups.map((group, index) => {
+        return { ...group, order: index + 1 };
+      });
+
+      queryClient.setQueryData(queryKey, orderedGroups);
 
       return {
         rollback: () => queryClient.setQueryData(queryKey, previousGroups),

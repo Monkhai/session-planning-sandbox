@@ -10,7 +10,6 @@ import Spacer from "~/components/utility/Spacer";
 import useCreateAthleteSession from "~/hooks/athletesHooks/useCreateAthleteSession";
 import useGetAthleteSessions from "~/hooks/athletesHooks/useGetAthleteSessions";
 import useGetOneAthlete from "~/hooks/athletesHooks/useGetOneAthlete";
-import useGetGroupSessions from "~/hooks/groupSessionHooks/useGetGroupSessions";
 import { useAuth } from "~/hooks/useAuth";
 import client from "~/utils/supabaseClient";
 
@@ -47,7 +46,6 @@ const Session = ({ params }: Props) => {
       athlete_id: params.athlete_id,
       group_id: params.group_id,
     });
-
   const { mutate: createAthleteSession } = useCreateAthleteSession();
 
   const [showContact, setShowContact] = useState(false);
