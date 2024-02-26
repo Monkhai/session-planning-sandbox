@@ -13,6 +13,7 @@ import useCreateAthlete from "~/hooks/athletesHooks/useCreateAthlete";
 import useCreateGroupSession from "~/hooks/groupSessionHooks/useCreateGroupSession";
 import useGetGroupSessions from "~/hooks/groupSessionHooks/useGetGroupSessions";
 import useGetGroupAthletes from "~/hooks/groupsHooks/useGetGroupAthletes";
+import useGetOneGroup from "~/hooks/groupsHooks/useGetOneGroup";
 import { useAuth } from "~/hooks/useAuth";
 import client from "~/utils/supabaseClient";
 
@@ -25,6 +26,8 @@ interface Props {
 const Session = ({ params }: Props) => {
   useAuth();
   const router = useRouter();
+
+  const { data: group } = useGetOneGroup(params.group_id);
 
   const { data: athletes, isLoading: areAthletesLoading } = useGetGroupAthletes(
     params.group_id,
@@ -60,7 +63,7 @@ const Session = ({ params }: Props) => {
 
   return (
     <main className="flex min-h-[100dvh] flex-col items-center justify-start bg-background dark:bg-darkBackground">
-      <NavBar />
+      <NavBar title={group?.name} />
       <div className="flex w-full flex-col items-center gap-2 md:w-3/4 md:flex-row md:items-start md:justify-center md:gap-4">
         <GroupSessionsList
           sessions={generalSessions}

@@ -24,11 +24,18 @@ export type QKFGroupsArgs = {};
 
 export const queryKeyFactory = {
   groups: (): string[] => ["groups"],
+
+  specificGroup: ({ group_id }: { group_id: string }): string[] => [
+    "groups",
+    group_id,
+  ],
+
   groupAthletes: ({ group_id }: QKFAthletesArgs): string[] => [
     "groups",
     group_id,
     "athletes",
   ],
+
   specificAthlete: ({
     athlete_id,
     group_id,
@@ -38,6 +45,7 @@ export const queryKeyFactory = {
     "athletes",
     athlete_id,
   ],
+
   athleteSessions: ({
     athlete_id,
     group_id,
@@ -53,6 +61,11 @@ export const queryKeyFactory = {
     "groups",
     group_id,
     "groupSessions",
+  ],
+
+  specificSession: ({ session_id }: { session_id: string }): string[] => [
+    "sessions",
+    session_id,
   ],
 
   stations: ({ session_id }: QKFStationsArgs): string[] => [

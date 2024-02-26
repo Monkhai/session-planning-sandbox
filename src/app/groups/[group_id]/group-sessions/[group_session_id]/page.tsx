@@ -11,6 +11,7 @@ import StationResponseHandler from "~/components/StationResponseHandler";
 import Spacer from "~/components/utility/Spacer";
 import { SessionContext } from "~/context/SessionIdContext";
 import useCreateDrillStation from "~/hooks/drillStationHooks/useCreateDrillStation";
+import useGetOneSession from "~/hooks/sessionsHooks/useGetOneSession";
 import useStationsForSession from "~/hooks/sessionsHooks/useStationsForSession";
 import useCreateSkillStation from "~/hooks/skillStationHooks/useCreateSkillStation";
 import { useAuth } from "~/hooks/useAuth";
@@ -28,6 +29,8 @@ const Session = ({ params }: Props) => {
   const router = useRouter();
 
   const [showContact, setShowContact] = useState(false);
+
+  const { data: session } = useGetOneSession(params.group_session_id);
 
   const {
     data: allStations,
@@ -59,7 +62,7 @@ const Session = ({ params }: Props) => {
 
   return (
     <main className="flex min-h-[100dvh] flex-col items-center justify-start bg-background dark:bg-darkBackground">
-      <NavBar />
+      <NavBar title={session?.name} />
       <SessionContext.Provider value={{ session_id: params.group_session_id }}>
         <StationResponseHandler
           error={error}
