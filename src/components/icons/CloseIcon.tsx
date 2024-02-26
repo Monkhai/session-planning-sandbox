@@ -9,7 +9,7 @@ const CloseIcon = ({ color, size }: Props) => {
   const colorMap = {
     blue: "var(--color-blue)",
     gray: "grey",
-    red: "red",
+    red: "rgb(239 68 68)",
   };
 
   return (

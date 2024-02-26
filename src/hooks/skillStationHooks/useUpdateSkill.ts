@@ -12,8 +12,16 @@ const useUpdateSkill = () => {
       repetitions,
       description,
       show_reps,
+      order,
     }: updateSkillArgs) => {
-      await updateSkill(skill_id, name, repetitions, description, show_reps);
+      await updateSkill({
+        skill_id,
+        name,
+        repetitions,
+        description,
+        show_reps,
+        order,
+      });
     },
 
     onMutate: ({

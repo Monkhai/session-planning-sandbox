@@ -113,6 +113,7 @@ export type updateSkillArgs = {
   station_id: number;
   show_reps: boolean;
   session_id: string;
+  order: number;
 };
 
 export type UpdateDrillArgs = {

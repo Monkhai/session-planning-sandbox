@@ -35,7 +35,12 @@ export default async ({ session_id, name, order, joinTable }: Args) => {
 
     if (sessionsOfError) throw sessionsOfError;
 
-    return data[0] as SessionWithOrder;
+    const sessionWithOrder = {
+      ...data[0],
+      order,
+    };
+
+    return sessionWithOrder as SessionWithOrder;
   } catch (error) {
     throw error;
   }

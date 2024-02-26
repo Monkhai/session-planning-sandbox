@@ -4,8 +4,9 @@ import ReorderIcon from "./icons/ReorderIcon";
 interface Props {
   controls: DragControls;
   handleReorderEnd: () => void;
+  noMargin?: boolean;
 }
-const ReorderController = ({ controls, handleReorderEnd }: Props) => {
+const ReorderController = ({ controls, handleReorderEnd, noMargin }: Props) => {
   const ref = React.useRef<HTMLButtonElement>(null);
   const onPointerDown = (e: React.PointerEvent) => {
     controls.start(e);
@@ -19,7 +20,7 @@ const ReorderController = ({ controls, handleReorderEnd }: Props) => {
         touchAction: "none",
       }}
       onPointerDown={onPointerDown}
-      className="ml-2 hover:cursor-grab active:cursor-grabbing md:ml-4"
+      className={"ml-2 hover:cursor-grab active:cursor-grabbing md:ml-4"}
     >
       <ReorderIcon size={28} />
     </button>
