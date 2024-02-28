@@ -129,6 +129,7 @@ export type UpdateDrillArgs = {
   show_edit_media: boolean;
   station_id: number;
   session_id: string;
+  order: number;
 };
 
 export type ImageDimensions = { height: number; width: number };

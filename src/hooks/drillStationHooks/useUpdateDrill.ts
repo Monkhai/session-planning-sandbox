@@ -2,13 +2,23 @@ import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "Providers/ReactQueryProvider";
 import updateDrill from "~/services/backend/drills/updateDrill";
 import { queryKeyFactory } from "~/utils/queryFactories";
-import {
-  DrillStationWithDrillsType,
-  DrillType,
-  Station,
-  UpdateDrillArgs,
-} from "~/utils/types";
+import { DrillStationWithDrillsType, DrillType, Station } from "~/utils/types";
 
+type Args = {
+  drill_id: number;
+  duration: string | null;
+  name: string;
+  show_duration: boolean;
+  description: string;
+  comments: string;
+  show_comments: boolean;
+  show_media: boolean;
+  show_edit_media: boolean;
+  station_id: number;
+  session_id: string;
+  drillOfStationId: number;
+  order: number;
+};
 const useUpdateDrill = () => {
   return useMutation({
     mutationFn: async ({
@@ -23,7 +33,9 @@ const useUpdateDrill = () => {
       show_media,
       station_id,
       session_id,
-    }: UpdateDrillArgs) => {
+      drillOfStationId,
+      order,
+    }: Args) => {
       return await updateDrill({
         drill_id,
         name,
@@ -36,6 +48,8 @@ const useUpdateDrill = () => {
         show_media,
         station_id,
         session_id,
+        drillOfStationId,
+        order,
       });
     },
 

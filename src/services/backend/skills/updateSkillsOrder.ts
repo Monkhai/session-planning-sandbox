@@ -12,6 +12,7 @@ export default async (skills: SkillType[]) => {
           repetitions: skill.repetitions,
           show_reps: skill.show_reps,
           skill_id: skill.id,
+          skillOfStationId: skill.skillOfStationId,
         });
         if (!newSkill) {
           throw new Error("No data returned from skills");

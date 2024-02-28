@@ -2,8 +2,18 @@ import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "Providers/ReactQueryProvider";
 import updateSkill from "~/services/backend/skills/updateSkill";
 import { queryKeyFactory } from "~/utils/queryFactories";
-import { SkillStationWithSkillsType, updateSkillArgs } from "~/utils/types";
-
+import { SkillStationWithSkillsType } from "~/utils/types";
+type Args = {
+  skill_id: number;
+  name: string;
+  repetitions: number;
+  description: string;
+  station_id: number;
+  show_reps: boolean;
+  session_id: string;
+  order: number;
+  skillOfStationId: number;
+};
 const useUpdateSkill = () => {
   return useMutation({
     mutationFn: async ({
@@ -13,7 +23,8 @@ const useUpdateSkill = () => {
       description,
       show_reps,
       order,
-    }: updateSkillArgs) => {
+      skillOfStationId,
+    }: Args) => {
       await updateSkill({
         skill_id,
         name,
@@ -21,6 +32,7 @@ const useUpdateSkill = () => {
         description,
         show_reps,
         order,
+        skillOfStationId,
       });
     },
 
@@ -32,7 +44,7 @@ const useUpdateSkill = () => {
       station_id,
       show_reps,
       session_id,
-    }: updateSkillArgs) => {
+    }) => {
       const queryKey = queryKeyFactory.stations({ session_id });
       queryClient.cancelQueries({
         queryKey: queryKey,

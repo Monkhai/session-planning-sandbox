@@ -3,10 +3,10 @@ import { useParams } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import { SessionContext } from "~/context/SessionIdContext";
 import { SkillType, updateSkillArgs } from "~/utils/types";
+import useUpdateSkill from "./useUpdateSkill";
 
 type useSkillRowStatesArgs = {
   skill: SkillType;
-  updateSkill: UseMutateFunction<void, Error, updateSkillArgs, () => void>;
   nameRef: React.RefObject<HTMLInputElement | null>;
   repsRef: React.RefObject<HTMLInputElement | null>;
   descriptionRef: React.RefObject<HTMLTextAreaElement | null>;
@@ -17,13 +17,12 @@ const useSkillRowStates = ({
   nameRef,
   repsRef,
   skill,
-  updateSkill,
 }: useSkillRowStatesArgs) => {
   const [skillName, setSkillName] = useState<string>("");
   const [reps, setReps] = useState<number>(0);
   const [description, setDescription] = useState<string>("");
   const [showReps, setShowReps] = useState<boolean>(false);
-
+  const { mutate: updateSkill } = useUpdateSkill();
   const { session_id } = useContext(SessionContext);
 
   useEffect(() => {
@@ -49,6 +48,8 @@ const useSkillRowStates = ({
           station_id: skill.station_id,
           show_reps: showReps,
           session_id: session_id,
+          order: skill.order,
+          skillOfStationId: skill.skillOfStationId,
         });
       }
     };
@@ -91,6 +92,7 @@ const useSkillRowStates = ({
     showReps,
     setShowReps,
     session_id,
+    updateSkill,
   };
 };
 

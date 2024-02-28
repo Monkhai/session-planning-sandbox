@@ -12,6 +12,7 @@ const useGetDrillMedia = ({ drill_id, session_id }: Args) => {
     drill_id: drill_id,
     session_id: session_id,
   });
+
   return useQuery({
     queryKey: queryKey,
     queryFn: async () => await getAllMediaForDrill(drill_id),

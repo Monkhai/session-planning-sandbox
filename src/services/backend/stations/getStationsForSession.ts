@@ -394,6 +394,7 @@ export default async (session_id: string) => {
     const drillStationsWithDrills = await getDrillStations(drillStations);
     const skillStationsWithSkills = await getSkillStations(skillStations);
 
+    console.log(skillStationsWithSkills);
     const allStations = [
       ...drillStationsWithDrills,
       ...skillStationsWithSkills,

@@ -16,6 +16,8 @@ import { DrillType } from "~/utils/types";
 import SettingsIcon from "../icons/SettingsIcon";
 import DrillStationSettings from "./DrillStationSettings";
 import CircuitDrillDuration from "./circuitDrillDuration";
+import { DragControls } from "framer-motion";
+import ReorderController from "../ReorderController";
 
 interface Props {
   drill: DrillType;
@@ -33,6 +35,7 @@ interface Props {
   setShowDuration: React.Dispatch<React.SetStateAction<boolean>>;
   showComments: boolean;
   setShowComments: React.Dispatch<React.SetStateAction<boolean>>;
+  dragControls: DragControls;
 }
 
 const CircuitDrillHeader = ({
@@ -51,6 +54,7 @@ const CircuitDrillHeader = ({
   setShowDuration,
   showComments,
   setShowComments,
+  dragControls,
 }: Props) => {
   const { session_id } = useContext(SessionContext);
 
@@ -99,6 +103,8 @@ const CircuitDrillHeader = ({
           show_media: showMedia,
           station_id: drill.station_id,
           session_id: session_id,
+          drillOfStationId: drill.drillOfStationId,
+          order: drill.order,
         });
       }
     };
@@ -140,6 +146,8 @@ const CircuitDrillHeader = ({
         show_media: showMedia,
         station_id: drill.station_id,
         session_id: session_id,
+        drillOfStationId: drill.drillOfStationId,
+        order: drill.order,
       });
     },
     [
@@ -175,6 +183,8 @@ const CircuitDrillHeader = ({
         show_media: showMedia,
         station_id: drill.station_id,
         session_id: session_id,
+        drillOfStationId: drill.drillOfStationId,
+        order: drill.order,
       });
     },
     [
@@ -209,6 +219,8 @@ const CircuitDrillHeader = ({
         show_media: showMedia,
         station_id: drill.station_id,
         session_id: session_id,
+        drillOfStationId: drill.drillOfStationId,
+        order: drill.order,
       });
     },
     [
@@ -243,6 +255,8 @@ const CircuitDrillHeader = ({
         show_edit_media: editMedia,
         station_id: drill.station_id,
         session_id: session_id,
+        drillOfStationId: drill.drillOfStationId,
+        order: drill.order,
       });
     },
     [
@@ -288,6 +302,8 @@ const CircuitDrillHeader = ({
         show_media: showMedia,
         station_id: drill.station_id,
         session_id: session_id,
+        drillOfStationId: drill.drillOfStationId,
+        order: drill.order,
       });
     },
     [
@@ -308,7 +324,8 @@ const CircuitDrillHeader = ({
   return (
     <div>
       <div className="relative flex flex-row items-center gap-0">
-        <div className="relative flex print:hidden">
+        <ReorderController controls={dragControls} size="small" />
+        <div className="relative flex pl-1 print:hidden">
           <button
             ref={controlButtonRef}
             onClick={() => setShowSettingsModal(!showSettingsModal)}

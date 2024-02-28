@@ -33,7 +33,6 @@ const SkillRow = ({
   const controlButtonRef = React.useRef<HTMLButtonElement>(null);
 
   const { mutate: deleteSkill } = useDeleteSkill();
-  const { mutate: updateSkill } = useUpdateSkill();
 
   const {
     description,
@@ -45,12 +44,12 @@ const SkillRow = ({
     setDescription,
     setShowReps,
     session_id,
+    updateSkill,
   } = useSkillRowStates({
     skill: skill,
     descriptionRef: descriptionRef,
     nameRef: nameRef,
     repsRef: repsRef,
-    updateSkill: updateSkill,
   });
 
   const handleDeleteSkill = useCallback(() => {
@@ -73,6 +72,7 @@ const SkillRow = ({
         show_reps: show,
         session_id: session_id,
         order: skill.order,
+        skillOfStationId: skill.skillOfStationId,
       });
     },
     [skill, skillName, reps, description, showReps],

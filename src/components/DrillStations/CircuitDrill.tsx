@@ -1,5 +1,5 @@
 import { useParams } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import useDeleteMedia from "~/hooks/drillStationHooks/useDeleteMedia";
 import useGetDrillMedia from "~/hooks/drillStationHooks/useGetDrillStationMedia";
 import useUpdateDrill from "~/hooks/drillStationHooks/useUpdateDrill";
@@ -8,13 +8,16 @@ import { DrillType } from "~/utils/types";
 import CircuitDrillHeader from "./CircuitDrillHeader";
 import CircuitDrillMedia from "./CircuitDrillMedia";
 import CircuitDrillTextArea from "./CircuitDrillTextArea";
+import { Reorder, useDragControls } from "framer-motion";
+import { SessionContext } from "~/context/SessionIdContext";
 
 interface Props {
   drill: DrillType;
+  onReorderEnd: () => void;
 }
 
-export const CircuitDrill = ({ drill }: Props) => {
-  const { session_id } = useParams<{ session_id: string }>();
+export const CircuitDrill = ({ drill, onReorderEnd }: Props) => {
+  const { session_id } = useContext(SessionContext);
 
   const { mutate: updateDrill } = useUpdateDrill();
   const { data: drillMedia, isLoading: isMediaLoading } = useGetDrillMedia({
@@ -66,6 +69,8 @@ export const CircuitDrill = ({ drill }: Props) => {
           show_media: showMedia,
           station_id: drill.station_id,
           session_id: session_id,
+          drillOfStationId: drill.drillOfStationId,
+          order: drill.order,
         });
       }
     };
@@ -116,9 +121,19 @@ export const CircuitDrill = ({ drill }: Props) => {
     [uploadMedia, drill.id],
   );
 
+  const dragControls = useDragControls();
+
   return (
-    <div className="relative flex flex-col gap-2">
+    <Reorder.Item
+      value={drill}
+      dragControls={dragControls}
+      dragListener={false}
+      key={drill.id}
+      onDragEnd={onReorderEnd}
+      className="relative flex flex-col gap-2"
+    >
       <CircuitDrillHeader
+        dragControls={dragControls}
         editMedia={editMedia}
         setEditMedia={setEditMedia}
         showMedia={showMedia}
@@ -162,6 +177,6 @@ export const CircuitDrill = ({ drill }: Props) => {
           onDeleteMedia={handleDeleteMedia}
         />
       </div>
-    </div>
+    </Reorder.Item>
   );
 };

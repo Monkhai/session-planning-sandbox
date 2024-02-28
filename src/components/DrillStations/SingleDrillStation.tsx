@@ -70,7 +70,6 @@ const SingleDrillStation = ({
   const { mutate: uploadMedia } = useUploadMedia();
   const { mutate: deleteMedia } = useDeleteMedia();
   const { mutate: addlDrillToCircuit } = useCreateDrill();
-
   const {
     data: drillMedia,
     isLoading: isMediaLoading,
@@ -80,9 +79,9 @@ const SingleDrillStation = ({
     session_id,
   });
 
-  // if (mediaError) {
-  //   alert("Error fetching media");
-  // }
+  if (mediaError) {
+    alert("Error fetching media");
+  }
 
   const handleToggleDuration = useCallback(
     (show: boolean) => {
@@ -99,6 +98,8 @@ const SingleDrillStation = ({
         show_edit_media: editMedia,
         station_id: drill.station_id,
         session_id,
+        order: drill.order,
+        drillOfStationId: drill.drillOfStationId,
       });
     },
     [
@@ -151,6 +152,8 @@ const SingleDrillStation = ({
         show_edit_media: editMedia,
         drill_id: drill.id,
         session_id,
+        order: drill.order,
+        drillOfStationId: drill.drillOfStationId,
       });
     },
     [
@@ -200,6 +203,8 @@ const SingleDrillStation = ({
         show_edit_media: editMedia,
         drill_id: drill.id,
         session_id,
+        order: drill.order,
+        drillOfStationId: drill.drillOfStationId,
       });
     },
     [
@@ -230,6 +235,8 @@ const SingleDrillStation = ({
         show_edit_media: editMedia,
         drill_id: drill.id,
         session_id,
+        order: drill.order,
+        drillOfStationId: drill.drillOfStationId,
       });
     },
     [
@@ -260,6 +267,8 @@ const SingleDrillStation = ({
         show_edit_media: show,
         drill_id: drill.id,
         session_id,
+        order: drill.order,
+        drillOfStationId: drill.drillOfStationId,
       });
     },
     [

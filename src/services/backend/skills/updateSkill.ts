@@ -9,6 +9,7 @@ type Args = {
   description: string;
   show_reps: boolean;
   order: number;
+  skillOfStationId: number;
 };
 
 export default async ({
@@ -18,6 +19,7 @@ export default async ({
   description,
   show_reps,
   order,
+  skillOfStationId,
 }: Args) => {
   try {
     const user_id = getUserId();
@@ -60,8 +62,10 @@ export default async ({
     const skillWithOrder = {
       ...data[0],
       order,
+      skillOfStationId,
     };
 
+    console.log("skillWithOrder", skillWithOrder);
     return skillWithOrder as SkillType;
   } catch (error) {
     throw error;

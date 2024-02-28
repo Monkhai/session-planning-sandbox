@@ -11,11 +11,14 @@ import useCreateDrill from "~/hooks/drillStationHooks/useCreateDrill";
 import useDeleteDrillStation from "~/hooks/drillStationHooks/useDeleteDrillStation";
 import useUpdateDrillStation from "~/hooks/drillStationHooks/useUpdateDrillStation";
 import { convertDurationToString } from "~/services/DurationFunctions";
-import { DrillStationWithDrillsType } from "~/utils/types";
+import { DrillStationWithDrillsType, DrillType, Station } from "~/utils/types";
 import StationBottomBorder from "../SkillStation/StationBottomBorder";
 import { CircuitDrill } from "./CircuitDrill";
 import CircuitStationHeader from "./CircuitStationHeader";
 import { Reorder, useDragControls } from "framer-motion";
+import { queryKeyFactory } from "~/utils/queryFactories";
+import { queryClient } from "Providers/ReactQueryProvider";
+import useUpdateDrillsOrder from "~/hooks/drillStationHooks/useUpdateDrillsOrder";
 
 interface Props {
   station: DrillStationWithDrillsType;
@@ -55,7 +58,7 @@ const CircuitStation = ({ station, isLast, onReorderEnd }: Props) => {
   const { mutate: deleteDrillStation } = useDeleteDrillStation();
   const { mutate: updateDrillStation } = useUpdateDrillStation();
   const { mutate: addlDrillToCircuit } = useCreateDrill();
-
+  const { mutate: updateDrillsOrder } = useUpdateDrillsOrder();
   const handleToggleDuration = useCallback(
     (show: boolean) => {
       setShowDuration(show);
@@ -131,6 +134,30 @@ const CircuitStation = ({ station, isLast, onReorderEnd }: Props) => {
 
   const dragControls = useDragControls();
 
+  const handleDrillReorder = (drills: DrillType[]) => {
+    const queryKey = queryKeyFactory.stations({ session_id });
+    const previousStations: Station[] =
+      queryClient.getQueryData(queryKey) ?? [];
+
+    const newStation = {
+      ...station,
+      drills,
+    };
+
+    const newStations = previousStations.map((station) => {
+      if (station.id === newStation.id) {
+        return newStation;
+      }
+      return station;
+    });
+
+    queryClient.setQueryData(queryKey, newStations);
+  };
+
+  const handleDrillReorderEnd = () => {
+    updateDrillsOrder({ drills: station.drills, session_id });
+  };
+
   return (
     <Reorder.Item
       value={station}
@@ -164,11 +191,20 @@ const CircuitStation = ({ station, isLast, onReorderEnd }: Props) => {
           durationString={durationString}
         />
       </div>
-      <div className="flex flex-1 flex-col gap-4 md:flex-[3] md:gap-6">
+      <Reorder.Group
+        values={station.drills}
+        axis="y"
+        onReorder={handleDrillReorder}
+        className="flex flex-1 flex-col gap-4 md:flex-[3] md:gap-6"
+      >
         {station.drills.map((drill) => (
-          <CircuitDrill key={drill.id} drill={drill} />
+          <CircuitDrill
+            onReorderEnd={handleDrillReorderEnd}
+            key={drill.id}
+            drill={drill}
+          />
         ))}
-      </div>
+      </Reorder.Group>
       <StationBottomBorder isLast={isLast} />
     </Reorder.Item>
   );

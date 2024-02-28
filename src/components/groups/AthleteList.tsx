@@ -55,6 +55,7 @@ const AthleteList = ({ athletes, areAthletesLoading }: Props) => {
               (lastAthlete && athlete.id === lastAthlete.id) || false;
             return (
               <AthleteRow
+                handleReorderEnd={onReorderEnd}
                 key={athlete.id}
                 athlete={athlete}
                 index={index}
