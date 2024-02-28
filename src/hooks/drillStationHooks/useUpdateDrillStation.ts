@@ -12,8 +12,15 @@ const useUpdateDrillStation = () => {
       name,
       show_duration,
       station_id,
+      order,
     }: updateStationArgs) => {
-      await updateStation(station_id, duration, name, show_duration);
+      await updateStation({
+        duration,
+        name,
+        show_duration,
+        station_id,
+        order: order,
+      });
     },
 
     onMutate: ({
@@ -22,6 +29,7 @@ const useUpdateDrillStation = () => {
       show_duration,
       station_id,
       session_id,
+      order,
     }: updateStationArgs) => {
       const queryKey = queryKeyFactory.stations({ session_id });
       queryClient.cancelQueries({
@@ -38,6 +46,7 @@ const useUpdateDrillStation = () => {
             duration: duration,
             name: name,
             show_duration: show_duration,
+            order: order,
           };
         }
         return station;

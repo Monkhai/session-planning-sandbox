@@ -40,6 +40,7 @@ const GroupRow = ({ index, isLast, group, handleReorderEnd }: Props) => {
       dragListener={false}
       key={group.id}
       value={group}
+      onDragEnd={handleReorderEnd}
       style={{
         borderBottomLeftRadius: isLast ? "10px" : "0px",
         borderBottomRightRadius: isLast ? "10px" : "0px",
@@ -52,10 +53,7 @@ const GroupRow = ({ index, isLast, group, handleReorderEnd }: Props) => {
           : "relative flex h-[36px] w-full flex-row items-center  bg-white   print:h-[35px] print:p-2 print:py-0 md:h-[50px] dark:bg-darkSecondaryBackground"
       }
     >
-      <ReorderController
-        controls={dragControls}
-        handleReorderEnd={handleReorderEnd}
-      />
+      <ReorderController controls={dragControls} />
       <Link
         className="flex h-[36px] w-full flex-row items-center justify-between p-2 text-base md:h-[50px] md:p-4 md:text-xl"
         href={`/groups/${group.id}`}

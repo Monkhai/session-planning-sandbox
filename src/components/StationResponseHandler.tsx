@@ -53,7 +53,6 @@ const StationResponseHandler = ({ error, isLoading, stations }: Props) => {
   }
 
   const handleReorder = (newStations: Station[]) => {
-    console.log(newStations);
     const queryKey = queryKeyFactory.stations({ session_id });
     queryClient.setQueryData(queryKey, newStations);
   };
@@ -101,4 +100,4 @@ const StationResponseHandler = ({ error, isLoading, stations }: Props) => {
   return null;
 };
 
-export default React.memo(StationResponseHandler);
+export default StationResponseHandler;

@@ -1,13 +1,11 @@
-import { AthleteFromDB, AthleteWithOrder } from "~/utils/types";
-import AthleteRow from "./AthleteRow";
-import Loader from "../Loader";
-import { Reorder } from "framer-motion";
-import useUpdateAthletesOrder from "~/hooks/athletesHooks/useUpdateAthletesOrder";
-import { useParams } from "next/navigation";
-import { on } from "events";
-import React, { useEffect } from "react";
-import { queryKeyFactory } from "~/utils/queryFactories";
 import { queryClient } from "Providers/ReactQueryProvider";
+import { Reorder } from "framer-motion";
+import { useParams } from "next/navigation";
+import useUpdateAthletesOrder from "~/hooks/athletesHooks/useUpdateAthletesOrder";
+import { queryKeyFactory } from "~/utils/queryFactories";
+import { AthleteWithOrder } from "~/utils/types";
+import Loader from "../Loader";
+import AthleteRow from "./AthleteRow";
 
 interface Props {
   athletes: AthleteWithOrder[] | undefined;
@@ -57,7 +55,6 @@ const AthleteList = ({ athletes, areAthletesLoading }: Props) => {
               (lastAthlete && athlete.id === lastAthlete.id) || false;
             return (
               <AthleteRow
-                handleReorderEnd={onReorderEnd}
                 key={athlete.id}
                 athlete={athlete}
                 index={index}

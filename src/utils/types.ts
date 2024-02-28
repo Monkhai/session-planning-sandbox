@@ -97,6 +97,7 @@ export type updateStationArgs = {
   duration: string | null;
   show_duration: boolean;
   session_id: string;
+  order: number;
 };
 
 export type CreateSkillArgs = {

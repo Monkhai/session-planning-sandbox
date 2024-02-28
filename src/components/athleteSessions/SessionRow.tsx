@@ -43,6 +43,7 @@ const SessionRow = ({ index, isLast, session, onReorderEnd }: Props) => {
       dragListener={false}
       key={session.id}
       value={session}
+      onDragEnd={onReorderEnd}
       style={{
         borderBottomLeftRadius: isLast ? "10px" : "0px",
         borderBottomRightRadius: isLast ? "10px" : "0px",
@@ -55,10 +56,7 @@ const SessionRow = ({ index, isLast, session, onReorderEnd }: Props) => {
           : "relative flex h-[36px] w-full flex-row items-center rounded-[10px]  bg-white   print:h-[35px] print:p-2 print:py-0 md:h-[50px] dark:bg-darkSecondaryBackground"
       }
     >
-      <ReorderController
-        controls={dragControls}
-        handleReorderEnd={onReorderEnd}
-      />
+      <ReorderController controls={dragControls} />
       <Link
         className="flex h-[36px] w-full flex-row items-center justify-between p-2 text-base md:h-[50px] md:p-4 md:text-xl"
         href={`/groups/${group_id}/athletes/${athlete_id}/athlete-sessions/${session.id}`}

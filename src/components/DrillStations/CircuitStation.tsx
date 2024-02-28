@@ -15,13 +15,15 @@ import { DrillStationWithDrillsType } from "~/utils/types";
 import StationBottomBorder from "../SkillStation/StationBottomBorder";
 import { CircuitDrill } from "./CircuitDrill";
 import CircuitStationHeader from "./CircuitStationHeader";
+import { Reorder, useDragControls } from "framer-motion";
 
 interface Props {
   station: DrillStationWithDrillsType;
   isLast: boolean;
+  onReorderEnd: () => void;
 }
 
-const CircuitStation = ({ station, isLast }: Props) => {
+const CircuitStation = ({ station, isLast, onReorderEnd }: Props) => {
   const [showDurationPicker, setShowDurationPicker] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState<boolean>(false);
 
@@ -63,6 +65,7 @@ const CircuitStation = ({ station, isLast }: Props) => {
         station_id: station.id,
         show_duration: show,
         session_id: session_id,
+        order: station.order,
       });
     },
     [duration, stationName, station.id, updateDrillStation],
@@ -77,6 +80,7 @@ const CircuitStation = ({ station, isLast }: Props) => {
           station_id: station.id,
           show_duration: showDuration,
           session_id: session_id,
+          order: station.order,
         });
       }
     };
@@ -108,6 +112,7 @@ const CircuitStation = ({ station, isLast }: Props) => {
         station_id: station.id,
         show_duration: showDuration,
         session_id: session_id,
+        order: station.order,
       });
     },
     [stationName, station.id, showDuration, updateDrillStation],
@@ -124,8 +129,15 @@ const CircuitStation = ({ station, isLast }: Props) => {
   //---------------------------------------------
   //---------------------------------------------
 
+  const dragControls = useDragControls();
+
   return (
-    <div
+    <Reorder.Item
+      value={station}
+      dragControls={dragControls}
+      dragListener={false}
+      key={station.id}
+      onDragEnd={onReorderEnd}
       className={
         "relative flex w-full flex-col px-2 py-2 print:px-2 print:py-1  md:flex-row md:px-10" +
         (isLast
@@ -135,6 +147,7 @@ const CircuitStation = ({ station, isLast }: Props) => {
     >
       <div className="flex flex-1">
         <CircuitStationHeader
+          dragControls={dragControls}
           onAddDrill={handleAddDrill}
           duration={duration}
           handleDurationChange={handleDurationChange}
@@ -157,7 +170,7 @@ const CircuitStation = ({ station, isLast }: Props) => {
         ))}
       </div>
       <StationBottomBorder isLast={isLast} />
-    </div>
+    </Reorder.Item>
   );
 };
 

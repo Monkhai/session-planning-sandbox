@@ -7,7 +7,7 @@ import useGetDrillStationMedia from "~/hooks/drillStationHooks/useGetDrillStatio
 import useSingleDrillState from "~/hooks/drillStationHooks/useSingleDrillStates";
 import useUpdateDrill from "~/hooks/drillStationHooks/useUpdateDrill";
 import useUploadMedia from "~/hooks/drillStationHooks/useUploadMedia";
-import { DrillType } from "~/utils/types";
+import { DrillStationWithDrillsType, DrillType } from "~/utils/types";
 import StationBottomBorder from "../SkillStation/StationBottomBorder";
 import Spacer from "../utility/Spacer";
 import DrillStationHeader from "./DrillStationHeader";
@@ -19,9 +19,15 @@ interface Props {
   drill: DrillType;
   isLast: boolean;
   onReorderEnd: () => void;
+  dragValue: DrillStationWithDrillsType;
 }
 
-const SingleDrillStation = ({ drill, isLast, onReorderEnd }: Props) => {
+const SingleDrillStation = ({
+  drill,
+  isLast,
+  onReorderEnd,
+  dragValue,
+}: Props) => {
   const { session_id } = useContext(SessionContext);
 
   const [showDurationPicker, setShowDurationPicker] = React.useState(false);
@@ -285,10 +291,11 @@ const SingleDrillStation = ({ drill, isLast, onReorderEnd }: Props) => {
 
   return (
     <Reorder.Item
-      value={drill}
+      value={dragValue}
       key={drill.id}
-      dragListener={false}
       dragControls={dragControls}
+      dragListener={false}
+      onDragEnd={onReorderEnd}
       className={
         "relative flex w-full flex-col px-2 py-2 print:px-2 print:py-1  md:flex-row md:px-10" +
         (isLast
@@ -299,7 +306,6 @@ const SingleDrillStation = ({ drill, isLast, onReorderEnd }: Props) => {
       <div className="flex flex-1">
         <DrillStationHeader
           dragControls={dragControls}
-          onReorderEnd={onReorderEnd}
           onAddDrill={handleAddDrill}
           editMedia={editMedia}
           onToggleShowComments={handleToggleComments}

@@ -27,7 +27,6 @@ interface Props {
   showMedia: boolean;
   onToggleEditMedia: (show: boolean) => void;
   onAddDrill: () => void;
-  onReorderEnd: () => void;
   dragControls: DragControls;
 }
 
@@ -53,17 +52,13 @@ const DrillStationHeader = ({
   showMedia,
   onToggleEditMedia,
   dragControls,
-  onReorderEnd,
 }: Props) => {
   const controlButtonRef = React.useRef<HTMLButtonElement>(null);
 
   return (
     <div className="flex w-full flex-col items-start justify-start py-2 md:min-h-20">
       <div className="flex flex-row items-center justify-center gap-4">
-        <ReorderController
-          controls={dragControls}
-          handleReorderEnd={onReorderEnd}
-        />
+        <ReorderController controls={dragControls} />
         <div className="relative flex print:hidden">
           <button
             ref={controlButtonRef}

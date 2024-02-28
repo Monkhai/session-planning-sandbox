@@ -171,15 +171,17 @@ export default async (stations: Station[]) => {
 
             const skills = await getSkills(skillIds);
 
-            const orderedSkill = insertOrderToSkills(
+            const orderedSkills = insertOrderToSkills(
               skills,
               skillList,
               newStation.id,
             );
 
+            orderedSkills.sort((a, b) => a.order - b.order);
+
             return {
               ...newStation,
-              skills: orderedSkill,
+              skills: orderedSkills,
             };
           } else {
             const drillList = await getDrillList(newStation.id);
@@ -188,15 +190,17 @@ export default async (stations: Station[]) => {
 
             const drills = await getDrills(drillIds);
 
-            const orderedDrill = insertOrderToDrills(
+            const orderedDrills = insertOrderToDrills(
               drills,
               drillList,
               newStation.id,
             );
 
+            orderedDrills.sort((a, b) => a.order - b.order);
+
             return {
               ...newStation,
-              drills: orderedDrill,
+              drills: orderedDrills,
             };
           }
         }

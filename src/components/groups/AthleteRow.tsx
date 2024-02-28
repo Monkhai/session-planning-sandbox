@@ -33,6 +33,7 @@ const AthleteRow = ({ index, isLast, athlete, handleReorderEnd }: Props) => {
       dragListener={false}
       value={athlete}
       key={athlete.id}
+      onDragEnd={handleReorderEnd}
       style={{
         borderBottomLeftRadius: isLast ? "10px" : "0px",
         borderBottomRightRadius: isLast ? "10px" : "0px",
@@ -45,10 +46,7 @@ const AthleteRow = ({ index, isLast, athlete, handleReorderEnd }: Props) => {
           : "relative  flex h-[36px] w-full flex-row items-center  bg-white   print:h-[35px] print:p-2 print:py-0 md:h-[50px] dark:bg-darkSecondaryBackground"
       }
     >
-      <ReorderController
-        controls={dragControls}
-        handleReorderEnd={handleReorderEnd}
-      />
+      <ReorderController controls={dragControls} />
       <Link
         className="flex h-[36px] w-full flex-row items-center justify-between p-2 text-base md:h-[50px] md:p-4 md:text-xl"
         href={`/groups/${group_id}/athletes/${athlete.id}`}

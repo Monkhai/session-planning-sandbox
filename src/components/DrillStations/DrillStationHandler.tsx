@@ -10,6 +10,7 @@ const DrillStationHandler = ({ station, isLast, onReorderEnd }: Props) => {
   if (station.drills.length === 1 && station.drills[0] !== undefined) {
     return (
       <SingleDrillStation
+        dragValue={station}
         onReorderEnd={onReorderEnd}
         drill={station.drills[0]}
         isLast={isLast}
@@ -18,7 +19,13 @@ const DrillStationHandler = ({ station, isLast, onReorderEnd }: Props) => {
   }
 
   if (station.drills.length > 1) {
-    return <CircuitStation station={station} isLast={isLast} />;
+    return (
+      <CircuitStation
+        onReorderEnd={onReorderEnd}
+        station={station}
+        isLast={isLast}
+      />
+    );
   }
 
   return null;

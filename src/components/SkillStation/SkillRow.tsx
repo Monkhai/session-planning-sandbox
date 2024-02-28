@@ -83,6 +83,7 @@ const SkillRow = ({
       dragControls={dragContols}
       dragListener={false}
       value={skill}
+      onDragEnd={onReorderEnd}
       className="flex flex-row gap-2 md:gap-0"
     >
       <div
@@ -98,10 +99,7 @@ const SkillRow = ({
             : "flex h-[36px] w-full flex-row items-center bg-white print:h-[35px] md:h-[50px] dark:bg-darkSecondaryBackground"
         }
       >
-        <ReorderController
-          controls={dragContols}
-          handleReorderEnd={onReorderEnd}
-        />
+        <ReorderController controls={dragContols} />
         <div className="flex w-full flex-row items-center p-4">
           <input
             ref={nameRef}

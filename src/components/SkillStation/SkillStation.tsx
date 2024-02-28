@@ -1,4 +1,5 @@
 "use client";
+import { Reorder, useDragControls } from "framer-motion";
 import React, { useCallback, useContext, useState } from "react";
 import { SessionContext } from "~/context/SessionIdContext";
 import useCreateSkill from "~/hooks/skillStationHooks/useCreateSkill";
@@ -9,9 +10,6 @@ import StationHeader from "../StationHeader";
 import Spacer from "../utility/Spacer";
 import StationBottomBorder from "./StationBottomBorder";
 import StationSkills from "./StationSkills";
-import ReorderController from "../ReorderController";
-import { Reorder, useDragControls } from "framer-motion";
-import useUpdateStationsOrder from "~/hooks/useUpdateStationsOrder";
 
 interface Props {
   station: SkillStationWithSkillsType;
@@ -113,6 +111,7 @@ const SkillStation = ({ station, isLast, onReorderEnd }: Props) => {
       key={station.id}
       dragListener={false}
       dragControls={dragControls}
+      onDragEnd={onReorderEnd}
       className={
         "relative flex w-full flex-col px-2 py-2 print:px-2 print:py-1 md:flex-row md:px-10" +
         (isLast
@@ -123,7 +122,6 @@ const SkillStation = ({ station, isLast, onReorderEnd }: Props) => {
       <div className="flex md:flex-1">
         <StationHeader
           dragControls={dragControls}
-          onReorderEnd={onReorderEnd}
           duration={duration}
           durationString={durationString}
           handleDurationChange={handleDurationChange}
