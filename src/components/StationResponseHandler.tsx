@@ -1,5 +1,5 @@
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useContext } from "react";
 import client from "~/utils/supabaseClient";
 import {
   DrillStationWithDrillsType,
@@ -9,6 +9,11 @@ import {
 import DrillStationHandler from "./DrillStations/DrillStationHandler";
 import Loader from "./Loader";
 import SkillStation from "./SkillStation/SkillStation";
+import { Reorder } from "framer-motion";
+import { queryKeyFactory } from "~/utils/queryFactories";
+import { SessionContext } from "~/context/SessionIdContext";
+import { queryClient } from "Providers/ReactQueryProvider";
+import useUpdateStationsOrder from "~/hooks/useUpdateStationsOrder";
 
 interface Props {
   stations: Station[] | undefined;
@@ -18,7 +23,9 @@ interface Props {
 
 const StationResponseHandler = ({ error, isLoading, stations }: Props) => {
   const router = useRouter();
+  const { session_id } = useContext(SessionContext);
 
+  const { mutate: updateStationsOrder } = useUpdateStationsOrder();
   if (isLoading) {
     return (
       <div className="flex h-full w-full flex-1 items-center justify-center">
@@ -45,14 +52,32 @@ const StationResponseHandler = ({ error, isLoading, stations }: Props) => {
     );
   }
 
+  const handleReorder = (newStations: Station[]) => {
+    console.log(newStations);
+    const queryKey = queryKeyFactory.stations({ session_id });
+    queryClient.setQueryData(queryKey, newStations);
+  };
+
+  const handleReorderEnd = () => {
+    if (stations) {
+      updateStationsOrder({ stations, session_id });
+    }
+  };
+
   if (stations && stations.length > 0) {
     return (
-      <div className="flex w-full flex-col gap-4 pt-4">
+      <Reorder.Group
+        values={stations}
+        onReorder={(values) => handleReorder(values)}
+        axis="y"
+        className="flex w-full flex-col gap-4 pt-4"
+      >
         {stations.map((station, index) => {
           const isLast = stations.length - 1 === index;
           if (station.type === "skillStation") {
             return (
               <SkillStation
+                onReorderEnd={handleReorderEnd}
                 key={station.id + station.type}
                 isLast={isLast}
                 station={station as SkillStationWithSkillsType}
@@ -61,6 +86,7 @@ const StationResponseHandler = ({ error, isLoading, stations }: Props) => {
           } else if (station.type === "drillStation") {
             return (
               <DrillStationHandler
+                onReorderEnd={handleReorderEnd}
                 key={station.id + station.type}
                 isLast={isLast}
                 station={station as DrillStationWithDrillsType}
@@ -68,7 +94,7 @@ const StationResponseHandler = ({ error, isLoading, stations }: Props) => {
             );
           }
         })}
-      </div>
+      </Reorder.Group>
     );
   }
 

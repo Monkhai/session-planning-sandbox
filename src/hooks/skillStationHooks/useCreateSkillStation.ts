@@ -1,8 +1,9 @@
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "Providers/ReactQueryProvider";
 import createSkillStation from "~/services/backend/stations/skillStations/createSkillStation";
+import getUserId from "~/services/backend/userManagement/getUserId";
 import { queryKeyFactory } from "~/utils/queryFactories";
-import { SkillStationWithSkillsType } from "~/utils/types";
+import { SkillStationWithSkillsType, Station } from "~/utils/types";
 
 const useCreateSkillStation = () => {
   return useMutation({
@@ -18,10 +19,16 @@ const useCreateSkillStation = () => {
 
     onMutate: ({ lastOrder, session_id }) => {
       const queryKey = queryKeyFactory.stations({ session_id });
-      queryClient.cancelQueries({
-        queryKey: queryKey,
-      });
-      const previousStations = queryClient.getQueryData(queryKey) ?? [];
+
+      const previousStations: Station[] =
+        queryClient.getQueryData(queryKey) ?? [];
+
+      const user_id = getUserId();
+
+      if (!user_id) {
+        throw new Error("No user id found");
+      }
+
       const tempId = Math.floor(Math.random() * 1000000000);
 
       const newStation = {
@@ -32,17 +39,12 @@ const useCreateSkillStation = () => {
         skills: [],
         show_duration: true,
         type: "skillStation",
-      };
+        user_id,
+      } as Station;
 
-      queryClient.setQueryData(
-        queryKey,
-        (old: SkillStationWithSkillsType[] | undefined) => {
-          if (old === undefined) {
-            return [newStation];
-          }
-          return [...old, newStation];
-        },
-      );
+      const newStations = [...previousStations, newStation];
+
+      queryClient.setQueryData(queryKey, newStations);
 
       return {
         rollback: () => queryClient.setQueryData(queryKey, previousStations),
@@ -52,15 +54,15 @@ const useCreateSkillStation = () => {
     },
 
     onSuccess: (newStation, _, { optimisticStation, queryKey }) => {
-      const previousStations: SkillStationWithSkillsType[] =
+      const previousStations: Station[] =
         queryClient.getQueryData(queryKey) ?? [];
 
-      const newStations = previousStations.map((station) => {
-        if (
-          station.id === optimisticStation.id &&
-          station.type === "skillStation"
-        ) {
-          return newStation[0];
+      const newStations: Station[] = previousStations.map((station) => {
+        if (station.id === optimisticStation.id) {
+          return {
+            ...newStation,
+            skills: [],
+          } as Station;
         }
         return station;
       });
@@ -69,9 +71,9 @@ const useCreateSkillStation = () => {
     },
 
     onError: (error, _, context) => {
+      console.error(error);
       if (context) {
         context.rollback();
-        return error;
       }
     },
   });

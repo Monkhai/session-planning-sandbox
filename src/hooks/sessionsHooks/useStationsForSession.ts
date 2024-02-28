@@ -13,6 +13,7 @@ const useStationsForSession = ({ session_id }: Args) => {
     queryFn: async () => {
       return await getStationsForSession(session_id);
     },
+    staleTime: 1000 * 60 * 60, // 1 hour
   });
 };
 

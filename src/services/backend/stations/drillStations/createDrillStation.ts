@@ -16,7 +16,6 @@ export default async (lastOrder: number, session_id: string) => {
         {
           name: "",
           user_id: user_id,
-          order: lastOrder + 1,
           type: "drillStation" as StationType,
         },
       ])
@@ -33,6 +32,7 @@ export default async (lastOrder: number, session_id: string) => {
           user_id: user_id,
           station_id: data[0].id,
           session_id: Number(session_id),
+          order: lastOrder + 1,
         },
       ]);
 

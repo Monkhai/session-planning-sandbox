@@ -13,13 +13,15 @@ import Spacer from "../utility/Spacer";
 import DrillStationHeader from "./DrillStationHeader";
 import DrillStationMedia from "./DrillStationMedia";
 import DrillStationTextArea from "./DrillStationTextArea";
+import { Reorder, useDragControls } from "framer-motion";
 
 interface Props {
   drill: DrillType;
   isLast: boolean;
+  onReorderEnd: () => void;
 }
 
-const SingleDrillStation = ({ drill, isLast }: Props) => {
+const SingleDrillStation = ({ drill, isLast, onReorderEnd }: Props) => {
   const { session_id } = useContext(SessionContext);
 
   const [showDurationPicker, setShowDurationPicker] = React.useState(false);
@@ -279,8 +281,14 @@ const SingleDrillStation = ({ drill, isLast }: Props) => {
   //---------------------------------------------
   //---------------------------------------------
 
+  const dragControls = useDragControls();
+
   return (
-    <div
+    <Reorder.Item
+      value={drill}
+      key={drill.id}
+      dragListener={false}
+      dragControls={dragControls}
       className={
         "relative flex w-full flex-col px-2 py-2 print:px-2 print:py-1  md:flex-row md:px-10" +
         (isLast
@@ -290,6 +298,8 @@ const SingleDrillStation = ({ drill, isLast }: Props) => {
     >
       <div className="flex flex-1">
         <DrillStationHeader
+          dragControls={dragControls}
+          onReorderEnd={onReorderEnd}
           onAddDrill={handleAddDrill}
           editMedia={editMedia}
           onToggleShowComments={handleToggleComments}
@@ -342,7 +352,7 @@ const SingleDrillStation = ({ drill, isLast }: Props) => {
       </div>
       <StationBottomBorder isLast={isLast} />
       <Spacer showOnPrint={false} />
-    </div>
+    </Reorder.Item>
   );
 };
 

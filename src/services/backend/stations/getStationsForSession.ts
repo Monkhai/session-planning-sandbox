@@ -177,7 +177,7 @@ const getDrillStations = async (
 //------------------------------------------------------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------------------------------------------------------
 
-const getSkillList = async (stations: SkillStationType[]) => {
+export const getSkillList = async (stations: SkillStationType[]) => {
   const skillList = Promise.all(
     stations.map(async (station) => {
       const {
@@ -313,12 +313,13 @@ const getStationList = async (session_id: number, user_id: string) => {
   const {
     data: stations,
     error,
-  }: PostgrestSingleResponse<{ id: number; station_id: number }[]> =
-    await client
-      .from("stations_of_sessions")
-      .select("id, station_id")
-      .eq("user_id", user_id)
-      .eq("session_id", session_id);
+  }: PostgrestSingleResponse<
+    { id: number; station_id: number; order: number }[]
+  > = await client
+    .from("stations_of_sessions")
+    .select("id, station_id, order")
+    .eq("user_id", user_id)
+    .eq("session_id", session_id);
 
   if (error) {
     throw error;
@@ -335,7 +336,7 @@ const getStationList = async (session_id: number, user_id: string) => {
 //------------------------------------------------------------------------------------------------------------------------------------------------
 
 const getStations = async (
-  stationList: { id: number; station_id: number }[],
+  stationList: { id: number; station_id: number; order: number }[],
 ) => {
   const { data: stations, error }: PostgrestSingleResponse<StationFromDB[]> =
     await client
@@ -353,7 +354,17 @@ const getStations = async (
     throw new Error("No data");
   }
 
-  return stations;
+  const stationsWithOrder = stations.map((station) => {
+    const order = stationList.find(
+      (stationItem) => stationItem.station_id === station.id,
+    )?.order;
+    if (!order) {
+      throw new Error("No order found for station");
+    }
+    return { ...station, order } as Station;
+  });
+
+  return stationsWithOrder;
 };
 
 //------------------------------------------------------------------------------------------------------------------------------------------------
@@ -388,7 +399,6 @@ export default async (session_id: string) => {
       ...skillStationsWithSkills,
     ];
     allStations.sort((a, b) => a.order - b.order);
-
     return allStations as Station[];
   } catch (error) {
     console.error(error);

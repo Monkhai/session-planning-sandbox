@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import CreateNewStationButton from "~/components/CreateNewStationButton";
 import HelpButton from "~/components/HelpButton";
 import NavBar from "~/components/NavBar";
@@ -40,7 +40,6 @@ const Session = ({ params }: Props) => {
 
   const { mutate: createNewSkillStation } = useCreateSkillStation();
   const { mutate: createNewDrillStation } = useCreateDrillStation();
-
   const handleCreateSkillStation = useCallback(() => {
     createNewSkillStation({
       lastOrder: allStations?.length ?? 0,

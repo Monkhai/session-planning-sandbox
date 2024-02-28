@@ -9,13 +9,17 @@ import StationHeader from "../StationHeader";
 import Spacer from "../utility/Spacer";
 import StationBottomBorder from "./StationBottomBorder";
 import StationSkills from "./StationSkills";
+import ReorderController from "../ReorderController";
+import { Reorder, useDragControls } from "framer-motion";
+import useUpdateStationsOrder from "~/hooks/useUpdateStationsOrder";
 
 interface Props {
   station: SkillStationWithSkillsType;
   isLast: boolean;
+  onReorderEnd: () => void;
 }
 
-const SkillStation = ({ station, isLast }: Props) => {
+const SkillStation = ({ station, isLast, onReorderEnd }: Props) => {
   const [showDurationPicker, setShowDurationPicker] = useState(false);
 
   const stationNameRef = React.useRef<HTMLTextAreaElement>(null);
@@ -54,6 +58,7 @@ const SkillStation = ({ station, isLast }: Props) => {
           name: stationName,
           show_duration: showDuration,
           session_id,
+          order: station.order,
         });
       } else {
         updateStation({
@@ -62,6 +67,7 @@ const SkillStation = ({ station, isLast }: Props) => {
           name: stationName,
           show_duration: showDuration,
           session_id,
+          order: station.order,
         });
       }
     },
@@ -93,13 +99,20 @@ const SkillStation = ({ station, isLast }: Props) => {
         name: stationName,
         show_duration: show,
         session_id,
+        order: station.order,
       });
     },
     [station.id, duration, stationName],
   );
 
+  const dragControls = useDragControls();
+
   return (
-    <div
+    <Reorder.Item
+      value={station}
+      key={station.id}
+      dragListener={false}
+      dragControls={dragControls}
       className={
         "relative flex w-full flex-col px-2 py-2 print:px-2 print:py-1 md:flex-row md:px-10" +
         (isLast
@@ -109,6 +122,8 @@ const SkillStation = ({ station, isLast }: Props) => {
     >
       <div className="flex md:flex-1">
         <StationHeader
+          dragControls={dragControls}
+          onReorderEnd={onReorderEnd}
           duration={duration}
           durationString={durationString}
           handleDurationChange={handleDurationChange}
@@ -134,7 +149,7 @@ const SkillStation = ({ station, isLast }: Props) => {
 
       <StationBottomBorder isLast={isLast} />
       <Spacer />
-    </div>
+    </Reorder.Item>
   );
 };
 

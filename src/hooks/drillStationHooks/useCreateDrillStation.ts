@@ -27,9 +27,6 @@ const useCreateDrillStation = () => {
 
     onMutate: ({ lastOrder, session_id }) => {
       const queryKey = queryKeyFactory.stations({ session_id });
-      queryClient.cancelQueries({
-        queryKey: queryKey,
-      });
 
       const user_id = getUserId();
 

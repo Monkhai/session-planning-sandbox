@@ -4,9 +4,9 @@ import { Station } from "~/utils/types";
 export default async (station: Station) => {
   try {
     const { data, error } = await client
-      .from("stations")
+      .from("stations_of_sessions")
       .update({ order: station.order - 1 })
-      .eq("id", station.id)
+      .eq("station_id", station.id)
       .select();
 
     if (error) {

@@ -62,6 +62,7 @@ const useSkillStationStates = ({
           name: stationName,
           show_duration: showDuration,
           session_id,
+          order: station.order,
         });
       }
     };

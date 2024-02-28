@@ -11,12 +11,25 @@ type Args = {
   duration: string | null;
   show_duration: boolean;
   session_id: string;
+  order: number;
 };
 
 const useUpdateSkillStation = () => {
   return useMutation({
-    mutationFn: async ({ duration, name, show_duration, station_id }: Args) => {
-      await updateStation(station_id, duration, name, show_duration);
+    mutationFn: async ({
+      duration,
+      name,
+      show_duration,
+      station_id,
+      order,
+    }: Args) => {
+      await updateStation({
+        station_id,
+        duration,
+        name,
+        show_duration,
+        order,
+      });
     },
 
     onMutate: ({ duration, name, show_duration, station_id, session_id }) => {
@@ -51,7 +64,7 @@ const useUpdateSkillStation = () => {
       if (rollback) {
         rollback();
       }
-      return error;
+      console.error(error);
     },
   });
 };

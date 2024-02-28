@@ -193,7 +193,6 @@ export type StationFromDB = {
   name: string;
   duration: string;
   show_duration: boolean;
-  order: number;
   type: StationType;
 };
 
@@ -238,3 +237,11 @@ export type GroupType = GroupFromDB & {
 };
 
 export type SessionType = "general-sessions" | "athlete-sessions";
+
+export type StationOfSessionFromDB = {
+  id: number;
+  user_id: string;
+  station_id: number;
+  session_id: number;
+  order: number;
+};

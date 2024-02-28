@@ -3,6 +3,8 @@ import StationSettings from "./DrillStations/StationSettings";
 import StationDuration from "./StationDuration";
 import StationTitle from "./StationTitle";
 import SettingsIcon from "./icons/SettingsIcon";
+import ReorderController from "./ReorderController";
+import { DragControls, useDragControls } from "framer-motion";
 
 interface Props {
   setShowSettingsModal: React.Dispatch<React.SetStateAction<boolean>>;
@@ -19,6 +21,8 @@ interface Props {
   durationString: string | undefined;
   showDuration: boolean;
   handleDurationChange: (duration: string) => void;
+  onReorderEnd: () => void;
+  dragControls: DragControls;
 }
 
 const StationHeader = ({
@@ -36,12 +40,18 @@ const StationHeader = ({
   stationName,
   stationNameRef,
   showDuration,
+  onReorderEnd,
+  dragControls,
 }: Props) => {
   const controlButtonRef = React.useRef<HTMLButtonElement>(null);
 
   return (
     <div className="flex w-full flex-col items-start justify-start py-2 md:min-h-20">
       <div className="flex flex-row items-center justify-center gap-4">
+        <ReorderController
+          handleReorderEnd={onReorderEnd}
+          controls={dragControls}
+        />
         <div className="relative flex print:hidden">
           <button
             ref={controlButtonRef}

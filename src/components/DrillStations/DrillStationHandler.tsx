@@ -4,10 +4,17 @@ import SingleDrillStation from "./SingleDrillStation";
 interface Props {
   station: DrillStationWithDrillsType;
   isLast: boolean;
+  onReorderEnd: () => void;
 }
-const DrillStationHandler = ({ station, isLast }: Props) => {
+const DrillStationHandler = ({ station, isLast, onReorderEnd }: Props) => {
   if (station.drills.length === 1 && station.drills[0] !== undefined) {
-    return <SingleDrillStation drill={station.drills[0]} isLast={isLast} />;
+    return (
+      <SingleDrillStation
+        onReorderEnd={onReorderEnd}
+        drill={station.drills[0]}
+        isLast={isLast}
+      />
+    );
   }
 
   if (station.drills.length > 1) {

@@ -53,7 +53,7 @@ const useDeleteGroupSession = () => {
     onSuccess: async (_, __, { rollback, sessionsToUpdate }) => {
       try {
         for (const session of sessionsToUpdate) {
-          await decrementSessionOrder(session);
+          await decrementSessionOrder(session, "sessions_of_athletes");
         }
       } catch (error) {
         console.error(error);
