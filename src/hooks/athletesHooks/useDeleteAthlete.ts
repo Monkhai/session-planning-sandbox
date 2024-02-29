@@ -3,7 +3,7 @@ import { queryClient } from "Providers/ReactQueryProvider";
 import decrementAthleteOrder from "~/services/backend/athletes/decrementAthleteOrder";
 import deleteAthlete from "~/services/backend/athletes/deleteAthlete";
 import { queryKeyFactory } from "~/utils/queryFactories";
-import { AthleteFromDB } from "~/utils/types";
+import { AthleteWithOrder } from "~/utils/types";
 
 const useDeleteAthlete = () => {
   return useMutation({
@@ -20,15 +20,15 @@ const useDeleteAthlete = () => {
       const queryKey = queryKeyFactory.groupAthletes({ group_id });
       queryClient.cancelQueries({ queryKey: queryKey });
 
-      const previousAthletes: AthleteFromDB[] =
+      const previousAthletes: AthleteWithOrder[] =
         queryClient.getQueryData(queryKey) ?? [];
 
       const index = previousAthletes.findIndex(
-        (athlete: AthleteFromDB) => athlete.id === athlete_id,
+        (athlete: AthleteWithOrder) => athlete.id === athlete_id,
       );
 
       const newAthletes = previousAthletes.filter(
-        (athlete: AthleteFromDB) => athlete.id !== athlete_id,
+        (athlete: AthleteWithOrder) => athlete.id !== athlete_id,
       );
 
       const athletesToUpdate = newAthletes.slice(index);
