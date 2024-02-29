@@ -85,6 +85,8 @@ const useSingleDrillState = ({
           show_media: showMedia,
           station_id: drill.station_id,
           session_id,
+          drillOfStationId: drill.drillOfStationId,
+          order: drill.order,
         });
       }
     };
