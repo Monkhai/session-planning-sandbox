@@ -1,7 +1,7 @@
 import client from "~/utils/supabaseClient";
-import { AthleteFromDB } from "~/utils/types";
+import { AthleteWithOrder } from "~/utils/types";
 
-export default async (athlete: AthleteFromDB) => {
+export default async (athlete: AthleteWithOrder) => {
   try {
     const { data, error } = await client
       .from("athletes")
@@ -19,7 +19,7 @@ export default async (athlete: AthleteFromDB) => {
       throw new Error("No data");
     }
 
-    return data[0] as AthleteFromDB;
+    return data[0] as AthleteWithOrder;
   } catch (error) {
     console.error(error);
     throw error;
