@@ -17,7 +17,12 @@ const useUpdateAthleteSession = () => {
       athlete_id: string;
       order: number;
     }) => {
-      return await updateSession(session_id, name, order);
+      return await updateSession({
+        joinTable: "sessions_of_athletes",
+        session_id,
+        name,
+        order,
+      });
     },
 
     onMutate: async ({ session_id, name, group_id, athlete_id }) => {
