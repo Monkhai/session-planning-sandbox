@@ -21,7 +21,6 @@ const AthleteRowSettings = ({
 }: Props) => {
   const params = useParams<{ group_id: string; athlete_id: string }>();
   const [athleteName, setAthleteName] = React.useState(athlete.name || "");
-  console.log(athlete);
   const { mutate: updateAthlete } = useUpdateAthlete();
   const { mutate: deleteAthlete } = useDeleteAthlete();
 

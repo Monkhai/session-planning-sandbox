@@ -1,15 +1,15 @@
+import { Reorder, useDragControls } from "framer-motion";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import React from "react";
 import { IoChevronForward } from "react-icons/io5";
-import { AthleteFromDB } from "~/utils/types";
+import { AthleteWithOrder } from "~/utils/types";
+import ReorderController from "../ReorderController";
 import SettingsIcon from "../icons/SettingsIcon";
 import AthleteRowSettings from "./AthleteRowSettings";
-import { Reorder, useDragControls } from "framer-motion";
-import ReorderController from "../ReorderController";
 
 interface Props {
-  athlete: AthleteFromDB;
+  athlete: AthleteWithOrder;
   index: number;
   isLast: boolean;
   handleReorderEnd: () => void;

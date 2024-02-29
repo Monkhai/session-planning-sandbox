@@ -65,7 +65,6 @@ export default async ({
       skillOfStationId,
     };
 
-    console.log("skillWithOrder", skillWithOrder);
     return skillWithOrder as SkillType;
   } catch (error) {
     throw error;
