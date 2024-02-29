@@ -57,7 +57,7 @@ const Session = ({ params }: Props) => {
     createNewGroupSession({
       name,
       group_id: params.group_id,
-      lastOrder: athletes?.length || 0,
+      lastOrder: generalSessions?.length || 0,
     });
   };
 

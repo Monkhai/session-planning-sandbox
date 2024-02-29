@@ -27,13 +27,13 @@ const page = () => {
   };
 
   return (
-    <main className="relative flex h-[100dvh] flex-col items-center justify-center bg-background dark:bg-darkBackground">
-      {/*<NavBar />
-
-       <Link href={"/groups"}>
-        <h2>Go To Groups!</h2>
+    <main className="relative flex h-[100dvh] flex-col items-center justify-center gap-4 bg-background dark:bg-darkBackground">
+      <Spacer />
+      <h1>Gymnastics Session Planner</h1>
+      <h3>A simple way to plan and organize your sessions</h3>
+      <Link href={"/groups"}>
+        <h4 className="text-primary">Go To Your Groups -&gt;</h4>
       </Link>
-
       <Spacer />
 
       <div className="sticky bottom-0 flex w-full flex-row items-center justify-center gap-4 bg-[rgba(215,215,215,0.5)] px-4 py-2 backdrop-blur-md print:hidden md:bottom-0 md:px-10 md:py-5 dark:bg-opacNavbarBackground">
@@ -43,7 +43,7 @@ const page = () => {
           setShowContact={setShowContact}
           showContact={showContact}
         />
-      </div> */}
+      </div>
     </main>
   );
 };
