@@ -1,21 +1,22 @@
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "Providers/ReactQueryProvider";
 import updateAthlete from "~/services/backend/athletes/updateAthlete";
-import updateGroup from "~/services/backend/groups/updateGroup";
 import { queryKeyFactory } from "~/utils/queryFactories";
-import { AthleteFromDB, GroupFromDB } from "~/utils/types";
+import { AthleteFromDB } from "~/utils/types";
 
 const useUpdateAthlete = () => {
   return useMutation({
     mutationFn: async ({
       athlete_id,
       name,
+      order,
     }: {
       group_id: string;
       athlete_id: string;
       name: string;
+      order: number;
     }) => {
-      return await updateAthlete(Number(athlete_id), name);
+      return await updateAthlete(Number(athlete_id), name, order);
     },
 
     onMutate: async ({ athlete_id, name, group_id }) => {

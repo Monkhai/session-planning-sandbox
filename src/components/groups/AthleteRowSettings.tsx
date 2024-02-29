@@ -3,14 +3,14 @@ import React, { useEffect } from "react";
 import useDeleteAthlete from "~/hooks/athletesHooks/useDeleteAthlete";
 import useUpdateAthlete from "~/hooks/athletesHooks/useUpdateAthlete";
 import useModalControl from "~/hooks/useModalControl";
-import { AthleteFromDB } from "~/utils/types";
+import { AthleteWithOrder } from "~/utils/types";
 import CloseIcon from "../icons/CloseIcon";
 
 interface Props {
   showSettingsModal: boolean;
   setShowSettingsModal: React.Dispatch<React.SetStateAction<boolean>>;
   controlButtonRef: React.RefObject<HTMLButtonElement>;
-  athlete: AthleteFromDB;
+  athlete: AthleteWithOrder;
 }
 
 const AthleteRowSettings = ({
@@ -21,7 +21,7 @@ const AthleteRowSettings = ({
 }: Props) => {
   const params = useParams<{ group_id: string; athlete_id: string }>();
   const [athleteName, setAthleteName] = React.useState(athlete.name || "");
-
+  console.log(athlete);
   const { mutate: updateAthlete } = useUpdateAthlete();
   const { mutate: deleteAthlete } = useDeleteAthlete();
 
@@ -34,6 +34,7 @@ const AthleteRowSettings = ({
       name: athleteName,
       athlete_id: params.athlete_id,
       group_id: params.group_id,
+      order: athlete.order,
     });
     setShowSettingsModal(false);
   };
