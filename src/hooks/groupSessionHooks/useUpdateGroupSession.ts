@@ -16,7 +16,12 @@ const useUpdateGroupSession = () => {
       group_id: string;
       order: number;
     }) => {
-      return await updateSession(session_id, name, order);
+      return await updateSession({
+        joinTable: "sessions_of_groups",
+        session_id,
+        name,
+        order,
+      });
     },
 
     onMutate: async ({ session_id, name, group_id }) => {
