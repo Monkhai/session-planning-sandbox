@@ -2,7 +2,9 @@ import { PostgrestSingleResponse } from "@supabase/supabase-js";
 import getUserId from "./userManagement/getUserId";
 import client from "~/utils/supabaseClient";
 
-export default async <T>(table: string) => {
+type Table = "groups" | "sessions";
+
+export default async <T>(table: Table) => {
   const user_id = getUserId();
   if (!user_id) {
     return undefined;
