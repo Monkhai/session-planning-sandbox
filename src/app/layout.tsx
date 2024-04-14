@@ -1,4 +1,5 @@
 import ReactQueryProvider from "Providers/ReactQueryProvider";
+import { url } from "inspector";
 import { Inter } from "next/font/google";
 import "~/styles/globals.css";
 
@@ -8,9 +9,9 @@ const inter = Inter({
 });
 
 export const metadata = {
-  title: "Session Sandbox",
-  description: "Made By Someone",
-  icons: [{ rel: "icon", url: "../../public/favicon.ico" }],
+  title: "FlexiPlan",
+  description: "Made By Yohai Wiener",
+  icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
 export default function RootLayout({

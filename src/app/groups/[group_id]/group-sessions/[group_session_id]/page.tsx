@@ -61,7 +61,7 @@ const Session = ({ params }: Props) => {
   };
 
   return (
-    <main className="flex min-h-[100dvh] flex-col items-center justify-start bg-background dark:bg-darkBackground">
+    <main className="dark:bg-dark-background-gradient bg-background-gradient flex min-h-[100dvh] flex-col items-center justify-start">
       <NavBar title={session?.name} />
       <SessionContext.Provider value={{ session_id: params.group_session_id }}>
         <StationResponseHandler

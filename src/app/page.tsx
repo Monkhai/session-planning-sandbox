@@ -5,7 +5,7 @@ import { useAuth } from "~/hooks/useAuth";
 const Page = () => {
   useAuth();
   redirect("/home");
-  return <div className="h-screen w-screen dark:bg-darkBackground" />;
+  return <div className="dark:bg-dark-background-gradient h-screen w-screen" />;
 };
 
 export default Page;

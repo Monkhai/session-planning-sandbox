@@ -29,6 +29,12 @@ export default {
         darkSecondaryTextInputBackground:
           "var(--color-dark-secondary-text-input-field)",
       },
+      backgroundImage: () => ({
+        "background-gradient":
+          "linear-gradient(180deg, #f1f3f5 0%, #d2dfe2 100%)",
+        "dark-background-gradient":
+          "linear-gradient(180deg, #000 0%, #2c3e50 100%)",
+      }),
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],
       },

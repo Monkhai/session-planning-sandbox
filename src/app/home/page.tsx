@@ -1,13 +1,8 @@
 "use client";
-import { Reorder, motion, useDragControls } from "framer-motion";
-import { Chela_One } from "next/font/google";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { Dispatch, SetStateAction, useRef, useState } from "react";
-import { IoReorderThreeOutline } from "react-icons/io5";
-import { set } from "zod";
+import React from "react";
 import HelpButton from "~/components/HelpButton";
-import NavBar from "~/components/NavBar";
 import Spacer from "~/components/utility/Spacer";
 import { useAuth } from "~/hooks/useAuth";
 import client from "~/utils/supabaseClient";
@@ -27,9 +22,9 @@ const page = () => {
   };
 
   return (
-    <main className="relative flex h-[100dvh] flex-col items-center justify-center gap-4 bg-background dark:bg-darkBackground">
+    <main className="bg-background-gradient-gradient dark:bg-dark-background-gradient relative flex h-[100dvh] flex-col items-center justify-center gap-4">
       <Spacer />
-      <h1>Gymnastics Session Planner</h1>
+      <h1>FlexiPlan</h1>
       <h3>A simple way to plan and organize your sessions</h3>
       <Link href={"/groups"}>
         <h4 className="text-primary">Go To Your Groups -&gt;</h4>

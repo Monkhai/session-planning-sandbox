@@ -35,7 +35,7 @@ const Session = ({ params }: Props) => {
 
   const navBarTitle = useMemo(() => {
     if (isAthleteLoading || !athlete || athleteError) {
-      return "Gymnastics Session Planner";
+      return "FlexiPlan";
     }
 
     return athlete.name;
@@ -65,7 +65,7 @@ const Session = ({ params }: Props) => {
   };
 
   return (
-    <main className="flex min-h-[100dvh] flex-col items-center justify-start bg-background dark:bg-darkBackground">
+    <main className="dark:bg-dark-background-gradient bg-background-gradient flex min-h-[100dvh] flex-col items-center justify-start">
       <NavBar title={navBarTitle} />
 
       <SessionList

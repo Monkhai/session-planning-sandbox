@@ -63,7 +63,7 @@ const Session = ({ params }: Props) => {
   };
 
   return (
-    <main className="flex min-h-[100dvh] flex-col items-center justify-start bg-background dark:bg-darkBackground">
+    <main className="dark:bg-dark-background-gradient bg-background-gradient flex min-h-[100dvh] flex-col items-center justify-start">
       <NavBar title={group?.name} />
       <div className="flex w-full flex-col items-center gap-2 md:w-3/4 md:flex-row md:items-start md:justify-center md:gap-4">
         <GroupSessionsList

@@ -35,7 +35,7 @@ const Login = () => {
   }, []);
 
   return (
-    <section className="flex h-[100dvh] flex-col items-center justify-start dark:bg-darkBackground">
+    <section className="dark:bg-dark-background-gradient flex h-[100dvh] flex-col items-center justify-start">
       <NavBar />
 
       <section className="flex h-full w-full flex-col items-center justify-center gap-4 pt-4">
