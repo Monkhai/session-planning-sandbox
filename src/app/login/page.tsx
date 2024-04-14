@@ -10,9 +10,7 @@ import client from "~/utils/supabaseClient";
 const Login = () => {
   const router = useRouter();
 
-  const isDarkTheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
-
-  const [theme, setTheme] = useState(isDarkTheme ? "dark" : "light");
+  const [theme, setTheme] = useState("light");
 
   useEffect(() => {
     const darkTheme = window.matchMedia("(prefers-color-scheme: dark)");
