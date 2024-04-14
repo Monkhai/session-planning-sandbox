@@ -1,19 +1,32 @@
 "use client";
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
-import { IoIosMail } from "react-icons/io";
+import { useEffect, useState } from "react";
 import NavBar from "~/components/NavBar";
-import introductionText from "~/utils/introductionText";
-import client from "~/utils/supabaseClient";
-import * as IGLogo from "../../../public/instagram.png";
-import * as DarkIGLogo from "../../../public/instagram-dark.png";
 import Spacer from "~/components/utility/Spacer";
+import client from "~/utils/supabaseClient";
 
 const Login = () => {
   const router = useRouter();
+
+  const isDarkTheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+  const [theme, setTheme] = useState(isDarkTheme ? "dark" : "light");
+
+  useEffect(() => {
+    const darkTheme = window.matchMedia("(prefers-color-scheme: dark)");
+
+    const listener = (e: MediaQueryListEvent) => {
+      setTheme(e.matches ? "dark" : "light");
+    };
+
+    darkTheme.addEventListener("change", listener);
+
+    return () => {
+      darkTheme.removeEventListener("change", listener);
+    };
+  }, []);
 
   useEffect(() => {
     client.auth.getSession().then(({ data }) => {
@@ -37,6 +50,7 @@ const Login = () => {
         <Spacer />
         <div className="md:w-1/4">
           <Auth
+            theme={theme}
             appearance={{
               theme: ThemeSupa,
               variables: {
@@ -49,7 +63,7 @@ const Login = () => {
               },
             }}
             supabaseClient={client}
-            providers={["google"]}
+            providers={["google", "apple"]}
             redirectTo="/home"
           />
         </div>

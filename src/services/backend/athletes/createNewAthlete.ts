@@ -1,7 +1,7 @@
 import client from "~/utils/supabaseClient";
 import getUserId from "../userManagement/getUserId";
 import { PostgrestSingleResponse } from "@supabase/supabase-js";
-import { AthleteFromDB } from "~/utils/types";
+import { AthleteFromDB, AthleteWithOrder } from "~/utils/types";
 
 export default async (group_id: number, name: string, lastOrder: number) => {
   try {
@@ -32,7 +32,12 @@ export default async (group_id: number, name: string, lastOrder: number) => {
 
     if (athletes_of_groupsError) throw athletes_of_groupsError;
 
-    return athlete[0];
+    const athleteWithOrder: AthleteWithOrder = {
+      ...athlete[0],
+      order: lastOrder + 1,
+    };
+
+    return athleteWithOrder;
   } catch (error) {
     throw error;
   }

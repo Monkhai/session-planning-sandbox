@@ -1,11 +1,7 @@
-import client from "~/utils/supabaseClient";
-import getUserId from "../userManagement/getUserId";
 import { PostgrestSingleResponse } from "@supabase/supabase-js";
-import {
-  AthleteFromDB,
-  AthleteOfGroupFromDB,
-  AthleteWithOrder,
-} from "~/utils/types";
+import client from "~/utils/supabaseClient";
+import { AthleteFromDB, AthleteWithOrder } from "~/utils/types";
+import getUserId from "../userManagement/getUserId";
 
 export default async (group_id: number) => {
   try {

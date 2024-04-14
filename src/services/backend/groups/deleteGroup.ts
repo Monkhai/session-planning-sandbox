@@ -3,6 +3,7 @@ import getListOfAthletes from "../athletes/getListOfGroupAthletes";
 import deleteSessionsOfGroup from "../sessions/deleteSessionsOfGroup";
 import deleteSessionsOfMultipleAthletes from "../sessions/deleteSessionsOfMultipleAthletes";
 import getUserId from "../userManagement/getUserId";
+import deleteMultipleAthletes from "../athletes/deleteMultipleAthletes";
 
 export default async (group_id: number) => {
   try {
@@ -14,8 +15,9 @@ export default async (group_id: number) => {
 
     const athlete_ids = athletes.map((athlete) => athlete.id);
 
-    await deleteSessionsOfMultipleAthletes(athlete_ids);
+    await deleteSessionsOfMultipleAthletes({ athlete_ids });
     await deleteSessionsOfGroup(group_id);
+    await deleteMultipleAthletes(athlete_ids);
 
     const { error: deleteGroupError } = await client
       .from("groups")

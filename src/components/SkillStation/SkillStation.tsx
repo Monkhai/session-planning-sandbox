@@ -42,7 +42,7 @@ const SkillStation = ({ station, isLast, onReorderEnd }: Props) => {
     stationNameRef,
     session_id,
   });
-
+  console.log(station.duration);
   const { mutate: createSkill } = useCreateSkill();
   const { mutate: deleteStation } = useDeleteSkillStation();
 
@@ -113,7 +113,7 @@ const SkillStation = ({ station, isLast, onReorderEnd }: Props) => {
       dragControls={dragControls}
       onDragEnd={onReorderEnd}
       className={
-        "relative flex w-full flex-col px-2 py-2 print:px-2 print:py-1 md:flex-row md:px-10" +
+        "flex w-full flex-col px-2 py-2 print:px-2 print:py-1 md:flex-row md:px-10" +
         (isLast
           ? ""
           : " print:border-b-[1px] print:border-b-seperatorSecondary")

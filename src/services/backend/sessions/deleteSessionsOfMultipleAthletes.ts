@@ -8,11 +8,13 @@ import getUserId from "../userManagement/getUserId";
 import getListOfMultipleAthletesSessions from "./getListOfMultipleAthletesSessions";
 import getListOfStationsFromMultipleSessions from "./getListOfStationsFromMultipleSessions";
 
-export default async (athlete_ids: number[]) => {
+type Args = {
+  athlete_ids: number[];
+};
+
+export default async ({ athlete_ids }: Args) => {
   try {
     const user_id = getUserId();
-
-    if (!user_id) throw new Error("User not found");
 
     const athleteSessions =
       await getListOfMultipleAthletesSessions(athlete_ids);

@@ -4,9 +4,9 @@ import { AthleteWithOrder } from "~/utils/types";
 export default async (athlete: AthleteWithOrder) => {
   try {
     const { data, error } = await client
-      .from("athletes")
+      .from("athletes_of_group")
       .update({ order: athlete.order - 1 })
-      .eq("id", athlete.id)
+      .eq("athlete_id", athlete.id)
       .select();
 
     if (error) {

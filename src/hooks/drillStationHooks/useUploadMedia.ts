@@ -5,7 +5,7 @@ import uploadDrillMedia, {
   checkIsImage,
 } from "~/services/backend/drills/media/uploadDrillMedia";
 import { queryKeyFactory } from "~/utils/queryFactories";
-import { SignedUrls, UploadMediaArgs } from "~/utils/types";
+import { SignedUrls } from "~/utils/types";
 type Args = {
   station_id: number;
   session_id: string;

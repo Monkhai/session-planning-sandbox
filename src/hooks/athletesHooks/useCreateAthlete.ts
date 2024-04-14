@@ -59,6 +59,7 @@ const useCreateAthlete = () => {
       const previousAthletes: AthleteFromDB[] =
         queryClient.getQueryData(queryKey) ?? [];
 
+      console.log(data);
       const newAthletes = previousAthletes.map((athlete) => {
         if (athlete.id === athleteToReplace.id) {
           return data;

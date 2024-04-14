@@ -1,13 +1,19 @@
-import React, { useCallback, useState } from "react";
+import {
+  AnimatePresence,
+  Reorder,
+  checkTargetForNewValues,
+  motion,
+  spring,
+  useDragControls,
+} from "framer-motion";
+import React, { useCallback, useEffect, useState } from "react";
 import { IoInformationCircleOutline } from "react-icons/io5";
 import useDeleteSkill from "~/hooks/skillStationHooks/useDeleteSkill";
 import useSkillRowStates from "~/hooks/skillStationHooks/useSkillRowStates";
-import useUpdateSkill from "~/hooks/skillStationHooks/useUpdateSkill";
 import { SkillType } from "~/utils/types";
+import ReorderController from "../ReorderController";
 import RemoveIcon from "../icons/RemoveIcon";
 import SkillStationDescriptionModal from "./SkillStationDescriptionModal";
-import { Reorder, useDragControls } from "framer-motion";
-import ReorderController from "../ReorderController";
 
 interface Props {
   isLast?: boolean;
@@ -78,6 +84,27 @@ const SkillRow = ({
     [skill, skillName, reps, description, showReps],
   );
   const dragContols = useDragControls();
+
+  const [points, setPoints] = useState<{ x: number; y: number }>({
+    x: 0,
+    y: 0,
+  });
+
+  const [showContext, setShowContext] = useState(false);
+  const contextMenueRef = React.useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (showContext) {
+      document.addEventListener("mousedown", (e) => {
+        const target = e.target as HTMLElement;
+        const context = contextMenueRef.current;
+
+        if (context && !context.contains(target)) {
+          setShowContext(false);
+        }
+      });
+    }
+  });
+
   return (
     <Reorder.Item
       dragControls={dragContols}
@@ -87,6 +114,11 @@ const SkillRow = ({
       className="flex flex-row gap-2 md:gap-0"
     >
       <div
+        onContextMenu={(e) => {
+          e.preventDefault();
+          setPoints({ x: e.pageX, y: e.pageY });
+          setShowContext(true);
+        }}
         style={{
           borderBottomLeftRadius: isLast ? "10px" : "0px",
           borderBottomRightRadius: isLast ? "10px" : "0px",
@@ -129,6 +161,47 @@ const SkillRow = ({
             </button>
           )}
         </div>
+        <AnimatePresence>
+          {showContext && (
+            <motion.div
+              layout
+              // transition={spring}
+              key={skill.id}
+              initial={{ scale: 0, opacity: 0, transformOrigin: "top left" }}
+              animate={{ scale: 1, opacity: 1, transformOrigin: "top left" }}
+              exit={{ scale: 0, opacity: 0, transformOrigin: "top left" }}
+              ref={contextMenueRef}
+              style={{
+                position: "absolute",
+                top: points.y,
+                left: points.x,
+                zIndex: 100 + index,
+              }}
+              className="flex w-80 flex-col gap-4 rounded-md border-2 border-seperator bg-white p-4 shadow-lg dark:border-darkSeperator dark:bg-darkSecondaryBackground"
+            >
+              <div className="flex flex-row pr-1">
+                <p className="flex-1 ">Show reps</p>
+                <input
+                  checked={showReps}
+                  onChange={(e) => handleToggleReps(e.target.checked)}
+                  type="checkbox"
+                  name="showReps"
+                  id="showReps"
+                  className="h-4 w-4"
+                />
+              </div>
+              <button
+                onClick={() => {
+                  setShowContext(false);
+                  handleDeleteSkill();
+                }}
+                className="outline-6 flex h-12 w-full items-center justify-center rounded-md bg-red-500 text-white "
+              >
+                Delete
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       <div className="flex items-center justify-center print:hidden md:relative md:left-4">
@@ -141,7 +214,10 @@ const SkillRow = ({
           }}
           className="rounded-full active:scale-95"
         >
-          <IoInformationCircleOutline color={"var(--color-blue)"} size={28} />
+          <IoInformationCircleOutline
+            color={description ? "var(--color-blue)" : "gray"}
+            size={28}
+          />
         </button>
 
         <SkillStationDescriptionModal

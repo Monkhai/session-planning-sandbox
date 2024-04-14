@@ -46,6 +46,7 @@ const Session = ({ params }: Props) => {
   };
 
   const handleCreateNewAthlete = (name: string) => {
+    console.log("Creating new athlete");
     createNewAthlete({
       name,
       group_id: params.group_id,
