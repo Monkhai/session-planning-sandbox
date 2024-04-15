@@ -3,6 +3,8 @@ import React, { useRef } from "react";
 import FormLink from "~/utils/FormLink";
 import * as PrintTip from "../../public/howToPrint.png";
 import useModalControl from "~/hooks/useModalControl";
+import { Router } from "next/router";
+import Link from "next/link";
 
 interface Props {
   showContact: boolean;
@@ -56,6 +58,15 @@ const HelpModal = ({
       >
         Teach me how to print
       </button>
+      <div className="absolute h-[1px] w-full bg-seperatorSecondary dark:bg-darkSeperatorSecondary" />
+      <Link href={"/privacy-policy.html"}>
+        <button
+          tabIndex={showContact ? 0 : -1}
+          className="h-16 w-60 bg-white text-primary transition-all duration-150 hover:bg-seperatorSecondary dark:bg-darkTextInputBackground"
+        >
+          Privacy Policy
+        </button>
+      </Link>
       <div className="absolute h-[1px] w-full bg-seperatorSecondary dark:bg-darkSeperatorSecondary" />
       <button
         tabIndex={showContact ? 0 : -1}
