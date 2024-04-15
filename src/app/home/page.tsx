@@ -22,7 +22,7 @@ const page = () => {
   };
 
   return (
-    <main className="bg-background-gradient-gradient dark:bg-dark-background-gradient relative flex h-[100dvh] flex-col items-center justify-center gap-4">
+    <main className="bg-background-gradient dark:bg-dark-background-gradient relative flex h-[100dvh] flex-col items-center justify-center gap-4">
       <Spacer />
       <h1>FlexiPlan</h1>
       <h3>A simple way to plan and organize your sessions</h3>
