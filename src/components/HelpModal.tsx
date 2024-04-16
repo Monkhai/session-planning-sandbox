@@ -130,7 +130,7 @@ const HelpModal = ({
             <button
               onClick={() => {
                 deleteUser();
-                onLogout();
+                // onLogout();
               }}
               className="rounded-[10px] border-2 border-red-500 p-3 text-red-500 transition-colors duration-150 hover:bg-red-500 hover:text-white"
             >
