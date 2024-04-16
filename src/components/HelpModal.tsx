@@ -5,6 +5,11 @@ import * as PrintTip from "../../public/howToPrint.png";
 import useModalControl from "~/hooks/useModalControl";
 import { Router } from "next/router";
 import Link from "next/link";
+import { AuthClient } from "@supabase/supabase-js";
+import client from "~/utils/supabaseClient";
+import deleteUser from "~/services/backend/userManagement/deleteUser";
+import CloseIcon from "./icons/CloseIcon";
+import Spacer from "./utility/Spacer";
 
 interface Props {
   showContact: boolean;
@@ -20,6 +25,7 @@ const HelpModal = ({
   onLogout,
 }: Props) => {
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const deleteUserRef = useRef<HTMLDialogElement>(null);
   const ref = useRef<HTMLDivElement>(null);
   useModalControl(ref, showContact, setShowContact, controlButtonRef);
 
@@ -71,6 +77,17 @@ const HelpModal = ({
       <button
         tabIndex={showContact ? 0 : -1}
         className="h-16 w-60 bg-white text-red-500 transition-all duration-150 hover:bg-seperatorSecondary dark:bg-darkTextInputBackground"
+        onClick={() => {
+          setShowContact(false);
+          deleteUserRef.current?.showModal();
+        }}
+      >
+        Delete User
+      </button>
+      <div className="absolute h-[1px] w-full bg-seperatorSecondary dark:bg-darkSeperatorSecondary" />
+      <button
+        tabIndex={showContact ? 0 : -1}
+        className="h-16 w-60 bg-white text-red-500 transition-all duration-150 hover:bg-seperatorSecondary dark:bg-darkTextInputBackground"
         onClick={onLogout}
       >
         Logout
@@ -93,6 +110,33 @@ const HelpModal = ({
           >
             Got it!
           </button>
+        </div>
+      </dialog>
+      <dialog
+        ref={deleteUserRef}
+        className="w-[90%] overflow-x-hidden rounded-[10px] p-4 shadow-xl transition-all duration-150 md:w-2/6 dark:bg-darkSecondaryBackground"
+      >
+        <div className="flex h-full flex-1 flex-col items-center justify-start gap-4 text-center">
+          <h3>Your'e about to delete your account!</h3>
+          <p>You will lose your data permanently. Are you sure?</p>
+          <div className="flex flex-row gap-4">
+            <button
+              onClick={() => deleteUserRef.current?.close()}
+              className="rounded-[10px] bg-primary p-3 text-white"
+            >
+              No, I'll stay for a bit longer
+            </button>
+
+            <button
+              onClick={() => {
+                deleteUser();
+                onLogout();
+              }}
+              className="rounded-[10px] border-2 border-red-500 p-3 text-red-500 transition-colors duration-150 hover:bg-red-500 hover:text-white"
+            >
+              Yes, Delete my account
+            </button>
+          </div>
         </div>
       </dialog>
     </div>

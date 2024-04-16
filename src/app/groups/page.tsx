@@ -30,7 +30,7 @@ const page = () => {
   };
 
   return (
-    <main className="dark:bg-dark-background-gradient bg-background-gradient-gradient relative flex h-[100dvh] flex-col items-center justify-start">
+    <main className="dark:bg-dark-background-gradient bg-background-gradient relative flex h-[100dvh] flex-col items-center justify-start">
       <NavBar />
 
       <GroupList groups={groups} areGroupsLoading={areGroupsLoading} />
