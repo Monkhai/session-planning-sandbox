@@ -42,7 +42,6 @@ const SkillStation = ({ station, isLast, onReorderEnd }: Props) => {
     stationNameRef,
     session_id,
   });
-  console.log(station.duration);
   const { mutate: createSkill } = useCreateSkill();
   const { mutate: deleteStation } = useDeleteSkillStation();
 

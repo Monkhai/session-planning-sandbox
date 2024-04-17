@@ -39,6 +39,7 @@ export default async (station_id: number): Promise<SignedUrls[]> => {
 
     const signedUrls: (SignedUrls | undefined)[] = await Promise.all(
       media.map(async (file) => {
+        if (file.name === ".emptyFolderPlaceholder") return undefined;
         const { data: signedUrl, error } = await client.storage
           .from("user-media")
           .createSignedUrl(`${user_id}/drills/${station_id}/${file.name}`, 120);

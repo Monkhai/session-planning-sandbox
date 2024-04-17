@@ -4,13 +4,10 @@ import deleteMedia from "./deleteMedia";
 import getAllMediaForDrill from "./getAllMediaForDrill";
 
 export default async (station_id: number) => {
-  const user_id = getUserId();
-  if (!user_id) {
-    console.error("User not found");
-    return;
-  }
-
   try {
+    const user_id = getUserId();
+    if (!user_id) throw new Error("User not found");
+
     const allMedia = await getAllMediaForDrill(station_id);
 
     if (allMedia.length > 0) {
@@ -23,9 +20,7 @@ export default async (station_id: number) => {
       .from("user-media")
       .remove([`${user_id}/drills/${station_id}`]);
 
-    if (error) {
-      console.error(error);
-    }
+    if (error) throw error;
   } catch (error) {
     throw error;
   }

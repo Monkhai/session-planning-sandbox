@@ -1,6 +1,5 @@
 export default () => {
   let sessionName: string = "";
-
   for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i);
     if (key) {
@@ -21,6 +20,7 @@ export default () => {
   if (!data) {
     return null;
   }
+
   const jsonedData = JSON.parse(data);
   const user_id: string = jsonedData.user.id;
   return user_id;

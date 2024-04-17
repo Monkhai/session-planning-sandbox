@@ -46,7 +46,6 @@ const Session = ({ params }: Props) => {
   };
 
   const handleCreateNewAthlete = (name: string) => {
-    console.log("Creating new athlete");
     createNewAthlete({
       name,
       group_id: params.group_id,
@@ -63,7 +62,7 @@ const Session = ({ params }: Props) => {
   };
 
   return (
-    <main className="dark:bg-dark-background-gradient bg-background-gradient flex min-h-[100dvh] flex-col items-center justify-start">
+    <main className="flex min-h-[100dvh] flex-col items-center justify-start bg-background-gradient dark:bg-dark-background-gradient">
       <NavBar title={group?.name} />
       <div className="flex w-full flex-col items-center gap-2 md:w-3/4 md:flex-row md:items-start md:justify-center md:gap-4">
         <GroupSessionsList

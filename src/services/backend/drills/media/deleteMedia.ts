@@ -13,9 +13,7 @@ export default async (name: string, station_id: number) => {
       .from("user-media")
       .remove([`${user_id}/drills/${station_id}/${name}`]);
 
-    if (error) {
-      throw error;
-    }
+    if (error) throw error;
   } catch (error) {
     throw error;
   }
