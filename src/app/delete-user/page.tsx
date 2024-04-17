@@ -1,8 +1,11 @@
+"use client";
 import React from "react";
+import getUserId from "~/services/backend/userManagement/getUserId";
+import client from "~/utils/supabaseClient";
 
 const page = () => {
   return (
-    <section className="dark:bg-dark-background-gradient bg-background-gradient relative flex h-[100dvh] flex-col items-center justify-start pt-4">
+    <section className="relative flex h-[100dvh] flex-col items-center justify-start bg-background-gradient pt-4 dark:bg-dark-background-gradient">
       <h1>How to delete your account</h1>
       <h2 className="pt-4">Step 1</h2>
       <p className="pt-2">Log in to your account</p>
