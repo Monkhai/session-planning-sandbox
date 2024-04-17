@@ -1,7 +1,4 @@
 "use client";
-import React from "react";
-import getUserId from "~/services/backend/userManagement/getUserId";
-import client from "~/utils/supabaseClient";
 
 const page = () => {
   return (
